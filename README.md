@@ -40,12 +40,15 @@ The idea is to have the machine immediately be able to pull out "entities" like 
 
 # Prelude
 Assuming you already have `python` and `pip`
-install `NLTK`
+install `NLTK` and `beautifulsoup`
 
 ```bash
-sudo pip install -U nltk
+sudo pip install nltk
 ```
 
+```bash
+sudo pip install beautifulsoup4
+```
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
 
