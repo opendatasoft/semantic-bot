@@ -17,15 +17,31 @@ LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api)
 # NLTK (Natural Language ToolKit)
 This chatbot use NLTK to perform natural language processing:
 
-## Lemmatization
+### Lemmatization
 Lemmatization is a process of removing and replacing word suffixes to arrive at a common root form of the word.
+
 > Eating -> Eat
 
 > Persons -> Person
 
+### Stop words
+We dont wants useless word to be stored and treated in order to improve performance and reduce noise.
+we can easily remove them with nltk:
+> This is perfect -> "This Perfect"
+
+### Part of Speech tagging
+For `class` detection, we are only interested in Noun.
+nltk Part of Speech tagging labels words in a sentence as nouns, adjectives, verbs...
+
+### Named Entity Recognition
+The idea is to have the machine immediately be able to pull out "entities" like people, places, things, locations, monetary figures, and more.
+
+> OpenDataSoft - ORGANIZATION
+
 # Prelude
 Assuming you already have `python` and `pip`
 install `NLTK`
+
 ```bash
 sudo pip install -U nltk
 ```
