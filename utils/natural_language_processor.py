@@ -22,6 +22,6 @@ class NLProcessor(object):
         filtered_text = pos_tag(filtered_text)
         text_nouns = []
         for item in filtered_text:
-            if item[1][0] == 'NNS' or item[1] == 'NNP':
+            if item[1] == 'NNS' or item[1] == 'NNP':
                 text_nouns.append(item[0])
         print text_nouns
