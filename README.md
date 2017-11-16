@@ -20,6 +20,7 @@ This chatbot use NTLK to perform natural language processing:
 ## Lemmatization
 Lemmatization is a process of removing and replacing word suffixes to arrive at a common root form of the word.
 > Eating -> Eat
+
 > Persons -> Person
 
 # Prelude
