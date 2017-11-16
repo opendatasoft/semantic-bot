@@ -5,10 +5,6 @@ from urllib2 import urlopen, Request, HTTPError
 DATA_CATALOG_API_URL = "https://data.opendatasoft.com/api/datasets/1.0/%s/"
 
 
-class ODSNotAvailable(Exception):
-    pass
-
-
 class DatasetIdMissing(Exception):
     pass
 
@@ -34,9 +30,7 @@ class ODSCatalogApi(object):
         try:
             response = urlopen(request)
         except HTTPError:
-            raise ODSNotAvailable
+            raise UnknownDataset
         raw_data = response.read().decode('utf-8')
         data = json.loads(raw_data)
-        if data.get('error'):
-            raise UnknownDataset
         return data
