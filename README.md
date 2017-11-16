@@ -34,6 +34,9 @@ sudo pip install -U nltk
 Navigate to ontology-mapping-chatbot folder and execute:
 
 ```bash
-python ontobot.py
+python ontobot.py <dataset_id>
 ```
+replace `<dataset_id>` with the dataset_id of the dataset you want to semantize (only support DATA domain)
+
+> python ontobot.py roman-emperors@public
 
