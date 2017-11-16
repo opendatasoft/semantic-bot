@@ -14,8 +14,8 @@ Ontologies can be created for every area of concern and by everyone using RDF (R
 # LOV (Linked Open Vocabularies)
 LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
 
-# NTLK (Natural Language ToolKit)
-This chatbot use NTLK to perform natural language processing:
+# NLTK (Natural Language ToolKit)
+This chatbot use NLTK to perform natural language processing:
 
 ## Lemmatization
 Lemmatization is a process of removing and replacing word suffixes to arrive at a common root form of the word.
@@ -25,7 +25,7 @@ Lemmatization is a process of removing and replacing word suffixes to arrive at 
 
 # Prelude
 Assuming you already have `python` and `pip`
-install `NTLK`
+install `NLTK`
 ```bash
 sudo pip install -U nltk
 ```
