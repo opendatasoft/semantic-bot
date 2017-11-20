@@ -47,6 +47,10 @@ sudo pip install nltk
 ```
 
 ```bash
+python -m nltk.downloader popular
+```
+
+```bash
 sudo pip install beautifulsoup4
 ```
 # Run the demo
