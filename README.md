@@ -43,7 +43,7 @@ Assuming you already have `python` and `pip`
 install `NLTK` and `beautifulsoup`
 
 ```bash
-sudo pip install nltk
+pip install nltk
 ```
 
 ```bash
@@ -51,7 +51,11 @@ python -m nltk.downloader popular
 ```
 
 ```bash
-sudo pip install beautifulsoup4
+pip install wikipedia
+```
+
+```bash
+pip install beautifulsoup4
 ```
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
