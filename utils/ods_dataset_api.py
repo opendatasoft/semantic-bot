@@ -1,8 +1,9 @@
 import json
 
 from urllib2 import urlopen, Request, HTTPError
+from urllib import urlencode
 
-DATA_CATALOG_API_URL = "https://data.opendatasoft.com/api/datasets/1.0/%s/"
+DATA_RECORD_API_URL = "https://data.opendatasoft.com/api/records/1.0/search/"
 
 
 class DatasetIdMissing(Exception):
@@ -13,14 +14,16 @@ class UnknownDataset(Exception):
     pass
 
 
-class ODSCatalogApi(object):
-    """This class implements the OpenDataSoft catalog API v1."""
+class ODSDatasetApi(object):
+    """This class implements the OpenDataSoft records API v1."""
 
     @staticmethod
-    def dataset_meta_request(dataset_id):
-        """Retrieve dataset's metadatas based on its dataset_id."""
+    def dataset_records_request(dataset_id, rows=10):
+        """Retrieve dataset's records based on its dataset_id."""
         if dataset_id:
-            return ODSCatalogApi._request(DATA_CATALOG_API_URL % dataset_id)
+            params = {'dataset': dataset_id, 'rows': rows}
+            parameters = "?%s" % urlencode(params)
+            return ODSDatasetApi._request("%s%s" % (DATA_RECORD_API_URL, parameters))
         else:
             raise DatasetIdMissing
 

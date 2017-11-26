@@ -1,5 +1,6 @@
 from nltk import word_tokenize, WordNetLemmatizer, pos_tag
 from nltk.corpus import stopwords
+from wikipedia import wikipedia
 from bs4 import BeautifulSoup
 
 
@@ -24,4 +25,9 @@ class NLProcessor(object):
         for item in filtered_text:
             if item[1] == 'NNS' or item[1] == 'NNP':
                 text_nouns.append(item[0])
-        print text_nouns
+        return text_nouns
+
+    @staticmethod
+    def named_entity_recognition(records):
+        """Return a list with singular and plural noun."""
+        print wikipedia.page("test", auto_suggest=True).content
