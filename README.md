@@ -44,7 +44,7 @@ Assuming you already have `python` and `pip`
 install dependencies
 
 ```bash
-pip install -r requirements.txt```
+pip install -r requirements.txt
 ```
 
 ```bash
