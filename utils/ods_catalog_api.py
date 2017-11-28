@@ -1,36 +1,18 @@
-import json
+import requests
 
-from urllib2 import urlopen, Request, HTTPError
+import utils.requester as Requester
 
-DATA_CATALOG_API_URL = "https://data.opendatasoft.com/api/datasets/1.0/%s/"
+DATA_CATALOG_API_URL = "https://data.opendatasoft.com/api/datasets/1.0/{}/"
 
 
 class DatasetIdMissing(Exception):
     pass
 
 
-class UnknownDataset(Exception):
-    pass
-
-
-class ODSCatalogApi(object):
-    """This class implements the OpenDataSoft catalog API v1."""
-
-    @staticmethod
-    def dataset_meta_request(dataset_id):
-        """Retrieve dataset's metadatas based on its dataset_id."""
-        if dataset_id:
-            return ODSCatalogApi._request(DATA_CATALOG_API_URL % dataset_id)
-        else:
-            raise DatasetIdMissing
-
-    @staticmethod
-    def _request(url):
-        request = Request(url)
-        try:
-            response = urlopen(request)
-        except HTTPError:
-            raise UnknownDataset
-        raw_data = response.read().decode('utf-8')
-        data = json.loads(raw_data)
-        return data
+def dataset_meta_request(dataset_id):
+    if dataset_id:
+        request = requests.get(DATA_CATALOG_API_URL.format(dataset_id), timeout=Requester.get_timeout())
+        request.raise_for_status()
+        return request.json()
+    else:
+        raise DatasetIdMissing
