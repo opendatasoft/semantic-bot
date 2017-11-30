@@ -16,5 +16,4 @@ def extract_noun(text):
     for item in filtered_text:
         if item[1] == 'NNS' or item[1] == 'NNP':
             text_nouns.append(item[0])
-        print text_nouns
     return text_nouns

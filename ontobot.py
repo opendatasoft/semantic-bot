@@ -4,10 +4,16 @@ import json
 import utils.lov_api as LovApi
 import utils.ods_catalog_api as ODSCatalogApi
 import utils.ods_dataset_api as ODSDatasetApi
+import utils.dandelion_api as DandelionApi
 import utils.natural_language_processor as NLProcessor
 
 
-def search_candidate(candidate, dataset_title, dataset_fields):
+# A changer en regardant dans les types des fields
+def hasNoNumbers(inputString):
+    return not(any(char.isdigit() for char in inputString))
+
+
+def search_candidate(candidate, dataset_title, dataset_fields, dataset_records):
     # Find correspondance for dataset title
     candidate["dataset_title"] = {}
     for noun in NLProcessor.extract_noun(dataset_title):
@@ -20,6 +26,17 @@ def search_candidate(candidate, dataset_title, dataset_fields):
         lov_results = LovApi.term_request(field, term_type='property')["results"]
         if lov_results:
             candidate["fields"][field] = lov_results[0]
+
+    candidate["entities"] = {}
+    for record in dataset_records:
+        for field, value in record['fields'].iteritems():
+            if hasNoNumbers(value):
+                types = DandelionApi.entity_types_request(value)
+                if types:
+                    if field in candidate["entities"]:
+                        candidate["entities"][field].extend(types)
+                    else:
+                        candidate["entities"][field] = types
 
 
 def main():
@@ -34,10 +51,10 @@ def main():
     dataset_fields = []
     for field in dataset['fields']:
         dataset_fields.append(field['label'])
-    records = ODSDatasetApi.dataset_records_request(dataset_id, 10)['records']
+    records = ODSDatasetApi.dataset_records_request(dataset_id, 2)['records']
     # Candidate correspondances to be confirmed by a user.
     candidate = {}
-    search_candidate(candidate, dataset_title, dataset_fields)
+    search_candidate(candidate, dataset_title, dataset_fields, records)
 
     with open('result.json', 'w') as outfile:
         json.dump(candidate, outfile, indent=4)
