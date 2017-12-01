@@ -8,7 +8,7 @@ import utils.dandelion_api as DandelionApi
 import utils.natural_language_processor as NLProcessor
 
 
-# A changer en regardant dans les types des fields
+# A changer en regardant dans les types des fields ?
 def hasNoNumbers(inputString):
     return not(any(char.isdigit() for char in inputString))
 
@@ -17,7 +17,7 @@ def search_candidate(candidate, dataset_title, dataset_fields, dataset_records):
     # Find correspondance for dataset title
     candidate["dataset_title"] = {}
     for noun in NLProcessor.extract_noun(dataset_title):
-        lov_results = LovApi.vocabulary_request(noun)["results"]
+        lov_results = LovApi.term_request(noun, term_type='class')["results"]
         if lov_results:
             candidate["dataset_title"][noun] = lov_results[0]
 
@@ -56,7 +56,7 @@ def main():
     candidate = {}
     search_candidate(candidate, dataset_title, dataset_fields, records)
 
-    with open('result.json', 'w') as outfile:
+    with open('{}.json'.format(dataset_id), 'w') as outfile:
         json.dump(candidate, outfile, indent=4)
 
 
