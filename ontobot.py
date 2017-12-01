@@ -63,7 +63,7 @@ def main():
     candidate = {}
     search_candidate(candidate, dataset_title, dataset_fields, records)
 
-    with open('{}.json'.format(dataset_id), 'w') as outfile:
+    with open('results/{}.json'.format(dataset_id), 'w') as outfile:
         json.dump(candidate, outfile, indent=4)
 
 
