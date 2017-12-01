@@ -7,10 +7,15 @@ import utils.ods_dataset_api as ODSDatasetApi
 import utils.dandelion_api as DandelionApi
 import utils.natural_language_processor as NLProcessor
 
+LIMIT_SCORE_FIELD = 0.5000000
+LIMIT_SCORE_TITLE = 0.5555555
+
 
 # A changer en regardant dans les types des fields ?
-def hasNoNumbers(inputString):
-    return not(any(char.isdigit() for char in inputString))
+def hasNoNumbers(value):
+    if isinstance(value, unicode):
+        return not(any(char.isdigit() for char in value))
+    return False
 
 
 def search_candidate(candidate, dataset_title, dataset_fields, dataset_records):
@@ -19,13 +24,15 @@ def search_candidate(candidate, dataset_title, dataset_fields, dataset_records):
     for noun in NLProcessor.extract_noun(dataset_title):
         lov_results = LovApi.term_request(noun, term_type='class')["results"]
         if lov_results:
-            candidate["dataset_title"][noun] = lov_results[0]
+            if lov_results[0]['score'] > LIMIT_SCORE_TITLE:
+                candidate["dataset_title"][noun] = lov_results[0]
 
     candidate["fields"] = {}
     for field in dataset_fields:
         lov_results = LovApi.term_request(field, term_type='property')["results"]
         if lov_results:
-            candidate["fields"][field] = lov_results[0]
+            if lov_results[0]['score'] > LIMIT_SCORE_FIELD:
+                candidate["fields"][field] = lov_results[0]
 
     candidate["entities"] = {}
     for record in dataset_records:
