@@ -1,5 +1,6 @@
 import argparse
 import json
+from requests.exceptions import HTTPError
 
 import utils.lov_api as LovApi
 import utils.ods_catalog_api as ODSCatalogApi
@@ -42,7 +43,10 @@ def stat_datasets(dataset_id):
         result = json.load(open('results/dataset2.json'))
     except IOError:
         result = {}
-    records = ODSDatasetApi.dataset_records_request(dataset_id, 2)['records']
+    try:
+        records = ODSDatasetApi.dataset_records_request(dataset_id, 2)['records']
+    except HTTPError:
+        return
     for record in records:
         for field, value in record['fields'].iteritems():
             if hasNoNumbers(value):

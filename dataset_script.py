@@ -13,8 +13,8 @@ def main():
     args = parser.parse_args()
     start = args.start
     end = args.end
-    cmp = 0
-    while cmp < end:
+    while start < end:
+        cmp = 0
         datasets = ODSCatalogApi.datasets_meta_request(start)['datasets']
         for dataset in datasets:
             dataset_id = dataset['datasetid']
