@@ -19,6 +19,22 @@ def hasNoNumbers(value):
     return False
 
 
+def semantize_dataset(dataset_id):
+    # Retrieve data and metadatas from the dataset that will be used for Ontology matching.
+    dataset = ODSCatalogApi.dataset_meta_request(dataset_id)
+    dataset_title = dataset['metas']['title']
+    dataset_fields = []
+    for field in dataset['fields']:
+        dataset_fields.append(field['label'])
+    records = ODSDatasetApi.dataset_records_request(dataset_id, 2)['records']
+    # Candidate correspondances to be confirmed by a user.
+    candidate = {}
+    search_candidate(candidate, dataset_title, dataset_fields, records)
+
+    with open('results/{}.json'.format(dataset_id), 'w') as outfile:
+        json.dump(candidate, outfile, indent=4)
+
+
 def stat_datasets(dataset_id):
     # First dataset (field_name with property)
     try:
@@ -28,14 +44,16 @@ def stat_datasets(dataset_id):
     dataset = ODSCatalogApi.dataset_meta_request(dataset_id)
     for field in dataset['fields']:
         field = field['name']
-        if field not in result:
+        record_id = "{}{}".format(dataset_id.encode('utf-8'), field.encode('utf-8'))
+        if record_id not in result:
             lov_results = LovApi.term_request(field, term_type='property')["results"]
             if lov_results:
                 if lov_results[0]['score'] > LIMIT_SCORE_FIELD:
-                    result[field] = {}
-                    result[field]['field_name'] = field
-                    result[field]['property'] = lov_results[0]['uri']
-                    result[field]['score'] = lov_results[0]['score']
+                    result[record_id] = {}
+                    result[record_id]['dataset_id'] = dataset_id
+                    result[record_id]['field_name'] = field
+                    result[record_id]['property'] = lov_results[0]['uri']
+                    result[record_id]['score'] = lov_results[0]['score']
     with open('results/dataset1.json', 'w') as outfile:
         json.dump(result, outfile, indent=4)
     # Second dataset (dataset_id with field_name and class)
@@ -101,20 +119,7 @@ def main():
     dataset_id = args.dataset_id[0]
     mod = args.mod
     if mod == 0:
-        # Retrieve data and metadatas from the dataset that will be used for Ontology matching.
-        dataset = ODSCatalogApi.dataset_meta_request(dataset_id)
-        dataset_title = dataset['metas']['title']
-        dataset_fields = []
-        for field in dataset['fields']:
-            dataset_fields.append(field['label'])
-        records = ODSDatasetApi.dataset_records_request(dataset_id, 2)['records']
-        # Candidate correspondances to be confirmed by a user.
-        candidate = {}
-        search_candidate(candidate, dataset_title, dataset_fields, records)
-
-        with open('results/{}.json'.format(dataset_id), 'w') as outfile:
-            json.dump(candidate, outfile, indent=4)
-
+        semantize_dataset(dataset_id)
     elif mod == 1:
         stat_datasets(dataset_id)
 
