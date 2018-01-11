@@ -23,10 +23,6 @@ install dependencies
 pip install -r requirements.txt
 ```
 
-```bash
-python -m nltk.downloader popular
-```
-
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
 
@@ -36,3 +32,9 @@ python ontobot.py <dataset_id>
 replace `<dataset_id>` with the dataset_id of the dataset you want to semantize (only support DATA domain)
 
 > python ontobot.py roman-emperors@public
+
+Semantization result will be stored in the `results` folder
+
+#Clubhouse
+
+[Link](https://app.clubhouse.io/opendatasoft/epic/11656) to Clubhouse story
