@@ -16,24 +16,95 @@ class ChatBot(object):
         print Speech.instructions()
 
     def start(self):
-        for field, clss in self.candidate_correspondances['classes'].iteritems():
+        self.process_classes_candidate_correspondances()
+        self.process_properties_candidate_correspondances()
+
+    def process_classes_candidate_correspondances(self):
+        correspondance_type = 'classes'
+        while self.candidate_correspondances[correspondance_type]:
+            candidate = self.candidate_correspondances[correspondance_type].popitem()
+            field_name = candidate[0]
+            clss = candidate[1]
             candidate = SemanticEngine.get_class_uri(clss)
             if candidate:
-                user_response = raw_input(Speech.class_question(candidate['description'][0]))
-                while Speech.is_positive(user_response) is None:
+                user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
+                while not Speech.is_valid(user_response):
                     print Speech.bad_answer()
-                    user_response = raw_input(Speech.class_question(candidate['description'][0]))
+                    user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
                 if Speech.is_positive(user_response):
-                    self.confirm_correspondance('classes', field, candidate['uri'])
+                    self.confirm_class_correspondance(field_name, candidate['uri'], clss)
+                    print Speech.reply_to_positive()
                 elif not Speech.is_positive(user_response):
-                    self.deny_correspondance('classes', field)
-
+                    self.deny_class_correspondance(field_name, candidate['uri'], clss)
+                    print Speech.reply_to_negative()
+                else:
+                    self.postpone_class_correspondance(field_name, candidate['uri'], clss)
+                    print Speech.reply_to_neutral()
             else:
-                self.deny_correspondance('classes', field)
+                self.deny_class_correspondance(field_name)
 
-    def confirm_correspondance(self, correspondance_type, field, uri):
+    def process_properties_candidate_correspondances(self):
+        correspondance_type = 'properties'
+        while self.candidate_correspondances[correspondance_type]:
+            candidate = self.candidate_correspondances[correspondance_type].popitem()
+            field_name = candidate[0]
+            field_label = candidate[1]
+            candidate = SemanticEngine.get_property_uri(field_label)
+            if candidate:
+                for field, association in self.confirmed_correspondances['classes'].iteritems():
+                    associated_class = association['class']
+                    user_response = raw_input(Speech.property_question(field_name, candidate['description'][0], associated_class))
+                    while not Speech.is_valid(user_response):
+                        print Speech.bad_answer()
+                        user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
+                    if Speech.is_positive(user_response):
+                        self.confirm_property_correspondance(field_name, candidate['uri'], associated_class, field)
+                        print Speech.reply_to_positive()
+                        break
+                    elif not Speech.is_positive(user_response):
+                        self.deny_property_correspondance(field_name, candidate['uri'], associated_class, field)
+                        print Speech.reply_to_negative()
+                    else:
+                        self.postpone_property_correspondance(field_name, candidate['uri'], associated_class, field)
+                        print Speech.reply_to_neutral()
+            else:
+                self.deny_property_correspondance(field_name)
+
+    def confirm_class_correspondance(self, field, uri, clss):
+        correspondance_type = 'classes'
         self.confirmed_correspondances[correspondance_type][field] = {}
         self.confirmed_correspondances[correspondance_type][field]['uri'] = uri
+        self.confirmed_correspondances[correspondance_type][field]['class'] = clss
 
-    def deny_correspondance(self, correspondance_type, field):
-        self.denied_correspondances[correspondance_type][field] = self.candidate_correspondances[correspondance_type][field]
+    def deny_class_correspondance(self, field, uri=None, clss=None):
+        correspondance_type = 'classes'
+        self.denied_correspondances[correspondance_type][field] = {}
+        self.denied_correspondances[correspondance_type][field]['uri'] = uri
+        self.denied_correspondances[correspondance_type][field]['class'] = clss
+
+    def postpone_class_correspondance(self, field, uri, clss):
+        correspondance_type = 'classes'
+        self.awaiting_correspondances[correspondance_type][field] = {}
+        self.awaiting_correspondances[correspondance_type][field]['uri'] = uri
+        self.awaiting_correspondances[correspondance_type][field]['class'] = clss
+
+    def confirm_property_correspondance(self, field, uri, associated_class, associated_field):
+        correspondance_type = 'properties'
+        self.confirmed_correspondances[correspondance_type][field] = {}
+        self.confirmed_correspondances[correspondance_type][field]['uri'] = uri
+        self.confirmed_correspondances[correspondance_type][field]['associated_class'] = associated_class
+        self.confirmed_correspondances[correspondance_type][field]['associated_field'] = associated_field
+
+    def deny_property_correspondance(self, field, uri=None, associated_class=None, associated_field=None):
+        correspondance_type = 'properties'
+        self.denied_correspondances[correspondance_type][field] = {}
+        self.denied_correspondances[correspondance_type][field]['uri'] = uri
+        self.denied_correspondances[correspondance_type][field]['associated_class'] = associated_class
+        self.denied_correspondances[correspondance_type][field]['associated_field'] = associated_field
+
+    def postpone_property_correspondance(self, field, uri, associated_class, associated_field):
+        correspondance_type = 'properties'
+        self.awaiting_correspondances[correspondance_type][field] = {}
+        self.awaiting_correspondances[correspondance_type][field]['uri'] = uri
+        self.awaiting_correspondances[correspondance_type][field]['associated_class'] = associated_class
+        self.awaiting_correspondances[correspondance_type][field]['associated_field'] = associated_field

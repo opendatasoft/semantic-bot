@@ -14,6 +14,10 @@ Ontologies can be created for every area of concern and by everyone using RDF (R
 # LOV (Linked Open Vocabularies)
 LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
 
+# DandelionApi
+Dandelion is a web service that proposes named entity recognition as an API. This service work with a semantic version of wikipedia (DBpedia).
+Dandelion is used by the chatbot to extract classes from record values.
+
 # Prelude
 Assuming you already have `python` and `pip`
 

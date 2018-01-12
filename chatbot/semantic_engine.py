@@ -59,7 +59,7 @@ def get_class_uri(clss):
     lov_results = LovApi.term_request(clss, term_type='class')["results"]
     if lov_results:
         if lov_results[0]['score'] > LIMIT_SCORE_CLASS:
-            response['uri'] = lov_results[0]['uri']
+            response['uri'] = lov_results[0]['uri'][0]
             if lov_results[0]['highlight']:
                 response['description'] = lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]]
             else:

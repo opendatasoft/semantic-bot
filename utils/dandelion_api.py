@@ -11,9 +11,9 @@ class QueryParameterMissing(Exception):
     pass
 
 
-def entity_types_request(query):
+def entity_types_request(query, lang='en'):
     if query:
-        params = {'text': query, 'include': 'types', 'token': TOKEN}
+        params = {'text': query, 'lang': lang, 'include': 'types', 'token': TOKEN}
         request = requests.get(ENTITY_EXTRACTION_URL, params, timeout=Requester.get_timeout())
         if request.status_code != requests.codes.bad_request:
             request.raise_for_status
