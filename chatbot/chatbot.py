@@ -63,7 +63,6 @@ class ChatBot(object):
                 for field, association in self.confirmed_correspondances['classes'].iteritems():
                     associated_class = association['class']
                     if field_name in self.learned_denied_correspondances:
-                        # NE MARCHE PAS (LEARNED DICTIONARY)
                         if associated_class in self.learned_denied_correspondances[field_name]:
                             logging.info('BOT:field {} property {} linked to {} DENIED cause: LEARNED'.format(field_name, candidate['description'][0], associated_class))
                             continue
