@@ -18,15 +18,15 @@ def semantize_dataset(dataset_id):
         chatbot = ChatBot(ods_dataset_metas, ods_dataset_records)
     chatbot.start()
     with open('learned_denied_correspondances.json', 'w') as outfile:
-        json.dump(chatbot.learned_denied_correspondances, outfile)
+        json.dump(chatbot.learned_denied_correspondances, outfile, indent=4)
     with open('results/chatbot_results.json', 'w') as outfile:
-        json.dump(chatbot.candidate_correspondances, outfile)
+        json.dump(chatbot.candidate_correspondances, outfile, indent=4)
         outfile.write("\n")
-        json.dump(chatbot.confirmed_correspondances, outfile)
+        json.dump(chatbot.confirmed_correspondances, outfile, indent=4)
         outfile.write("\n")
-        json.dump(chatbot.awaiting_correspondances, outfile)
+        json.dump(chatbot.awaiting_correspondances, outfile, indent=4)
         outfile.write("\n")
-        json.dump(chatbot.denied_correspondances, outfile)
+        json.dump(chatbot.denied_correspondances, outfile, indent=4)
 
 
 def main():
