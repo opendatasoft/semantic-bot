@@ -39,17 +39,17 @@ replace `<dataset_id>` with the dataset_id of the dataset you want to semantize 
 
 Semantization result will be stored in the `results` folder
 
-#Clubhouse
+# Clubhouse
 
 [Link](https://app.clubhouse.io/opendatasoft/epic/11656) to Clubhouse story
 
-#How it works?
-##1 Class matching
+# How it works?
+## 1 Class matching
 Dandelion API is used to find classes corresponding to dataset's fields. N-first values of each fields are analysed by Dandelion API and corresponding classes name are returned. Each class name is search using Class LOV API. Class LOV API returns class URI and class description. Those informations are stored in chatbot candidate correspondances dict.
 
 Using class description and field name, class/field associations are proposed to the user. A positive answer dispatch correspondance in chatbot's confirmed correspondance dict. A negative answer dispatch it in denied correspondance dict. Empty answer dispatch it in awaiting correspondance dict.
 
-##2 Property matching
+## 2 Property matching
 The goal of this step is to associate properties to already confirmed classes (e.g. full name of a Person?, full name of a car?, etc.)
 Property LOV API is used to retrieve find associate field_name to property and to retrieve corresponding URI and description.
 
