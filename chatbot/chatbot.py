@@ -1,11 +1,16 @@
 import conversation_engine as Speech
 import semantic_engine as SemanticEngine
 
+import logging
+
+logging.basicConfig(filename='info.log', level=logging.INFO)
+
 
 class ChatBot(object):
 
-    def __init__(self, ods_dataset_metas, ods_dataset_records):
+    def __init__(self, ods_dataset_metas, ods_dataset_records, learned_denied_correspondances={}):
         self.introduction()
+        self.learned_denied_correspondances = learned_denied_correspondances
         self.confirmed_correspondances = {'classes': {}, 'properties': {}}
         self.candidate_correspondances = SemanticEngine.init_correspondances_set(ods_dataset_metas, ods_dataset_records)
         self.awaiting_correspondances = {'classes': {}, 'properties': {}}
@@ -33,15 +38,19 @@ class ChatBot(object):
                     user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
                 if Speech.is_positive(user_response):
                     self.confirm_class_correspondance(field_name, candidate['uri'], clss)
+                    logging.info('USER:field {} of type {} ACCEPTED'.format(field_name, clss))
                     print Speech.reply_to_positive()
                 elif not Speech.is_positive(user_response):
                     self.deny_class_correspondance(field_name, candidate['uri'], clss)
+                    logging.info('USER:field {} of type {} DENIED'.format(field_name, clss))
                     print Speech.reply_to_negative()
                 else:
                     self.postpone_class_correspondance(field_name, candidate['uri'], clss)
+                    logging.info('USER:field {} of type {} POSTPONED'.format(field_name, clss))
                     print Speech.reply_to_neutral()
             else:
                 self.deny_class_correspondance(field_name)
+                logging.info('BOT:field {} of type {} DENIED cause: LOV SCORE TOO LOW'.format(field_name, clss))
 
     def process_properties_candidate_correspondances(self):
         correspondance_type = 'properties'
@@ -53,6 +62,11 @@ class ChatBot(object):
             if candidate:
                 for field, association in self.confirmed_correspondances['classes'].iteritems():
                     associated_class = association['class']
+                    if field_name in self.learned_denied_correspondances:
+                        # NE MARCHE PAS (LEARNED DICTIONARY)
+                        if associated_class in self.learned_denied_correspondances[field_name]:
+                            logging.info('BOT:field {} property {} linked to {} DENIED cause: LEARNED'.format(field_name, candidate['description'][0], associated_class))
+                            continue
                     user_response = raw_input(Speech.property_question(field_name, candidate['description'][0], associated_class))
                     while not Speech.is_valid(user_response):
                         print Speech.bad_answer()
@@ -60,15 +74,21 @@ class ChatBot(object):
                     if Speech.is_positive(user_response):
                         self.confirm_property_correspondance(field_name, candidate['uri'], associated_class, field)
                         print Speech.reply_to_positive()
+                        logging.info('USER:field {} property {} linked to {} ACCEPTED'.format(field_name, candidate['description'][0], associated_class))
                         break
                     elif not Speech.is_positive(user_response):
                         self.deny_property_correspondance(field_name, candidate['uri'], associated_class, field)
                         print Speech.reply_to_negative()
+                        logging.info('USER:field {} property {} linked to {} DENIED'.format(field_name, candidate['description'][0], associated_class))
+                        if field_name not in self.learned_denied_correspondances:
+                            self.learned_denied_correspondances[field_name] = []
+                        self.learned_denied_correspondances[field_name].append(associated_class)
                     else:
                         self.postpone_property_correspondance(field_name, candidate['uri'], associated_class, field)
                         print Speech.reply_to_neutral()
             else:
                 self.deny_property_correspondance(field_name)
+                logging.info('BOT:field {} property DENIED cause: LOV SCORE'.format(field_name))
 
     def confirm_class_correspondance(self, field, uri, clss):
         correspondance_type = 'classes'

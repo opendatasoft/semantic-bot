@@ -24,13 +24,13 @@ PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicat
                       "I think that the field {field_name} represents {predicate_description} and is linked to {associated_class}.",
                       "Does your field {field_name} is {predicate_description} of {associated_class}?"]
 
-POSITIVE_ANSWER = ["yes", "yep", "ok"]
+POSITIVE_ANSWER = ["yes", "yep", "ok", "y"]
 
 POSITIVE_REPLY = ["Perfect, I added this information to your dataset.",
                   "Thanks, this information is added to your dataset.",
                   "Good. This was added to your dataset"]
 
-NEGATIVE_ANSWER = ["no", "nop"]
+NEGATIVE_ANSWER = ["no", "nop", "n"]
 
 NEGATIVE_REPLY = ["Okay, lets forget about that.",
                   "Ok, i will try to find something better.",
