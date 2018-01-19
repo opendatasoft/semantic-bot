@@ -3,6 +3,7 @@ import json
 
 import utils.ods_catalog_api as ODSCatalogApi
 import utils.ods_dataset_api as ODSDatasetApi
+import utils.rml_serializer as RMLSerializer
 from chatbot.chatbot import ChatBot
 
 
@@ -19,14 +20,8 @@ def semantize_dataset(dataset_id):
     chatbot.start()
     with open('learned_denied_correspondances.json', 'w') as outfile:
         json.dump(chatbot.learned_denied_correspondances, outfile, indent=4)
-    with open('results/chatbot_results.json', 'w') as outfile:
-        json.dump(chatbot.candidate_correspondances, outfile, indent=4)
-        outfile.write("\n")
-        json.dump(chatbot.confirmed_correspondances, outfile, indent=4)
-        outfile.write("\n")
-        json.dump(chatbot.awaiting_correspondances, outfile, indent=4)
-        outfile.write("\n")
-        json.dump(chatbot.denied_correspondances, outfile, indent=4)
+    with open('results/chatbot_results.rml', 'w') as outfile:
+        outfile.write(RMLSerializer.serialize(chatbot.confirmed_correspondances))
 
 
 def main():
