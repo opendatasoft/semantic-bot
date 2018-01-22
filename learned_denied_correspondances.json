@@ -1,7 +1,4 @@
 {
-    "reign_start": [
-        "PopulatedPlace"
-    ], 
     "index": [
         "PopulatedPlace", 
         "Person"
@@ -16,10 +13,6 @@
     "name": [
         "PopulatedPlace"
     ], 
-    "cause": [
-        "PopulatedPlace", 
-        "Person"
-    ], 
     "notes": [
         "PopulatedPlace", 
         "Person"
@@ -29,6 +22,12 @@
         "Person"
     ], 
     "dynasty": [
+        "PopulatedPlace"
+    ], 
+    "name_full": [
+        "PopulatedPlace"
+    ], 
+    "image": [
         "PopulatedPlace"
     ], 
     "birth_prv": [
@@ -43,10 +42,11 @@
     "birth": [
         "PopulatedPlace"
     ], 
-    "image": [
-        "PopulatedPlace"
+    "cause": [
+        "PopulatedPlace", 
+        "Person"
     ], 
-    "name_full": [
+    "reign_start": [
         "PopulatedPlace"
     ], 
     "birth_cty": [
