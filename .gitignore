@@ -1,4 +1,4 @@
-results/
+learned_denied_correspondances.json
 *.DS_Store
 
 # Byte-compiled / optimized / DLL files

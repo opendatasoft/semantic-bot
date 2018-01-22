@@ -1,2 +1,4 @@
 beautifulsoup4==4.6.0
-rdflib
+html5lib==0.999999999
+rdflib==4.2.2
+requests==2.18.4
