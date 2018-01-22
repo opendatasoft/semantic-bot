@@ -50,7 +50,6 @@ def get_property_uri(prop):
         if lov_results[0]['score'] > LIMIT_SCORE_FIELD:
             response['uri'] = lov_results[0]['uri'][0]
             if lov_results[0]['highlight']:
-                print lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0]
                 cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
             return response
@@ -64,8 +63,7 @@ def get_class_uri(clss):
         if lov_results[0]['score'] > LIMIT_SCORE_CLASS:
             response['uri'] = lov_results[0]['uri'][0]
             if lov_results[0]['highlight']:
-                print lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0]
-                cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
+                cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text()
                 response['description'] = cleaned_description
             else:
                 response['description'] = clss

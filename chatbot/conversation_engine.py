@@ -1,5 +1,5 @@
 import random
-from bs4 import BeautifulSoup
+from colorama import Fore, Style
 
 GREETINGS = ["Hello,",
              "Hi,",
@@ -16,7 +16,7 @@ Can you answer with 'yes', 'no' or an empty answer"""]
 CLASS_QUESTIONS = ["It seems that field {field_name} describes {class_description}? Is it true?",
                    "Looks like the field {field_name} represents {class_description}. Am I right?",
                    "Is the field {field_name} in your dataset describes {class_description}?",
-                   "Does the field {field_name} in your dataset represents {class_description}?",
+                   "Does the field {field_name}{Style.RESET_ALL} in your dataset represents {class_description}?",
                    "Does your dataset contains {class_description} in the field {field_name}?"]
 
 PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicate_description} and is linked to {associated_class}? Is it true?",
@@ -57,10 +57,15 @@ def bad_answer():
 
 
 def class_question(field_name, class_description):
+    field_name = "{}{}{}".format(Fore.GREEN, field_name, Style.RESET_ALL)
+    class_description = "{}{}{}".format(Fore.GREEN, class_description, Style.RESET_ALL)
     return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description)
 
 
 def property_question(field_name, predicate_description, associated_class):
+    field_name = "{}{}{}".format(Fore.GREEN, field_name, Style.RESET_ALL)
+    predicate_description = "{}{}{}".format(Fore.GREEN, predicate_description, Style.RESET_ALL)
+    associated_class = "{}{}{}".format(Fore.GREEN, associated_class, Style.RESET_ALL)
     return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, associated_class=associated_class)
 
 
