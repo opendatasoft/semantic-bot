@@ -32,10 +32,10 @@ class ChatBot(object):
             clss = candidate[1]
             candidate = SemanticEngine.get_class_uri(clss)
             if candidate:
-                user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
+                user_response = raw_input(Speech.class_question(field_name, candidate['description']))
                 while not Speech.is_valid(user_response):
                     print Speech.bad_answer()
-                    user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
+                    user_response = raw_input(Speech.class_question(field_name, candidate['description']))
                 if Speech.is_positive(user_response):
                     self.confirm_class_correspondance(field_name, candidate['uri'], clss)
                     logging.info('USER:field {} of type {} ACCEPTED'.format(field_name, clss))
@@ -64,21 +64,21 @@ class ChatBot(object):
                     associated_class = association['class']
                     if field_name in self.learned_denied_correspondances:
                         if associated_class in self.learned_denied_correspondances[field_name]:
-                            logging.info('BOT:field {} property {} linked to {} DENIED cause: LEARNED'.format(field_name, candidate['description'][0], associated_class))
+                            logging.info('BOT:field {} property {} linked to {} DENIED cause: LEARNED'.format(field_name, candidate['description'], associated_class))
                             continue
-                    user_response = raw_input(Speech.property_question(field_name, candidate['description'][0], associated_class))
+                    user_response = raw_input(Speech.property_question(field_name, candidate['description'], associated_class))
                     while not Speech.is_valid(user_response):
                         print Speech.bad_answer()
-                        user_response = raw_input(Speech.class_question(field_name, candidate['description'][0]))
+                        user_response = raw_input(Speech.class_question(field_name, candidate['description']))
                     if Speech.is_positive(user_response):
                         self.confirm_property_correspondance(field_name, candidate['uri'], associated_class, field)
                         print Speech.reply_to_positive()
-                        logging.info('USER:field {} property {} linked to {} ACCEPTED'.format(field_name, candidate['description'][0], associated_class))
+                        logging.info('USER:field {} property {} linked to {} ACCEPTED'.format(field_name, candidate['description'], associated_class))
                         break
                     elif not Speech.is_positive(user_response):
                         self.deny_property_correspondance(field_name, candidate['uri'], associated_class, field)
                         print Speech.reply_to_negative()
-                        logging.info('USER:field {} property {} linked to {} DENIED'.format(field_name, candidate['description'][0], associated_class))
+                        logging.info('USER:field {} property {} linked to {} DENIED'.format(field_name, candidate['description'], associated_class))
                         if field_name not in self.learned_denied_correspondances:
                             self.learned_denied_correspondances[field_name] = []
                         self.learned_denied_correspondances[field_name].append(associated_class)

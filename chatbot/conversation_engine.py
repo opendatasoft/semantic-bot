@@ -57,13 +57,11 @@ def bad_answer():
 
 
 def class_question(field_name, class_description):
-    cleaned_description = BeautifulSoup(class_description, "html5lib").get_text()
-    return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=cleaned_description)
+    return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description)
 
 
 def property_question(field_name, predicate_description, associated_class):
-    cleaned_description = BeautifulSoup(predicate_description, "html5lib").get_text()
-    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=cleaned_description, associated_class=associated_class)
+    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, associated_class=associated_class)
 
 
 def is_valid(answer):
