@@ -21,7 +21,7 @@ def semantize_dataset(dataset_id):
     with open('learned_denied_correspondances.json', 'w') as outfile:
         json.dump(chatbot.learned_denied_correspondances, outfile, indent=4)
     with open('results/{}.rml'.format(dataset_id), 'w') as outfile:
-        outfile.write(RMLSerializer.serialize(chatbot.confirmed_correspondances))
+        outfile.write(RMLSerializer.serialize(chatbot.confirmed_correspondances, dataset_id))
 
 
 def main():
