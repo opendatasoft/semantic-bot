@@ -16,12 +16,12 @@ Can you answer with 'yes', 'no' or an empty answer"""]
 CLASS_QUESTIONS = ["It seems that field {field_name} describes {class_description}? Is it true?",
                    "Looks like the field {field_name} represents {class_description}. Am I right?",
                    "Is the field {field_name} in your dataset describes {class_description}?",
-                   "Does the field {field_name}{Style.RESET_ALL} in your dataset represents {class_description}?",
+                   "Does the field {field_name} in your dataset represents {class_description}?",
                    "Does your dataset contains {class_description} in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicate_description} and is linked to {associated_class}? Is it true?",
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicate_description} of {associated_class}? Is it true?",
                       "Is the field {field_name} represents {predicate_description} and is an attribute of {associated_class}?",
-                      "I think that the field {field_name} represents {predicate_description} and is linked to {associated_class}.",
+                      "I think that the field {field_name} represents {predicate_description} of {associated_class}.",
                       "Does your field {field_name} is {predicate_description} of {associated_class}?"]
 
 POSITIVE_ANSWER = ["yes", "yep", "ok", "y"]
@@ -42,6 +42,8 @@ NEUTRAL_ANSWER = ["idk", "don't know", "dont know", "", " "]
 NEUTRAL_REPLY = ["Okay, We will see that later.",
                  "I will put this one apart.",
                  "Ok, maybe later"]
+
+SALUTATION = ["I have no more questions to ask.\nYour mapping have benn updated.\nHave a good day!"]
 
 
 def greeting():
@@ -99,3 +101,7 @@ def reply_to_negative():
 
 def reply_to_neutral():
     return random.choice(NEUTRAL_REPLY)
+
+
+def salutation():
+    return random.choice(SALUTATION)

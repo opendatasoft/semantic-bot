@@ -23,6 +23,7 @@ class ChatBot(object):
     def start(self):
         self.process_classes_candidate_correspondances()
         self.process_properties_candidate_correspondances()
+        print Speech.salutation()
 
     def process_classes_candidate_correspondances(self):
         correspondance_type = 'classes'
