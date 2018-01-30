@@ -4,18 +4,18 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static "chat/chat.css" %}">
-    <script src="https://unpkg.com/vue"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Chatbot semantize</title>
+    <script src="https://unpkg.com/vue"></script>
 </head>
 <body class="Global-container">
-<div class="container" id="app">
+<div class="container">
   <div class="row"></div>
   <div class="row">
     <div class="col-lg-2">
     </div>
-    <div class="col-lg-8 Chat-container">
+    <div class="col-lg-8 Chat-container" id="app">
       <div class="Messages-container">
         <div v-for="msg in messages">
           <div v-if="msg.type == 'bot'" class="row">
@@ -42,7 +42,7 @@
           <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" v-on:click="user_message('Yes.')" class="btn btn-secondary">Yes</button>
             <button type="button" v-on:click="user_message('No.')" class="btn btn-secondary">No</button>
-            <button type="button" v-on:click="user_message('I don't know.')" class="btn btn-secondary">don't know</button>
+            <button type="button" v-on:click="user_message('I do not know.')" class="btn btn-secondary">don't know</button>
           </div>
           </div>
           <div class="col-lg-4"></div>
@@ -53,27 +53,27 @@
     </div>
   </div>
 </div>
+<script>
+var chat = new Vue({
+  el: '#app',
 
-  <script>
-  new Vue({
-    el: '#app',
-    data: {
-      dataset_id: 'Welcome to My Journal',
-      messages: [
-        { text: 'Bot message', type: 'bot' },
-        { text: 'User message', type: 'user' },
-        { text: 'Bot message', type: 'bot' }
-      ]
-    },
-    methods: {
-      user_message: function (message) {
-        // `this` fait référence à l'instance de Vue à l'intérieur de `methods`
-      }
+  data: {
+    dataset_id: 'Welcome to My Journal',
+    messages: [
+      { text: 'Bot message', type: 'bot' },
+      { text: 'User message', type: 'user' },
+      { text: 'Bot message', type: 'bot' }
+    ]
+  },
+  methods: {
+    user_message: function (message) {
+      return 1
     }
-  })
-  </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  }
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
