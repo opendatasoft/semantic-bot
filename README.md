@@ -21,6 +21,8 @@ Dandelion is used by the chatbot to extract classes from record values.
 # Prelude
 Assuming you already have `python` and `pip`
 
+create a new virtualenv.
+
 install dependencies
 
 ```bash
@@ -31,13 +33,26 @@ pip install -r requirements.txt
 Navigate to ontology-mapping-chatbot folder and execute:
 
 ```bash
-python ontobot.py <dataset_id>
+python ontobot.py roman-emperors@public
 ```
-replace `<dataset_id>` with the dataset_id of the dataset you want to semantize (only support DATA domain)
 
-> python ontobot.py roman-emperors@public
+App should be running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+Go on [http://127.0.0.1:8000/chatbot/{dataset-id}](http://127.0.0.1:8000/dataset-id) and replace `dataset-id` with the Data dataset id you want to semantize.
+
+example: [http://127.0.0.1:8000/chatbot/roman-emperors@public/](http://127.0.0.1:8000/chatbot/roman-emperors@public/)
 
 Semantization result will be stored in the `results` folder
+
+# API
+
+An API is available to retrieve semantic correspondances of a specific dataset:
+
+`/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondances (powered by Dandelion API).
+
+`/api/{dataset-id}/correspondances/properties` to retrieve field name/properties correspondances (powered by LOV API).
+
+`/api/{dataset-id}/correspondances/` to retrieve both correspondances.
 
 # Clubhouse
 
