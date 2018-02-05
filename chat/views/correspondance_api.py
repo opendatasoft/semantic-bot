@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+
 from django.http.response import HttpResponse
 from django.views.decorators.http import require_http_methods
 
@@ -10,11 +10,6 @@ import json
 import utils.ods_catalog_api as ODSCatalogApi
 import utils.ods_dataset_api as ODSDatasetApi
 import chatbot.semantic_engine as SemanticEngine
-
-
-@require_http_methods(['GET'])
-def semantize(request, dataset_id):
-    return render(request, 'chatbot_semantize.html', {})
 
 
 @require_http_methods(['GET'])

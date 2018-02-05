@@ -15,9 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from chat.views import semantize, get_correspondances, get_classes_correspondances, get_properties_correspondances
+from chat.views.conversation_api import get_class_question, get_property_question, get_greeting, get_instructions
+from chat.views.conversation_api import get_positive_answer, get_neutral_answer, get_negative_answer, get_salutation
+from chat.views.correspondance_api import get_correspondances, get_classes_correspondances, get_properties_correspondances
+from chat.views.chat import semantize
 
 urlpatterns = [
+    url(r'^api/conversation/question/class', get_class_question, name='get_class_question'),
+    url(r'^api/conversation/question/property', get_property_question, name='get_property_question'),
+    url(r'^api/conversation/greeting', get_greeting, name='get_greeting'),
+    url(r'^api/conversation/instructions', get_instructions, name='get_instructions'),
+    url(r'^api/conversation/answer/positive', get_positive_answer, name='get_positive_answer'),
+    url(r'^api/conversation/answer/neutral', get_neutral_answer, name='get_neutral_answer'),
+    url(r'^api/conversation/answer/negative', get_negative_answer, name='get_negative_answer'),
+    url(r'^api/conversation/salutation', get_salutation, name='get_salutation'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/classes', get_classes_correspondances, name='get_dataset_classes_correspondances'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/properties', get_properties_correspondances, name='get_dataset_classes_correspondances'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances', get_correspondances, name='get_dataset_correspondances'),

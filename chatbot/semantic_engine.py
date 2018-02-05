@@ -31,19 +31,27 @@ def get_dataset_classes(ods_dataset_records):
                         candidates_classes[field].extend(types)
                     else:
                         candidates_classes[field] = types
+    correspondances = []
     for field, classes in candidates_classes.iteritems():
-        candidates_classes[field] = Counter(classes).most_common(1)[0][0]
-    return candidates_classes
+        common_class = Counter(classes).most_common(1)[0][0]
+        class_correspondance = get_class_correspondance(common_class)
+        if class_correspondance:
+            class_correspondance['field_name'] = field
+            correspondances.append(class_correspondance)
+    return correspondances
 
 
 def get_dataset_properties(ods_dataset_metas):
-    properties = {}
+    properties = []
     for field in ods_dataset_metas['fields']:
-        properties[field['name']] = field['label']
+        property_correspondance = get_property_correspondance(field['label'])
+        if property_correspondance:
+            property_correspondance['field_name'] = field['name']
+            properties.append(property_correspondance)
     return properties
 
 
-def get_property_uri(prop):
+def get_property_correspondance(prop):
     response = {'uri': '', 'description': ''}
     lov_results = LovApi.term_request(prop, term_type='property')["results"]
     if lov_results:
@@ -56,16 +64,14 @@ def get_property_uri(prop):
     return None
 
 
-def get_class_uri(clss):
-    response = {'uri': '', 'description': clss}
+def get_class_correspondance(clss):
+    response = {'uri': '', 'class': clss, 'description': clss}
     lov_results = LovApi.term_request(clss, term_type='class')["results"]
     if lov_results:
         if lov_results[0]['score'] > LIMIT_SCORE_CLASS:
             response['uri'] = lov_results[0]['uri'][0]
             if lov_results[0]['highlight']:
-                cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text()
+                cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
-            else:
-                response['description'] = clss
             return response
     return None

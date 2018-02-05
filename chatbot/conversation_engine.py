@@ -1,5 +1,4 @@
 import random
-from colorama import Fore, Style
 
 GREETINGS = ["Hello,",
              "Hi,",
@@ -7,8 +6,8 @@ GREETINGS = ["Hello,",
              "Welcome,"]
 
 INSTRUCTIONS = ["""I will ask you questions about your dataset.
-You will be able to communicate with me by answering with 'yes' or 'no'.
-You can also pass the question with an empty answer."""]
+You will be able to communicate with me by answering with the
+3 buttons in the bottom."""]
 
 BAD_ANSWER = ["""Sorry, I didn't understood your answer.
 Can you answer with 'yes', 'no' or an empty answer"""]
@@ -59,15 +58,10 @@ def bad_answer():
 
 
 def class_question(field_name, class_description):
-    field_name = "{}{}{}".format(Fore.GREEN, field_name, Style.RESET_ALL)
-    class_description = "{}{}{}".format(Fore.GREEN, class_description, Style.RESET_ALL)
     return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description)
 
 
 def property_question(field_name, predicate_description, associated_class):
-    field_name = "{}{}{}".format(Fore.GREEN, field_name, Style.RESET_ALL)
-    predicate_description = "{}{}{}".format(Fore.GREEN, predicate_description, Style.RESET_ALL)
-    associated_class = "{}{}{}".format(Fore.GREEN, associated_class, Style.RESET_ALL)
     return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, associated_class=associated_class)
 
 
