@@ -22,14 +22,14 @@
         <div v-for="msg in messages">
           <div v-if="msg.type == 'bot'" class="row">
             <div class="col-lg-1"></div>
-            <div class="col-lg-6 alert alert-secondary fadeInLeft">
+            <div class="col-lg-6 alert alert-bot fadeInLeft">
               <span v-html="msg.text"></span>
             </div>
             <div class="col-lg-5"></div>
           </div>
           <div v-else class="row">
             <div class="col-lg-5"></div>
-            <div class="col-lg-6 alert alert-primary fadeInRight">
+            <div class="col-lg-6 alert alert-user fadeInRight">
               <span v-html="msg.text"></span>
             </div>
             <div class="col-lg-1"></div>

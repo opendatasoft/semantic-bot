@@ -3,15 +3,18 @@
 }
 
 .Chat-container {
-  background:#F2F7F7;
+  background:#FCFFFF;
   border: 2px solid #ECF0F0;
   border-radius: 7px;
   margin: 70px 0;
   padding-top: 16px;
+  -webkit-box-shadow: 24px 7px 46px 7px rgba(0,0,0,0.31);
+  -moz-box-shadow: 24px 7px 46px 7px rgba(0,0,0,0.31);
+  box-shadow: 24px 7px 46px 7px rgba(0,0,0,0.31);
 }
 
 .Messages-container {
-  background:#FFFFFF;
+  background:#F2F7F7;
   border: 2px solid #ECF0F0;
   padding-top: 16px;
   height:500px;
@@ -23,18 +26,28 @@
   text-align: center;
 }
 
+.alert-bot {
+    color: #777777;
+    background-color: #FFFFFF;
+    border-color: #F2F7F7;
+}
+
+.alert-user {
+    color: #FFFFFF;
+    background-color: #5AD28C;
+    border-color: #dedede;
+}
+
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
 }
+
 ::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
-
-
-
 
 .fadeInLeft {
 -webkit-animation-name: fadeInLeft;
