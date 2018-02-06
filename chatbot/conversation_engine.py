@@ -1,5 +1,7 @@
 import random
 
+EMPHASIS = "<b>{}</b>"
+
 GREETINGS = ["Hello,",
              "Hi,",
              "greetings,",
@@ -7,7 +9,7 @@ GREETINGS = ["Hello,",
 
 INSTRUCTIONS = ["""I will ask you questions about your dataset.
 You will be able to communicate with me by answering with the
-3 buttons in the bottom."""]
+buttons in the bottom."""]
 
 BAD_ANSWER = ["""Sorry, I didn't understood your answer.
 Can you answer with 'yes', 'no' or an empty answer"""]
@@ -18,10 +20,14 @@ CLASS_QUESTIONS = ["It seems that field {field_name} describes {class_descriptio
                    "Does the field {field_name} in your dataset represents {class_description}?",
                    "Does your dataset contains {class_description} in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicate_description} of {associated_class}? Is it true?",
-                      "Is the field {field_name} represents {predicate_description} and is an attribute of {associated_class}?",
-                      "I think that the field {field_name} represents {predicate_description} of {associated_class}.",
-                      "Does your field {field_name} is {predicate_description} of {associated_class}?"]
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicate_description}. Is it true?",
+                      "Is the field {field_name} represents {predicate_description}.",
+                      "I think that the field {field_name} represents {predicate_description}.",
+                      "Does your field {field_name} is {predicate_description}?"]
+
+PROPERTY_CLASS_QUESTIONS = ["What entity should be associated with {predicate_description} represented by the field {field_name}?",
+                            "At which entity the field {field_name} (e.g. {predicate_description}) should be linked?",
+                            "Select an entity that can be associated to {predicate_description} in field {field_name}."]
 
 POSITIVE_ANSWER = ["yes", "yep", "ok", "y"]
 
@@ -42,7 +48,7 @@ NEUTRAL_REPLY = ["Okay, We will see that later.",
                  "I will put this one apart.",
                  "Ok, maybe later"]
 
-SALUTATION = ["I have no more questions to ask.\nYour mapping have benn updated.\nHave a good day!"]
+SALUTATION = ["I have no more questions to ask.\nYou will find your mapping in 'results' folder\nHave a good day!"]
 
 
 def greeting():
@@ -58,11 +64,21 @@ def bad_answer():
 
 
 def class_question(field_name, class_description):
+    field_name = EMPHASIS.format(field_name)
+    class_description = EMPHASIS.format(class_description)
     return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description)
 
 
-def property_question(field_name, predicate_description, associated_class):
-    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, associated_class=associated_class)
+def property_question(field_name, predicate_description):
+    field_name = EMPHASIS.format(field_name)
+    predicate_description = EMPHASIS.format(predicate_description)
+    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description)
+
+
+def property_class_question(field_name, predicate_description):
+    field_name = EMPHASIS.format(field_name)
+    predicate_description = EMPHASIS.format(predicate_description)
+    return random.choice(PROPERTY_CLASS_QUESTIONS).format(predicate_description=predicate_description, field_name=field_name)
 
 
 def is_valid(answer):

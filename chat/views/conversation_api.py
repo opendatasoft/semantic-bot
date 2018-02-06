@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 import json
 
 import chatbot.conversation_engine as ConversationEngine
+from api_errors import bad_format_correspondance
 
 
 @require_http_methods(['GET'])
@@ -92,8 +93,7 @@ def get_property_question(request):
         correspondance = json.loads(request.body)
         field_name = correspondance['field_name']
         predicate_description = correspondance['description']
-        associated_class = correspondance['associated_class']
-        message = {'text': ConversationEngine.property_question(field_name, predicate_description, associated_class)}
+        message = {'text': ConversationEngine.property_question(field_name, predicate_description)}
         response = HttpResponse(
             json.dumps(message),
             content_type='application/json')
@@ -103,10 +103,17 @@ def get_property_question(request):
     return response
 
 
-def bad_format_correspondance():
-    response = HttpResponse(
-        "Request format is not valid",
-        content_type='application/json',
-        status=400)
-    response['Access-Control-Allow-Origin'] = '*'
+@require_http_methods(['POST'])
+def get_property_class_question(request):
+    try:
+        correspondance = json.loads(request.body)
+        field_name = correspondance['field_name']
+        predicate_description = correspondance['description']
+        message = {'text': ConversationEngine.property_class_question(field_name, predicate_description)}
+        response = HttpResponse(
+            json.dumps(message),
+            content_type='application/json')
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
     return response

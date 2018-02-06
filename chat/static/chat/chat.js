@@ -1,40 +1,49 @@
 var chat = new Vue({
   el: '#chat-app',
   data: {
-    dataset_id: document.location.pathname,
+    dataset_id: get_dataset_id(),
     messages: [],
     correspondances: {},
     confirmed_correspondances: {'classes': [], 'properties': []},
     denied_correspondances: {'classes': [], 'properties': []},
     awaiting_correspondances: {'classes': [], 'properties': []},
-    awaiting_user: false,
     current_correspondance: {},
     current_correspondance_type: 'classes',
+    awaiting_user: false,
+    yes_no_questions: true,
   },
   mounted: function(){
-        this.bot_introduction();
+      this.bot_introduction();
+
   },
   methods: {
     push_user_message: function (message) {
       this.messages.push({
        text: message,
        type: 'user'
-      })
+     });
+    setTimeout(scroll_chat_to_bottom, 100);
     },
     push_bot_message: function (message) {
-      this.messages.push({
+      setTimeout(function(){
+       chat.messages.push({
        text: message,
        type: 'bot'
-     })
+      });
+      setTimeout(scroll_chat_to_bottom, 100);
+    }, 1000);
     },
     bot_introduction: function () {
       this.$http.get('/api/conversation/greeting').then(response => {
         this.push_bot_message(response.body['text']);
         this.$http.get('/api/conversation/instructions').then(response => {
           this.push_bot_message(response.body['text']);
-          this.next_semantize();
-        })
-      })
+          this.$http.get('/api/'+ this.dataset_id +'/correspondances').then(response => {
+            this.correspondances = response.body;
+            this.next_semantize();
+          });
+        });
+      });
     },
     next_semantize: function () {
       if (this.correspondances['classes'].length > 0) {
@@ -43,36 +52,89 @@ var chat = new Vue({
         this.$http.post('/api/conversation/question/class', this.current_correspondance).then(response => {
           this.push_bot_message(response.body['text']);
           this.awaiting_user = true;
-        })
+        });
+      } else if (this.correspondances['properties'].length > 0) {
+        this.current_correspondance_type = 'properties'
+        this.current_correspondance = this.correspondances['properties'].pop();
+        this.$http.post('/api/conversation/question/property', this.current_correspondance).then(response => {
+          this.push_bot_message(response.body['text']);
+          this.awaiting_user = true;
+        });
       } else {
-        console.log(this);
+        this.$http.post('/api/' + this.dataset_id +'/correspondances/mapping', this.confirmed_correspondances).then(response => {
+          this.$http.get('/api/conversation/salutation').then(response => {
+            this.push_bot_message(response.body['text']);
+          });
+        });
       }
     },
     user_input_yes: function () {
       if (this.awaiting_user) {
         this.push_user_message("Yes.");
-        this.awaiting_user = false;
-        this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-        this.next_semantize();
+        this.$http.get('/api/conversation/answer/positive').then(response => {
+          this.push_bot_message(response.body['text']);
+          this.awaiting_user = false;
+          if ((this.current_correspondance_type == 'properties') && (this.confirmed_correspondances['classes'].length > 0)) {
+            this.$http.post('/api/conversation/question/property-class', this.current_correspondance).then(response => {
+              this.push_bot_message(response.body['text']);
+              this.yes_no_questions = false;
+              this.awaiting_user = true;
+            });
+          } else {
+            this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+            setTimeout(function(){chat.next_semantize()},1500);
+          }
+        })
       }
     },
     user_input_idk: function () {
       if (this.awaiting_user) {
         this.push_user_message("I don't know.");
-        this.awaiting_user = false;
-        this.awaiting_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-        this.next_semantize();
+        this.$http.get('/api/conversation/answer/neutral').then(response => {
+          this.push_bot_message(response.body['text']);
+          this.awaiting_user = false;
+          this.awaiting_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+          setTimeout(function(){chat.next_semantize()},1500);
+        });
       }
     },
     user_input_no: function () {
       if (this.awaiting_user) {
         this.push_user_message("No.");
-        this.awaiting_user = false;
-        this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-        this.next_semantize();
+        this.$http.get('/api/conversation/answer/negative').then(response => {
+          this.push_bot_message(response.body['text']);
+          this.awaiting_user = false;
+          this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+          setTimeout(function(){chat.next_semantize()},1500);
+        });
+      }
+    },
+    user_input_property_class: function (associated_class) {
+      if ((this.awaiting_user) && (!this.yes_no_questions)) {
+        if (associated_class == null){
+          this.push_user_message('None of those');
+          this.$http.get('/api/conversation/answer/negative').then(response => {
+            this.push_bot_message(response.body['text']);
+            this.awaiting_user = false;
+            this.current_correspondance['associated_class'] = [];
+            this.current_correspondance['associated_field'] = [];
+            this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+            this.yes_no_questions = true;
+            setTimeout(function(){chat.next_semantize()},1500);
+          });
+        } else {
+          this.push_user_message(associated_class['class']);
+          this.$http.get('/api/conversation/answer/positive').then(response => {
+            this.push_bot_message(response.body['text']);
+            this.awaiting_user = false;
+            this.current_correspondance['associated_class'] = associated_class['class'];
+            this.current_correspondance['associated_field'] = associated_class['field_name'];
+            this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+            this.yes_no_questions = true;
+            setTimeout(function(){chat.next_semantize()},1500);
+          });
+        }
       }
     },
   },
 });
-
-chat.correspondances = {"classes": [{"description": "Company", "field_name": "verif_who", "uri": "http://vivoweb.org/ontology/core#Company", "class": "Company"}, {"description": "Person", "field_name": "dynasty", "uri": "http://xmlns.com/foaf/0.1/Person", "class": "Person"}, {"description": "PopulatedPlace", "field_name": "birth_cty", "uri": "http://dbpedia.org/ontology/PopulatedPlace", "class": "PopulatedPlace"}, {"description": "Person", "field_name": "name", "uri": "http://xmlns.com/foaf/0.1/Person", "class": "Person"}], "properties": [{"field_name": "reign_start", "uri": "http://dbpedia.org/ontology/startReign", "description": "start reign"}, {"field_name": "index", "uri": "http://d-nb.info/standards/elementset/gnd#thematicIndexNumericDesignationOfMusicalWork", "description": "Thematic index numeric designation of musical work"}, {"field_name": "verif_who", "uri": "http://purl.org/healthcarevocab/v1#VerificationFlag", "description": "VerificationFlag"}, {"field_name": "death", "uri": "http://dbpedia.org/ontology/deathPlace", "description": "death place"}, {"field_name": "name", "uri": "http://purl.org/ontology/wo/name", "description": "name"}, {"field_name": "name_full", "uri": "http://www.w3.org/2000/10/swap/pim/contact#fullName", "description": "fullName"}, {"field_name": "birth", "uri": "http://dbpedia.org/ontology/birthPlace", "description": "birth place"}, {"field_name": "dynasty", "uri": "http://simile.mit.edu/2003/10/ontologies/vraCore3#dynasty", "description": "dynasty"}, {"field_name": "rise", "uri": "http://www.disit.org/km4city/schema#moonrise", "description": "moonrise"}, {"field_name": "birth_prv", "uri": "http://dbpedia.org/ontology/birthPlace", "description": "birth place"}, {"field_name": "reign_end", "uri": "http://dbpedia.org/ontology/endReign", "description": "end reign"}, {"field_name": "era", "uri": "http://dbpedia.org/ontology/era", "description": "era"}, {"field_name": "image", "uri": "http://dbpedia.org/ontology/picture", "description": "Une image de quelque chose."}, {"field_name": "cause", "uri": "http://openprovenance.org/model/opmo#cause", "description": "cause"}, {"field_name": "notes", "uri": "http://dbpedia.org/ontology/notes", "description": "notes"}, {"field_name": "birth_cty", "uri": "http://dbpedia.org/ontology/city", "description": "city"}]}
