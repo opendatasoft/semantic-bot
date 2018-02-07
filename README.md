@@ -2,7 +2,17 @@
 
 Ontology Mapping ChatBot is a  semi-interactive ontology mapping algorithm. It provides an easy-to-use interface (Yes or No questions) in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
 
-# The curse word (Ontology)
+# Glossary
+
+## DandelionApi
+Dandelion is a web service that proposes named entity recognition as an API. This service work with a semantic version of wikipedia (DBpedia).
+Dandelion is used by the chatbot to extract classes from record values.
+It's not a free service. so we will need to have our own implementation.
+
+## LOV (Linked Open Vocabularies)
+LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
+
+## Ontology (The curse word)
 
 An `ontology` is a vocabulary defining the concepts and relationships used to describe an area of concern.
 It's composed of:
@@ -11,12 +21,9 @@ It's composed of:
 * `rules` (e.g. A person have a unique date of birth).
 Ontologies can be created for every area of concern and by everyone using RDF (Resource Description Framework), RDFS (RDF Schema) and OWL (Web Ontology Language).
 
-# LOV (Linked Open Vocabularies)
-LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
+## RML
 
-# DandelionApi
-Dandelion is a web service that proposes named entity recognition as an API. This service work with a semantic version of wikipedia (DBpedia).
-Dandelion is used by the chatbot to extract classes from record values.
+RML is a generic mapping language to describe multi-format to RDF transformations.
 
 # Prelude
 Assuming you already have `python` and `pip`
@@ -46,13 +53,41 @@ Semantization result will be stored in the `results` folder
 
 # API
 
-An API is available to retrieve semantic correspondances of a specific dataset:
+Chatbot is powered by an API exposed by this service:
 
-`/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondances (powered by Dandelion API).
+## Correspondances API
 
-`/api/{dataset-id}/correspondances/properties` to retrieve field name/properties correspondances (powered by LOV API).
+Correspondences are the semantic correspondences between a dataset's field and an ontology. Fields can be linked to classes (Car, Person, ...) or poroperties of class (Engine horsepower, full name, ...).
 
-`/api/{dataset-id}/correspondances/` to retrieve both correspondances.
+`/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondences (powered by Dandelion API).
+
+`/api/{dataset-id}/correspondances/properties` to retrieve field name/properties correspondences (powered by LOV API).
+
+`/api/{dataset-id}/correspondances/` to retrieve both correspondences.
+
+`/api/{dataset-id}/correspondances/mapping` to translate a set of correspondences into valid RML mapping file.
+
+## Conversation API
+
+Conversations API is used to translate possible correspondences into Human Readable questions.
+
+`/api/conversation/question/class` to ask question about a class/field correspondence.
+
+`/api/conversation/question/property` to ask question about a property/field correspondence.
+
+`/api/conversation/question/property-class` to ask question about a class/property correspondence.
+
+`/api/conversation/greeting` to welcome the user.
+
+`/api/conversation/instructions` instructions to use the chatbot.
+
+`/api/conversation/answer/positive` chatbot response to positive user input.
+
+`/api/conversation/answer/neutral` chatbot response to neutral user input.
+
+`/api/conversation/answer/negative` chatbot response to negative user input.
+
+`/api/conversation/salutation` to say goodbye to the user.
 
 # Clubhouse
 
