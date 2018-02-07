@@ -45,11 +45,11 @@ python ontobot.py roman-emperors@public
 
 App should be running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-Go on [http://127.0.0.1:8000/chatbot/{dataset-id}](http://127.0.0.1:8000/dataset-id) and replace `dataset-id` with the Data dataset id you want to semantize.
+Go on [http://127.0.0.1:8000/chatbot/{dataset-id}](http://127.0.0.1:8000/chatbot/dataset-id) and replace `dataset-id` with the Data dataset id you want to semantize.
 
 example: [http://127.0.0.1:8000/chatbot/roman-emperors@public/](http://127.0.0.1:8000/chatbot/roman-emperors@public/)
 
-Semantization result will be stored in the `results` folder
+Semantization result will be stored in the `results` folder in a file named results/{dataset-id}.rml
 
 # API
 
