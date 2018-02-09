@@ -1,10 +1,12 @@
 import requests
 
+from django.conf import settings
+
 import utils.requester as Requester
 
 ENTITY_EXTRACTION_URL = "https://api.dandelion.eu/datatxt/nex/v1"
-# just a free token to test api
-TOKEN = '820d18fd5e2a498eb4ebeec9c6c57325'
+# DANDELION_TOKEN should be in your local_settings.py
+DANDELION_TOKEN = settings.DANDELION_TOKEN
 
 
 class QueryParameterMissing(Exception):
@@ -13,7 +15,7 @@ class QueryParameterMissing(Exception):
 
 def entity_types_request(query, lang='en'):
     if query:
-        params = {'text': query, 'lang': lang, 'include': 'types', 'token': TOKEN}
+        params = {'text': query, 'lang': lang, 'include': 'types', 'token': DANDELION_TOKEN}
         request = requests.get(ENTITY_EXTRACTION_URL, params, timeout=Requester.get_timeout())
         if request.status_code != requests.codes.bad_request:
             request.raise_for_status

@@ -36,6 +36,14 @@ install dependencies
 pip install -r requirements.txt
 ```
 
+Create a free account on [Dandelion](https://dandelion.eu/), copy your API credential.
+into `chatbot_app/local_settings.py`:
+
+```python
+#DANDELION API CREDENTIALS
+DANDELION_TOKEN = "YOUR API CREDENTIAL"
+```
+
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
 
