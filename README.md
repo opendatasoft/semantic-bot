@@ -48,7 +48,7 @@ DANDELION_TOKEN = "YOUR API CREDENTIAL"
 Navigate to ontology-mapping-chatbot folder and execute:
 
 ```bash
-python ontobot.py roman-emperors@public
+python manage.py runserver
 ```
 
 App should be running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
