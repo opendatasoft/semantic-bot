@@ -41,6 +41,7 @@ pip install -r requirements.txt
 install `hdt` a python hdt file reader
 
 ```bash
+git clone --recursive https://github.com/Callidon/pyHDT
 cd pyHDT/
 python setup.py install
 ```

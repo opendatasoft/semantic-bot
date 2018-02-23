@@ -1,6 +1,3 @@
-import requests
-
-from django.conf import settings
 from hdt import HDTDocument
 
 DBPEDIA_RESOURCE_URI = "http://dbpedia.org/resource/{resource_name}"
