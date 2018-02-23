@@ -100,6 +100,10 @@ Conversations API is used to translate possible correspondences into Human Reada
 
 `/api/conversation/salutation` to say goodbye to the user.
 
+## Named Entity Recognition API
+
+`/api/ner?q=[query]&lang=[language]` returns the class of the term in the query.
+
 # Clubhouse
 
 [Link](https://app.clubhouse.io/opendatasoft/epic/11656) to Clubhouse story
