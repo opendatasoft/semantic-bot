@@ -44,10 +44,7 @@ install `hdt` a python hdt file reader
 cd pyHDT/
 python setup.py install
 ```
-
-download `hdt` version of DBPedia instance type dataset and copy .hdt and .index files here:
-
-`utils/dbpedia_dump/`
+download `hdt` version of DBPedia instance type dataset and copy .hdt and .index files in `/dbpedia_dump`
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:

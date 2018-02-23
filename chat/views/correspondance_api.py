@@ -17,7 +17,7 @@ from api_errors import bad_format_correspondance
 @require_http_methods(['GET'])
 def get_correspondances(request, dataset_id):
     ods_dataset_metas = ODSCatalogApi.dataset_meta_request(dataset_id)
-    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, 3)['records']
+    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, 50)['records']
     correspondances = SemanticEngine.init_correspondances_set(ods_dataset_metas, ods_dataset_records)
     response = HttpResponse(
         json.dumps(correspondances),
@@ -28,7 +28,7 @@ def get_correspondances(request, dataset_id):
 
 @require_http_methods(['GET'])
 def get_classes_correspondances(request, dataset_id):
-    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, 3)['records']
+    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, 50)['records']
     correspondances = SemanticEngine.get_dataset_classes(ods_dataset_records)
     response = HttpResponse(
         json.dumps(correspondances),
