@@ -2,7 +2,7 @@ from collections import Counter
 from bs4 import BeautifulSoup
 
 import utils.lov_api as LovApi
-import utils.dandelion_api as DandelionApi
+import utils.dbpedia_ner as DBPediaNER
 
 LIMIT_SCORE_FIELD = 0.5000000
 LIMIT_SCORE_CLASS = 0.5555555
@@ -25,7 +25,7 @@ def get_dataset_classes(ods_dataset_records):
     for record in ods_dataset_records:
         for field, value in record['fields'].iteritems():
             if hasNoNumbers(value):
-                types = DandelionApi.entity_types_request(value)
+                types = DBPediaNER.entity_types_request(value)
                 if types:
                     if field in candidates_classes:
                         candidates_classes[field].extend(types)
