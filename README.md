@@ -27,31 +27,24 @@ HDT (Header, Dictionary, Triples) is a compact data structure and binary seriali
 
 RML is a generic mapping language to describe multi-format to RDF transformations.
 
-# Prelude
-Assuming you already have `python`, `pip`, `gcc/clang` with c++11 support,
+# Installation
+Assuming you already have `python`, `pip`,
 
 create a new virtualenv.
 
-install dependencies
+install dependencies with pip (~2 minutes to install hdt)
 
 ```bash
 pip install -r requirements.txt
 ```
 
-install `hdt` a python hdt file reader
-
-```bash
-git clone --recursive https://github.com/Callidon/pyHDT
-cd pyHDT/
-python setup.py install
-```
 download `hdt` version of DBPedia instance type dataset and copy .hdt and .index files in `/dbpedia_dump`
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
 
 ```bash
-python ontobot.py roman-emperors@public
+python manage.py runserver
 ```
 
 App should be running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
