@@ -38,7 +38,7 @@ install dependencies with pip (~2 minutes to install hdt)
 pip install -r requirements.txt
 ```
 
-download `hdt` version of DBPedia instance type dataset and copy .hdt and .index files in `/dbpedia_dump`
+Download `hdt` version of DBPedia instance type dataset [here](https://eu.ftp.opendatasoft.com/bmoreau/chatbot_dbpedia_dump.zip) and override `/dbpedia_dump`
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
