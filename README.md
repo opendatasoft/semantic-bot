@@ -4,10 +4,9 @@ Ontology Mapping ChatBot is a  semi-interactive ontology mapping algorithm. It p
 
 # Glossary
 
-## DandelionApi
-Dandelion is a web service that proposes named entity recognition as an API. This service work with a semantic version of wikipedia (DBpedia).
-Dandelion is used by the chatbot to extract classes from record values.
-It's not a free service. so we will need to have our own implementation.
+## DBPedia
+DBpedia is wikipedia in RDF format with ontologies to describe resources.
+Chatbot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
 ## LOV (Linked Open Vocabularies)
 LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
@@ -21,28 +20,25 @@ It's composed of:
 * `rules` (e.g. A person have a unique date of birth).
 Ontologies can be created for every area of concern and by everyone using RDF (Resource Description Framework), RDFS (RDF Schema) and OWL (Web Ontology Language).
 
+## HDT
+HDT (Header, Dictionary, Triples) is a compact data structure and binary serialization format for RDF
+
 ## RML
 
 RML is a generic mapping language to describe multi-format to RDF transformations.
 
-# Prelude
-Assuming you already have `python` and `pip`
+# Installation
+Assuming you already have `python`, `pip`,
 
 create a new virtualenv.
 
-install dependencies
+install dependencies with pip (~2 minutes to install hdt)
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Create a free account on [Dandelion](https://dandelion.eu/), copy your API credential
-into `chatbot_app/local_settings.py`:
-
-```python
-#DANDELION API CREDENTIALS
-DANDELION_TOKEN = "YOUR API CREDENTIAL"
-```
+Download `hdt` version of DBPedia instance type dataset [here](https://eu.ftp.opendatasoft.com/bmoreau/chatbot_dbpedia_dump.zip) and override `/dbpedia_dump`
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
@@ -96,6 +92,10 @@ Conversations API is used to translate possible correspondences into Human Reada
 `/api/conversation/answer/negative` chatbot response to negative user input.
 
 `/api/conversation/salutation` to say goodbye to the user.
+
+## Named Entity Recognition API
+
+`/api/ner?q=[query]&lang=[language]` returns the class of the term in the query.
 
 # Clubhouse
 
