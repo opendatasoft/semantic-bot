@@ -22,8 +22,12 @@
   overflow-x: hidden;
 }
 
-.Buttons-container {;
+.Buttons-container {
   text-align: center;
+}
+
+.btn-margin {
+  margin: 4px 4px 4px 4px;
 }
 
 .alert-bot {

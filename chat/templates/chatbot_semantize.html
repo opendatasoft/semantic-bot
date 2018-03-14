@@ -45,13 +45,24 @@
             <button type="button" v-on:click="user_input_no()" class="btn btn-secondary">No</button>
             <button type="button" v-on:click="user_input_idk()" class="btn btn-secondary">don't know</button>
           </div>
-          <div v-else class="btn-group" role="group">
-            <button v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)" class="btn btn-secondary">
-              {{ associated_class.class }}
+          <div v-else>
+            <button class="btn btn-secondary btn-margin" v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)">
+              {{ associated_class.class }} ({{ associated_class.field_name }})
             </button>
-            <button type="button" v-on:click="user_input_property_class(null)" class="btn btn-secondary">None of those</button>
+            <button class="btn btn-secondary btn-margin" type="button" v-on:click="user_input_property_class(null)">None of those</button>
           </div>
           </div>
+        </div>
+      </div>
+      <hr class="my-1">
+      <div class="mapping_view">
+        <div class="mapping_view Buttons-container">
+          <a class="btn btn-secondary btn-margin collapsed" data-toggle="collapse" href="#graph" role="button" aria-expanded="false">
+            Toggle mapping
+          </a>
+        </div>
+        <div class="graph collapse" id="graph">
+          bonjour
         </div>
       </div>
     </div>
