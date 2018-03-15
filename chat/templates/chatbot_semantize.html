@@ -62,7 +62,9 @@
           </a>
         </div>
         <div class="graph collapse" id="graph">
-          bonjour
+          <svg id="mapping_graph" width="600" height="600"
+          viewBox="-300 -300 600 600">
+          </svg>
         </div>
       </div>
     </div>
@@ -83,6 +85,9 @@ function scroll_chat_to_bottom(){
   chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 </script>
+<!-- d3js for the graph -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="http://d3js.org/d3-selection-multi.v1.js"></script>
 <script src="{% static "chat/chat.js" %}"></script>
 </body>
 </html>

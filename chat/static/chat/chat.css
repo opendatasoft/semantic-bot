@@ -1,3 +1,20 @@
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+  stroke-width: 1px;
+}
+
+.noselect {
+  pointer-events: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
 .Global-container {
   background:#4B5A6B;
 }
