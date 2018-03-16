@@ -19,7 +19,7 @@ def dataset_meta_request(dataset_id):
         raise DatasetIdMissing
 
 
-def datasets_meta_request(start=0, rows=10):
+def datasets_meta_request(start=0, rows=100):
     params = {'start': start, 'rows': rows}
     request = requests.get(DATA_CATALOG_API_SEARCH_URL, params, timeout=Requester.get_timeout())
     request.raise_for_status()
