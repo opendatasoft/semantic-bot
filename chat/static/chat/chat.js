@@ -244,7 +244,7 @@ function update(links, nodes) {
     node.select("text").append("tspan")
       .attr("x", "0")
       .attr("dy", "1em")
-      .text(function (d) {return "(" + d.id + ")";});
+      .text(function (d) {return "(" + d.field_name + ")";});
 
     simulation
         .nodes(nodes)
@@ -295,13 +295,30 @@ function dragged(d) {
 
 function update_graph(correspondance, correspondance_type){
   if (correspondance_type == "classes"){
-    nodes.push({id: correspondance.field_name, label: correspondance.class, group: 'resource'});
+    nodes.push({id: correspondance.field_name, field_name: correspondance.field_name, label: correspondance.class, group: 'resource'});
   } else {
-    nodes.push({id: correspondance.field_name, label: 'field value', group: 'value'});
-    links.push({source: correspondance.associated_field, target: correspondance.field_name, label: correspondance.description})
+    existing_node = get_node_id(correspondance.field_name, correspondance);
+    if (existing_node == null){
+      id = correspondance.field_name + "_value"
+      nodes.push({id: id, field_name: correspondance.field_name, label: 'Dataset Field', group: 'value'});
+      links.push({source: correspondance.associated_field, target: id, label: correspondance.description})
+    } else {
+      links.push({source: correspondance.associated_field, target: existing_node, label: correspondance.description})
+    }
   }
   update(links, nodes);
-  simulation.alphaTarget(0.3).restart()
+  simulation.alphaTarget(0.3).restart();
+}
+
+function get_node_id(field_name, correspondance){
+  for (i in nodes){
+    if (field_name == nodes[i].id) {
+      if (nodes[i].id != correspondance.associated_field){
+        return nodes[i].id;
+      }
+    }
+  }
+  return null
 }
 
 var chart = $("#chart"),

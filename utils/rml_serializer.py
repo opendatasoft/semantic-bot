@@ -1,4 +1,4 @@
-from rdflib import Graph, Namespace, Literal, URIRef, BNode
+from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDFS
 
 rr = Namespace("http://www.w3.org/ns/r2rml#")
 rml = Namespace("http://semweb.mmlab.be/ns/rml#")
@@ -28,12 +28,20 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
     rdf_mapping.add((logical_source_node, rml['source'], Literal(dataset_id)))
     rdf_mapping.add((logical_source_node, rml['referenceFormulation'], ql['JSONPath']))
     rdf_mapping.add((logical_source_node, rml['iterator'], Literal("$.[*].fields")))
-
+    # Adding resource subject and type
     subject_map_node = BNode()
     subject_map = rr['subjectMap']
     rdf_mapping.add((subject_id, subject_map, subject_map_node))
     rdf_mapping.add((subject_map_node, rr['template'], Literal(SUBJECT_URI.format(class_name=class_correspondance['class'], field_name=class_correspondance['field_name']))))
     rdf_mapping.add((subject_map_node, rr['class'], URIRef(class_correspondance['uri'])))
+    # Adding label of the resource
+    predicate_map = rr['predicateObjectMap']
+    node = BNode()
+    rdf_mapping.add((subject_id, predicate_map, node))
+    rdf_mapping.add((node, rr['predicate'], RDFS.label))
+    object_node = BNode()
+    rdf_mapping.add((node, rr['objectMap'], object_node))
+    rdf_mapping.add((object_node, rml['reference'], Literal("$.{}".format(class_correspondance['field_name']))))
 
 
 def add_predicate_map(rdf_mapping, property_correspondance, class_correspondances):
@@ -45,9 +53,19 @@ def add_predicate_map(rdf_mapping, property_correspondance, class_correspondance
     object_node = BNode()
     rdf_mapping.add((node, rr['objectMap'], object_node))
     field_name = property_correspondance['field_name']
-    if field_name in class_correspondances:
-        parent_map_id = URIRef("#{}".format(class_correspondances[field_name]['class']))
+    class_correspondance = get_class(field_name, class_correspondances)
+    if class_correspondance:
+        # Target of the predicate is a resource (URI)
+        parent_map_id = URIRef("#{}".format(class_correspondance['class']))
         if parent_map_id != subject_id:
             rdf_mapping.add((object_node, rr['parentTriplesMap'], parent_map_id))
-            return
-    rdf_mapping.add((object_node, rml['reference'], Literal("$.{}".format(field_name))))
+    else:
+        # Target of the predicate is a field value (Term)
+        rdf_mapping.add((object_node, rml['reference'], Literal("$.{}".format(field_name))))
+
+
+def get_class(field_name, class_correspondances):
+    for class_correspondance in class_correspondances:
+        if field_name == class_correspondance['field_name']:
+            return class_correspondance
+    return None
