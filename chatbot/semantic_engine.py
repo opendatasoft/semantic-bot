@@ -33,7 +33,6 @@ def get_dataset_classes(ods_dataset_records):
                         candidates_classes[field] = types
     correspondances = []
     for field, classes in candidates_classes.iteritems():
-        print classes
         common_class = Counter(classes).most_common(1)[0][0]
         class_correspondance = get_class_correspondance(common_class)
         if class_correspondance:
