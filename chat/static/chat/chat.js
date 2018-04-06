@@ -24,13 +24,11 @@ var chat = new Vue({
     setTimeout(scroll_chat_to_bottom, 100);
     },
     push_bot_message: function (message) {
-      setTimeout(function(){
-       chat.messages.push({
+      chat.messages.push({
        text: message,
        type: 'bot'
       });
       setTimeout(scroll_chat_to_bottom, 100);
-    }, 1000);
     },
     bot_introduction: function () {
       this.$http.get('/api/conversation/greeting').then(response => {
@@ -71,8 +69,10 @@ var chat = new Vue({
       if (this.awaiting_user) {
         this.awaiting_user = false;
         this.push_user_message("Yes.");
+        /*
         this.$http.get('/api/conversation/answer/positive').then(response => {
           this.push_bot_message(response.body['text']);
+        */
           if ((this.current_correspondance_type == 'properties') && (this.confirmed_correspondances['classes'].length > 0)) {
             this.$http.post('/api/conversation/question/property-class', this.current_correspondance).then(response => {
               this.push_bot_message(response.body['text']);
@@ -82,31 +82,41 @@ var chat = new Vue({
           } else {
             this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
             update_graph(this.current_correspondance, this.current_correspondance_type);
-            setTimeout(function(){chat.next_semantize()},1500);
+            setTimeout(function(){chat.next_semantize()},1000);
           }
+        /*
         })
+        */
       }
     },
     user_input_idk: function () {
       if (this.awaiting_user) {
         this.awaiting_user = false;
         this.push_user_message("I don't know.");
+        /*
         this.$http.get('/api/conversation/answer/neutral').then(response => {
           this.push_bot_message(response.body['text']);
+        */
           this.awaiting_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-          setTimeout(function(){chat.next_semantize()},1500);
+          setTimeout(function(){chat.next_semantize()},1000);
+          /*
         });
+        */
       }
     },
     user_input_no: function () {
       if (this.awaiting_user) {
         this.awaiting_user = false;
         this.push_user_message("No.");
+        /*
         this.$http.get('/api/conversation/answer/negative').then(response => {
           this.push_bot_message(response.body['text']);
+        */
           this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-          setTimeout(function(){chat.next_semantize()},1500);
+          setTimeout(function(){chat.next_semantize()},1000);
+        /*
         });
+        */
       }
     },
     user_input_property_class: function (associated_class) {
@@ -114,26 +124,34 @@ var chat = new Vue({
         if (associated_class == null){
           this.awaiting_user = false;
           this.push_user_message('None of those');
+          /*
           this.$http.get('/api/conversation/answer/negative').then(response => {
             this.push_bot_message(response.body['text']);
+          */
             this.current_correspondance['associated_class'] = [];
             this.current_correspondance['associated_field'] = [];
             this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
             this.yes_no_questions = true;
-            setTimeout(function(){chat.next_semantize()},1500);
+            setTimeout(function(){chat.next_semantize()},1000);
+          /*
           });
+          */
         } else {
           this.awaiting_user = false;
           this.push_user_message(associated_class['class']);
+          /*
           this.$http.get('/api/conversation/answer/positive').then(response => {
             this.push_bot_message(response.body['text']);
+          */
             this.current_correspondance['associated_class'] = associated_class['class'];
             this.current_correspondance['associated_field'] = associated_class['field_name'];
             this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
             this.yes_no_questions = true;
             update_graph(this.current_correspondance, this.current_correspondance_type);
-            setTimeout(function(){chat.next_semantize()},1500);
+            setTimeout(function(){chat.next_semantize()},1000);
+          /*
           });
+          */
         }
       }
     },

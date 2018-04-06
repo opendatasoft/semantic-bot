@@ -73,8 +73,8 @@
 .fadeInLeft {
 -webkit-animation-name: fadeInLeft;
 animation-name: fadeInLeft;
--webkit-animation-duration: 0.7s;
-animation-duration: 0.7s;
+-webkit-animation-duration: 0.5s;
+animation-duration: 0.5s;
 -webkit-animation-fill-mode: both;
 animation-fill-mode: both;
 }
@@ -106,8 +106,8 @@ transform: none;
 .fadeInRight {
 -webkit-animation-name: fadeInRight;
 animation-name: fadeInRight;
--webkit-animation-duration: 0.7s;
-animation-duration: 0.7s;
+-webkit-animation-duration: 0.3s;
+animation-duration: 0.3s;
 -webkit-animation-fill-mode: both;
 animation-fill-mode: both;
 }
