@@ -105,7 +105,7 @@ Conversations API is used to translate possible correspondences into Human Reada
 
 ## Named Entity Recognition API
 
-`/api/ner?q=[query]&lang=[language]` returns the class of the term in the query.
+`GET` `/api/ner?q=[query]&lang=[language]` returns the class of the term in the query.
 
 # Clubhouse
 
