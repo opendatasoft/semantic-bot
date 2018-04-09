@@ -4,6 +4,14 @@
   stroke-width: 1px;
 }
 
+a {
+    color: #5b94d3;
+}
+a:hover {
+    color: #5bd38c;
+    text-decoration: none;
+}
+
 .noselect {
   pointer-events: none;
   -webkit-touch-callout: none; /* iOS Safari */

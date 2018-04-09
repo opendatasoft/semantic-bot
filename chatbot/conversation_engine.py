@@ -4,37 +4,42 @@ EMPHASIS = "<b>{}</b>"
 
 GREETINGS = ["Hello,",
              "Hi,",
-             "greetings,",
              "Welcome,"]
 
-INSTRUCTIONS = ["""I will ask you questions about your dataset.
-You will be able to communicate with me by answering with the
-buttons in the bottom."""]
+INSTRUCTIONS = ["""<b>Semantic</b> description of dataset can significantly <b>improve data quality</b>.<br>
+I will assist you during this process by asking you <b>questions</b> about your dataset.<br>
+You can <b>answer with the buttons in the bottom</b>.<br>
+You can also check the progression of the process with the <b>Toggle mapping button</b>"""]
 
-BAD_ANSWER = ["""Sorry, I didn't understood your answer.
+
+# Not used in the chatbot
+BAD_ANSWER = ["""Sorry, I didn't understood your answer.<br>
 Can you answer with 'yes', 'no' or an empty answer"""]
 
-CLASS_QUESTIONS = ["It seems that field {field_name} describes {class_description}? Is it true?",
-                   "Looks like the field {field_name} represents {class_description}. Am I right?",
-                   "Is the field {field_name} in your dataset describes {class_description}?",
-                   "Does the field {field_name} in your dataset represents {class_description}?",
-                   "Does your dataset contains {class_description} in the field {field_name}?"]
+CLASS_QUESTIONS = ["It seems that field {field_name} contains {class_description}? Is it true?",
+                   "Looks like the field {field_name} contains {class_description}. Am I right?",
+                   "Is the field {field_name} in your dataset contains {class_description}?",
+                   "Does the field {field_name} in your dataset contains {class_description}?",
+                   "Does the dataset contains {class_description} in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} represents {predicate_description}. Is it true?",
-                      "Is the field {field_name} represents {predicate_description}.",
-                      "I think that the field {field_name} represents {predicate_description}.",
-                      "Does your field {field_name} is {predicate_description}?"]
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} is {predicate_description}. Is it true?",
+                      "Is the field {field_name} is {predicate_description}.",
+                      "I think that the field {field_name} is {predicate_description}.",
+                      "Does the field {field_name} is {predicate_description}?"]
 
-PROPERTY_CLASS_QUESTIONS = ["What entity should be associated with {predicate_description} represented by the field {field_name}?",
-                            "At which entity the field {field_name} (e.g. {predicate_description}) should be linked?",
-                            "Select an entity that can be associated to {predicate_description} in field {field_name}."]
+PROPERTY_CLASS_QUESTIONS = ["{predicate_description}({field_name}) is the property of wich object?",
+                            "Select the object that have {predicate_description}({field_name}) as a property.",
+                            "Select the object that have the property {predicate_description}({field_name})."]
 
+# Not used in the chatbot
 POSITIVE_ANSWER = ["yes", "yep", "ok", "y"]
 
+# Not used in the chatbot
 POSITIVE_REPLY = ["Perfect, I added this information to your dataset.",
                   "Thanks, this information is added to your dataset.",
                   "Good. This was added to your dataset"]
 
+# Not used in the chatbot
 NEGATIVE_ANSWER = ["no", "nop", "n"]
 
 NEGATIVE_REPLY = ["Okay, lets forget about that.",
@@ -42,17 +47,23 @@ NEGATIVE_REPLY = ["Okay, lets forget about that.",
                   "Thanks, I will find something else.",
                   ]
 
+# Not used in the chatbot
 NEUTRAL_ANSWER = ["idk", "don't know", "dont know", "", " "]
 
+# Not used in the chatbot
 NEUTRAL_REPLY = ["Okay, We will see that later.",
                  "I will put this one apart.",
                  "Ok, maybe later"]
 
-SALUTATION = ["I have no more questions to ask.\nYou will find your mapping in 'results' folder\nHave a good day!"]
+SALUTATION = ["""I have no more questions to ask.<br>
+                 You will find your mapping in 'results' folder.<br>
+                 Feel free to improve the quality of the mapping using <a href="http://rml.io/" target="_blank">RML</a>.<br>
+                 Have a good day!"""]
 
-ERROR_LOV_UNVAILABLE = ["Sorry, Linked Open Vocabulary is unavailable for the moment.\nTry again later"]
+ERROR_LOV_UNVAILABLE = ["""Sorry, Linked Open Vocabulary is unavailable for the moment.<br>
+                           Try again later"""]
 
-ERROR_NO_CONFIRMED_CLASS = ["Sorry, I am not able to semantize your dataset.\n"]
+ERROR_NO_CONFIRMED_CLASS = ["Sorry, I was not able to semantize your dataset."]
 
 
 def greeting():
