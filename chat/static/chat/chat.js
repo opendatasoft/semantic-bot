@@ -74,9 +74,15 @@ var chat = new Vue({
         }
       // 3. Return the rml mapping
       } else {
-        this.$http.post('/api/' + this.dataset_id +'/correspondances/mapping', this.confirmed_correspondances).then(response => {
-          this.$http.get('/api/conversation/salutation').then(response => {
-            this.push_bot_message(response.body['text']);
+        this.$http.post('/api/' + this.dataset_id +'/correspondances/confirmed', this.confirmed_correspondances).then(response => {
+          this.$http.post('/api/' + this.dataset_id +'/correspondances/awaiting', this.awaiting_correspondances).then(response => {
+            this.$http.post('/api/' + this.dataset_id +'/correspondances/denied', this.denied_correspondances).then(response => {
+              this.$http.post('/api/' + this.dataset_id +'/correspondances/mapping', this.confirmed_correspondances).then(response => {
+                this.$http.get('/api/conversation/salutation').then(response => {
+                  this.push_bot_message(response.body['text']);
+                });
+              });
+            });
           });
         });
       }

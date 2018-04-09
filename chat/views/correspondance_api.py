@@ -64,6 +64,45 @@ def get_rml_mapping(request, dataset_id):
     return response
 
 
+@require_http_methods(['POST'])
+def result_confirmed_correspondances(request, dataset_id):
+    try:
+        confirmed_correspondances = json.loads(request.body)
+        response = HttpResponse(
+            json.dumps(confirmed_correspondances),
+            content_type='application/json')
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
+    return response
+
+
+@require_http_methods(['POST'])
+def result_awaiting_correspondances(request, dataset_id):
+    try:
+        awaiting_correspondances = json.loads(request.body)
+        response = HttpResponse(
+            json.dumps(awaiting_correspondances),
+            content_type='application/json')
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
+    return response
+
+
+@require_http_methods(['POST'])
+def result_denied_correspondances(request, dataset_id):
+    try:
+        denied_correspondances = json.loads(request.body)
+        response = HttpResponse(
+            json.dumps(denied_correspondances),
+            content_type='application/json')
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
+    return response
+
+
 @require_http_methods(['GET'])
 def get_class(request):
     term = request.GET.get('q', None)
