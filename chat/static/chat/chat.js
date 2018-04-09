@@ -31,18 +31,25 @@ var chat = new Vue({
       setTimeout(scroll_chat_to_bottom, 100);
     },
     bot_introduction: function () {
+      // Welcome messages
       this.$http.get('/api/conversation/greeting').then(response => {
         this.push_bot_message(response.body['text']);
         this.$http.get('/api/conversation/instructions').then(response => {
           this.push_bot_message(response.body['text']);
+          // Retrieve all correspondances (classes and properties)
           this.$http.get('/api/'+ this.dataset_id +'/correspondances').then(response => {
             this.correspondances = response.body;
             this.next_semantize();
+          },response => {
+            this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
+              this.push_bot_message(response.body['text']);
+            });
           });
         });
       });
     },
     next_semantize: function () {
+      // 1. Confirm class correspondances
       if (this.correspondances['classes'].length > 0) {
         this.current_correspondance_type = 'classes'
         this.current_correspondance = this.correspondances['classes'].pop();
@@ -50,13 +57,22 @@ var chat = new Vue({
           this.push_bot_message(response.body['text']);
           this.awaiting_user = true;
         });
+      // 2. Confirm properties correspondances
       } else if (this.correspondances['properties'].length > 0) {
-        this.current_correspondance_type = 'properties'
-        this.current_correspondance = this.correspondances['properties'].pop();
-        this.$http.post('/api/conversation/question/property', this.current_correspondance).then(response => {
-          this.push_bot_message(response.body['text']);
-          this.awaiting_user = true;
-        });
+        this.current_correspondance_type = 'properties';
+        if (this.confirmed_correspondances['classes'].length > 0){
+          this.current_correspondance = this.correspondances['properties'].pop();
+          this.$http.post('/api/conversation/question/property', this.current_correspondance).then(response => {
+            this.push_bot_message(response.body['text']);
+            this.awaiting_user = true;
+          });
+        } else {
+          //There is no class to link properties with
+          this.$http.get('/api/conversation/error/no-classes').then(response => {
+            this.push_bot_message(response.body['text']);
+          });
+        }
+      // 3. Return the rml mapping
       } else {
         this.$http.post('/api/' + this.dataset_id +'/correspondances/mapping', this.confirmed_correspondances).then(response => {
           this.$http.get('/api/conversation/salutation').then(response => {

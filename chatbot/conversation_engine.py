@@ -50,6 +50,10 @@ NEUTRAL_REPLY = ["Okay, We will see that later.",
 
 SALUTATION = ["I have no more questions to ask.\nYou will find your mapping in 'results' folder\nHave a good day!"]
 
+ERROR_LOV_UNVAILABLE = ["Sorry, Linked Open Vocabulary is unavailable for the moment.\nTry again later"]
+
+ERROR_NO_CONFIRMED_CLASS = ["Sorry, I am not able to semantize your dataset.\n"]
+
 
 def greeting():
     return random.choice(GREETINGS)
@@ -115,3 +119,11 @@ def reply_to_neutral():
 
 def salutation():
     return random.choice(SALUTATION)
+
+
+def error_lov_unavailable():
+    return random.choice(ERROR_LOV_UNVAILABLE)
+
+
+def error_no_confirmed_class():
+    return random.choice(ERROR_NO_CONFIRMED_CLASS)

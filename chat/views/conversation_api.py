@@ -70,6 +70,26 @@ def get_salutation(request):
     return response
 
 
+@require_http_methods(['GET'])
+def get_error_no_confirmed_class(request):
+    message = {'text': ConversationEngine.error_no_confirmed_class()}
+    response = HttpResponse(
+        json.dumps(message),
+        content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@require_http_methods(['GET'])
+def get_error_lov_unavailable(request):
+    message = {'text': ConversationEngine.error_lov_unavailable()}
+    response = HttpResponse(
+        json.dumps(message),
+        content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 @require_http_methods(['POST'])
 def get_class_question(request):
     try:
