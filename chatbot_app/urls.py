@@ -5,8 +5,9 @@ from chat.views.conversation_api import get_instructions, get_positive_answer, g
 from chat.views.correspondance_api import get_correspondances, get_classes_correspondances, get_properties_correspondances, get_rml_mapping
 from chat.views.correspondance_api import get_class
 from chat.views.chat import semantize
+from chat.views.root import api_root, root
 
-urlpatterns = [
+url_api = [
     url(r'^api/conversation/question/class', get_class_question, name='get_class_question'),
     url(r'^api/conversation/question/property-class', get_property_class_question, name='get_property_class_question'),
     url(r'^api/conversation/question/property', get_property_question, name='get_property_question'),
@@ -21,5 +22,17 @@ urlpatterns = [
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/properties', get_properties_correspondances, name='get_dataset_classes_correspondances'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/mapping', get_rml_mapping, name='get_rml_mapping'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances', get_correspondances, name='get_dataset_correspondances'),
+    url(r'^api', api_root, name='api_root')
+]
+
+url_chatbot = [
     url(r'^chatbot/(?P<dataset_id>[\w_@-]+)/?$', semantize, name='chatbot_semantize')
 ]
+
+url_root = [
+    url(r'', root, name='root')
+]
+
+urlpatterns = url_api
+urlpatterns += url_chatbot
+urlpatterns += url_root
