@@ -95,8 +95,9 @@ def get_class_question(request):
     try:
         correspondance = json.loads(request.body)
         field_name = correspondance['field_name']
+        uri = correspondance['uri']
         class_description = correspondance['description']
-        message = {'text': ConversationEngine.class_question(field_name, class_description)}
+        message = {'text': ConversationEngine.class_question(field_name, class_description, uri)}
         response = HttpResponse(
             json.dumps(message),
             content_type='application/json')
@@ -111,8 +112,9 @@ def get_property_question(request):
     try:
         correspondance = json.loads(request.body)
         field_name = correspondance['field_name']
+        uri = correspondance['uri']
         predicate_description = correspondance['description']
-        message = {'text': ConversationEngine.property_question(field_name, predicate_description)}
+        message = {'text': ConversationEngine.property_question(field_name, predicate_description, uri)}
         response = HttpResponse(
             json.dumps(message),
             content_type='application/json')
@@ -127,8 +129,9 @@ def get_property_class_question(request):
     try:
         correspondance = json.loads(request.body)
         field_name = correspondance['field_name']
+        uri = correspondance['uri']
         predicate_description = correspondance['description']
-        message = {'text': ConversationEngine.property_class_question(field_name, predicate_description)}
+        message = {'text': ConversationEngine.property_class_question(field_name, predicate_description, uri)}
         response = HttpResponse(
             json.dumps(message),
             content_type='application/json')

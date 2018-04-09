@@ -16,20 +16,20 @@ You can also check the progression of the process with the <b>Toggle mapping but
 BAD_ANSWER = ["""Sorry, I didn't understood your answer.<br>
 Can you answer with 'yes', 'no' or an empty answer"""]
 
-CLASS_QUESTIONS = ["It seems that field {field_name} contains {class_description}? Is it true?",
-                   "Looks like the field {field_name} contains {class_description}. Am I right?",
-                   "Is the field {field_name} in your dataset contains {class_description}?",
-                   "Does the field {field_name} in your dataset contains {class_description}?",
-                   "Does the dataset contains {class_description} in the field {field_name}?"]
+CLASS_QUESTIONS = ["It seems that field {field_name} contains <a href='{uri}' target='_blank'>{class_description}</a>? Is it true?",
+                   "Looks like the field {field_name} contains <a href='{uri}' target='_blank'>{class_description}</a>. Am I right?",
+                   "Is the field {field_name} in your dataset contains <a href='{uri}' target='_blank'>{class_description}</a>?",
+                   "Does the field {field_name} in your dataset contains <a href='{uri}' target='_blank'>{class_description}</a>?",
+                   "Does the dataset contains <a href='{uri}' target='_blank'>{class_description}</a> in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} is {predicate_description}. Is it true?",
-                      "Is the field {field_name} is {predicate_description}.",
-                      "I think that the field {field_name} is {predicate_description}.",
-                      "Does the field {field_name} is {predicate_description}?"]
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>. Is it true?",
+                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
+                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
+                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>?"]
 
-PROPERTY_CLASS_QUESTIONS = ["{predicate_description}({field_name}) is the property of wich object?",
-                            "Select the object that have {predicate_description}({field_name}) as a property.",
-                            "Select the object that have the property {predicate_description}({field_name})."]
+PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the property of wich object?",
+                            "Select the object that have <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) as a property.",
+                            "Select the object that have the property <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name})."]
 
 # Not used in the chatbot
 POSITIVE_ANSWER = ["yes", "yep", "ok", "y"]
@@ -78,22 +78,22 @@ def bad_answer():
     return random.choice(BAD_ANSWER)
 
 
-def class_question(field_name, class_description):
+def class_question(field_name, class_description, uri):
     field_name = EMPHASIS.format(field_name.encode("utf-8"))
     class_description = EMPHASIS.format(class_description.encode("utf-8"))
-    return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description)
+    return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description, uri=uri)
 
 
-def property_question(field_name, predicate_description):
+def property_question(field_name, predicate_description, uri):
     field_name = EMPHASIS.format(field_name.encode("utf-8"))
     predicate_description = EMPHASIS.format(predicate_description.encode('utf-8'))
-    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description)
+    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, uri=uri)
 
 
-def property_class_question(field_name, predicate_description):
+def property_class_question(field_name, predicate_description, uri):
     field_name = EMPHASIS.format(field_name.encode("utf-8"))
     predicate_description = EMPHASIS.format(predicate_description.encode("utf-8"))
-    return random.choice(PROPERTY_CLASS_QUESTIONS).format(predicate_description=predicate_description, field_name=field_name)
+    return random.choice(PROPERTY_CLASS_QUESTIONS).format(predicate_description=predicate_description, field_name=field_name, uri=uri)
 
 
 def is_valid(answer):
