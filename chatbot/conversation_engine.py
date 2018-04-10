@@ -22,10 +22,10 @@ CLASS_QUESTIONS = ["It seems that field {field_name} contains <a href='{uri}' ta
                    "Does the field {field_name} in your dataset contains <a href='{uri}' target='_blank'>{class_description}</a>?",
                    "Does the dataset contains <a href='{uri}' target='_blank'>{class_description}</a> in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>. Is it true?",
-                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
-                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
-                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>?"]
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something. Is it true?",
+                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something.",
+                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something.",
+                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something?"]
 
 PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the property of wich object?",
                             "Select the object that have <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) as a property.",

@@ -1,11 +1,14 @@
 from collections import Counter
 from bs4 import BeautifulSoup
+import requests
 
 import utils.lov_api as LovApi
 import utils.dbpedia_ner as DBPediaNER
+import utils.requester as Requester
 
 LIMIT_SCORE_FIELD = 0.5000000
 LIMIT_SCORE_CLASS = 0.5555555
+CHECK_URI_AVAILABILITY = True
 
 
 def hasNoNumbers(value):
@@ -54,11 +57,11 @@ def get_dataset_properties(ods_dataset_metas):
 def get_property_correspondance(prop):
     response = {'uri': '', 'description': ''}
     lov_results = LovApi.term_request(prop, term_type='property')["results"]
-    if lov_results:
-        if lov_results[0]['score'] > LIMIT_SCORE_FIELD:
-            response['uri'] = lov_results[0]['uri'][0]
-            if lov_results[0]['highlight']:
-                cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
+    for lov_result in lov_results:
+        if is_valid(lov_result):
+            response['uri'] = lov_result['uri'][0]
+            if lov_result['highlight']:
+                cleaned_description = BeautifulSoup(lov_result['highlight'][lov_result['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
             return response
     return None
@@ -67,11 +70,23 @@ def get_property_correspondance(prop):
 def get_class_correspondance(clss):
     response = {'uri': '', 'class': clss, 'description': clss}
     lov_results = LovApi.term_request(clss, term_type='class')["results"]
-    if lov_results:
-        if lov_results[0]['score'] > LIMIT_SCORE_CLASS:
-            response['uri'] = lov_results[0]['uri'][0]
-            if lov_results[0]['highlight']:
-                cleaned_description = BeautifulSoup(lov_results[0]['highlight'][lov_results[0]['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
+    for lov_result in lov_results:
+        if is_valid(lov_result):
+            response['uri'] = lov_result['uri'][0]
+            if lov_result['highlight']:
+                cleaned_description = BeautifulSoup(lov_result['highlight'][lov_result['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
             return response
     return None
+
+
+def is_valid(lov_result):
+    if lov_result < LIMIT_SCORE_FIELD:
+        return False
+    if CHECK_URI_AVAILABILITY:
+        try:
+            if requests.get(lov_result['uri'][0], timeout=Requester.get_timeout()).status_code != 200:
+                return False
+        except requests.Timeout:
+            return False
+    return True
