@@ -11,6 +11,7 @@ var chat = new Vue({
     current_correspondance_type: 'classes',
     awaiting_user: false,
     yes_no_questions: true,
+    is_finished: false
   },
   mounted: function(){
       this.bot_introduction();
@@ -80,6 +81,7 @@ var chat = new Vue({
               this.$http.post('/api/' + this.dataset_id +'/correspondances/mapping', this.confirmed_correspondances).then(response => {
                 this.$http.get('/api/conversation/salutation').then(response => {
                   this.push_bot_message(response.body['text']);
+                  this.is_finished = true;
                 });
               });
             });

@@ -6,12 +6,11 @@
     <link rel="stylesheet" type="text/css" href="{% static "chat/chat.css" %}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Chatbot semantization</title>
+    <title>Semantic Chatbot</title>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
 </head>
 <body class="Global-container">
-{% verbatim %}
 <div class="container">
   <div class="row"></div>
   <div class="row">
@@ -35,6 +34,14 @@
             <div class="col-lg-1"></div>
           </div>
         </div>
+        <div v-if="!awaiting_user && !is_finished" class="row">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-6 alert alert-bot fadeInLeft">
+            <img class="noselect" height="40" src="{% static "chat/bot_typing.gif" %}" alt="Bot typing">
+          </div>
+          <div class="col-lg-5"></div>
+        </div>
+{% verbatim %}
       </div>
       <hr class="my-1">
       <div class="Buttons-container">
