@@ -57,7 +57,7 @@ def get_rml_mapping(request, dataset_id):
             rml_mapping,
             content_type='text/turtle')
         response['Access-Control-Allow-Origin'] = '*'
-        with open('results/{}.rml'.format(dataset_id), 'w') as outfile:
+        with open('results/{}.rml.ttl'.format(dataset_id), 'w') as outfile:
             outfile.write(rml_mapping)
     except (ValueError, KeyError):
         response = bad_format_correspondance()
