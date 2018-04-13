@@ -47,9 +47,13 @@ def get_dataset_classes(ods_dataset_records):
 def get_dataset_properties(ods_dataset_metas):
     properties = []
     for field in ods_dataset_metas['fields']:
-        property_correspondance = get_property_correspondance(field['label'])
+        prop = field['label']
+        if field['type'] in ['datetime', 'date']:
+            prop = "{} date".format(prop)
+        property_correspondance = get_property_correspondance(prop)
         if property_correspondance:
             property_correspondance['field_name'] = field['name']
+            property_correspondance['type'] = field['type']
             properties.append(property_correspondance)
     return properties
 

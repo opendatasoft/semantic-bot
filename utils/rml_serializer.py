@@ -1,11 +1,18 @@
-from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDFS
+from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDFS, XSD
 
 rr = Namespace("http://www.w3.org/ns/r2rml#")
 rml = Namespace("http://semweb.mmlab.be/ns/rml#")
 ql = Namespace('http://semweb.mmlab.be/ns/ql#')
 
+RDF_TYPE = {
+    'boolean': XSD.boolean,
+    'date': XSD.date,
+    'datetime': XSD.datetime,
+    'int': XSD.int,
+    'double': XSD.double
+}
 
-SUBJECT_URI = "http://ods.dataset.com/{class_name}/{{{field_name}}}"
+SUBJECT_URI = "https://data.opendatasoft.com/ld/resources/{dataset_id}/{class_name}/{{{field_name}}}"
 
 
 def serialize(confirmed_correspondances, dataset_id):
@@ -32,7 +39,7 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
     subject_map_node = BNode()
     subject_map = rr['subjectMap']
     rdf_mapping.add((subject_id, subject_map, subject_map_node))
-    rdf_mapping.add((subject_map_node, rr['template'], Literal(SUBJECT_URI.format(class_name=class_correspondance['class'], field_name=class_correspondance['field_name']))))
+    rdf_mapping.add((subject_map_node, rr['template'], Literal(SUBJECT_URI.format(dataset_id=dataset_id, class_name=class_correspondance['class'], field_name=class_correspondance['field_name']))))
     rdf_mapping.add((subject_map_node, rr['class'], URIRef(class_correspondance['uri'])))
     # Adding label of the resource
     predicate_map = rr['predicateObjectMap']
@@ -61,7 +68,10 @@ def add_predicate_map(rdf_mapping, property_correspondance, class_correspondance
             rdf_mapping.add((object_node, rr['parentTriplesMap'], parent_map_id))
     else:
         # Target of the predicate is a field value (Term)
+        field_type = property_correspondance['type']
         rdf_mapping.add((object_node, rml['reference'], Literal("$.{}".format(field_name))))
+        if field_type in RDF_TYPE:
+            rdf_mapping.add((object_node, rr['datatype'], RDF_TYPE[field_type]))
 
 
 def get_class(field_name, class_correspondances):
