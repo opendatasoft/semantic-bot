@@ -28,13 +28,14 @@ HDT (Header, Dictionary, Triples) is a compact data structure and binary seriali
 RML is a generic mapping language to describe multi-format to RDF transformations.
 
 # Installation
-Assuming you already have `python`, `pip`,
+Assuming you already have `python 2.7` and `pip 9`,
 
 create a new virtualenv.
 
 install dependencies with pip (~2 minutes to install hdt)
 
 ```bash
+pip install pybind11==2.2.2
 pip install -r requirements.txt
 ```
 
