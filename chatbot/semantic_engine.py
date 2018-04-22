@@ -1,10 +1,12 @@
 from collections import Counter
 from bs4 import BeautifulSoup
 import requests
+from django.utils.encoding import smart_str
 
 import utils.lov_api as LovApi
 import utils.dbpedia_ner as DBPediaNER
 import utils.requester as Requester
+from requests.exceptions import ConnectionError
 
 LIMIT_SCORE_FIELD = 0.5000000
 LIMIT_SCORE_CLASS = 0.5555555
@@ -49,7 +51,7 @@ def get_dataset_properties(ods_dataset_metas):
     for field in ods_dataset_metas['fields']:
         prop = field['label']
         if field['type'] in ['datetime', 'date']:
-            prop = "{} date".format(prop)
+            prop = "{} date".format(smart_str(prop))
         property_correspondance = get_property_correspondance(prop)
         if property_correspondance:
             property_correspondance['field_name'] = field['name']
@@ -91,6 +93,6 @@ def is_valid(lov_result):
         try:
             if requests.get(lov_result['uri'][0], timeout=Requester.get_timeout()).status_code != 200:
                 return False
-        except requests.Timeout:
+        except (requests.Timeout, ConnectionError):
             return False
     return True
