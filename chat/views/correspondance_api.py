@@ -56,6 +56,7 @@ def get_rml_mapping(request, dataset_id):
         response = HttpResponse(
             rml_mapping,
             content_type='text/turtle')
+        response['Content-Disposition'] = 'attachment; filename="{}.rml.ttl"'.format(dataset_id)
         response['Access-Control-Allow-Origin'] = '*'
         with open('results/{}.rml.ttl'.format(dataset_id), 'w') as outfile:
             outfile.write(rml_mapping)
