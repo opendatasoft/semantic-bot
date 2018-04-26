@@ -15,7 +15,7 @@ def vocabulary_request(query, lang=None):
         params = {'q': query}
         if lang:
             params['lang'] = lang
-        request = requests.get(SEARCH_VOCAB_URL, params, timeout=Requester.get_timeout())
+        request = requests.get(SEARCH_VOCAB_URL, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
         return request.json()
     else:
@@ -25,7 +25,7 @@ def vocabulary_request(query, lang=None):
 def term_request(query, term_type='class'):
     if query:
         params = {'q': query, 'type': term_type}
-        request = requests.get(SEARCH_TERM_URL, params, timeout=Requester.get_timeout())
+        request = requests.get(SEARCH_TERM_URL, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
         return request.json()
     else:

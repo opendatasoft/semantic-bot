@@ -12,7 +12,7 @@ class DatasetIdMissing(Exception):
 def dataset_records_request(dataset_id, rows=10):
     if dataset_id:
         params = {'dataset': dataset_id, 'rows': rows}
-        request = requests.get(DATA_RECORD_API_URL, params, timeout=Requester.get_timeout())
+        request = requests.get(DATA_RECORD_API_URL, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
         return request.json()
     else:

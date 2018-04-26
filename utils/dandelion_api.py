@@ -16,7 +16,7 @@ class QueryParameterMissing(Exception):
 def entity_types_request(query, lang='en'):
     if query:
         params = {'text': query, 'lang': lang, 'include': 'types', 'token': DANDELION_TOKEN}
-        request = requests.get(ENTITY_EXTRACTION_URL, params, timeout=Requester.get_timeout())
+        request = requests.get(ENTITY_EXTRACTION_URL, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         if request.status_code != requests.codes.bad_request:
             request.raise_for_status
             result = request.json()
