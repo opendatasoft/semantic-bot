@@ -84,7 +84,6 @@ var chat = new Vue({
                 this.$http.get('/api/conversation/salutation').then(response => {
                   this.push_bot_message(response.body['text']);
                   this.is_finished = true;
-                  this.push_bot_message(this.rml_mapping);
                 });
               });
             });

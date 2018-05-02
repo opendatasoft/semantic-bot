@@ -43,6 +43,15 @@
             <div class="col-lg-5"></div>
           </div>
           {% verbatim %}
+          <div v-if="rml_mapping != null && is_finished" class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8 alert alert-bot fadeInLeft">
+              <pre><code>
+                {{ rml_mapping }}
+              </code></pre>
+            </div>
+            <div class="col-lg-2"></div>
+          </div>
         </div>
         <!-- <hr class="my-1"> -->
         <div class="Buttons-container">
