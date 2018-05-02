@@ -5,8 +5,8 @@ from chat.views.conversation_api import get_instructions, get_positive_answer, g
 from chat.views.conversation_api import get_error_lov_unavailable, get_error_no_confirmed_class
 from chat.views.correspondance_api import get_correspondances, get_classes_correspondances, get_properties_correspondances, get_rml_mapping
 from chat.views.correspondance_api import get_class, result_confirmed_correspondances, result_awaiting_correspondances, result_denied_correspondances
-from chat.views.chat import semantize
-from chat.views.root import api_root, root
+from chat.views.chat import semantize, chatbot_form
+from chat.views.root import api_root
 
 url_api = [
     url(r'^api/conversation/question/class', get_class_question, name='get_class_question'),
@@ -32,11 +32,12 @@ url_api = [
 ]
 
 url_chatbot = [
-    url(r'^chatbot/(?P<dataset_id>[\w_@-]+)/?$', semantize, name='chatbot_semantize')
+    url(r'^chatbot/(?P<dataset_id>[\w_@-]+)/?$', semantize, name='chatbot_semantize'),
+    url(r'^chatbot', chatbot_form, name='chatbot_form')
 ]
 
 url_root = [
-    url(r'', root, name='root')
+    url(r'', chatbot_form, name='root_chatbot_form')
 ]
 
 urlpatterns = url_api

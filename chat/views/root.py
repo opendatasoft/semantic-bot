@@ -19,16 +19,6 @@ def api_root(request):
     return response
 
 
-@require_http_methods(['GET'])
-def root(request):
-    patterns = get_patterns(None)
-    response = HttpResponse(
-        json.dumps(patterns),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
-    return response
-
-
 def get_patterns(root_path):
     resolver = urlresolvers.get_resolver(None)
     patterns = sorted([

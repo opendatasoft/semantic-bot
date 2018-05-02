@@ -45,6 +45,7 @@ var chat = new Vue({
           },response => {
             this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
               this.push_bot_message(response.body['text']);
+              this.is_finished = true;
             });
           });
         });
