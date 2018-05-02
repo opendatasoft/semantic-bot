@@ -19,17 +19,14 @@ def entity_types_request(query, lang='en'):
     if query:
         query = query.encode("utf-8")
         query = to_dbpedia_format(query)
-        subject_query = DBPEDIA_RESOURCE_URI.format(resource_name=query)
-        subject_query_fr = FR_DBPEDIA_RESOURCE_URI.format(resource_name=query)
-        (triples, cardinality) = eng_dbpedia.search_triples(subject_query, "", "")
-        (triples_fr, cardinality_fr) = fr_dbpedia.search_triples(subject_query_fr, "", "")
+        if lang == 'fr':
+            subject_query_fr = FR_DBPEDIA_RESOURCE_URI.format(resource_name=query)
+            (triples, cardinality) = fr_dbpedia.search_triples(subject_query_fr, "", "")
+        else:
+            subject_query = DBPEDIA_RESOURCE_URI.format(resource_name=query)
+            (triples, cardinality) = eng_dbpedia.search_triples(subject_query, "", "")
         classes = []
         for triple in triples:
-            cl = triple[2]
-            if "owl#Thing" not in cl:
-                cl = cl.replace(DBPEDIA_ONTOLOGY_URI, '')
-                classes.append(cl)
-        for triple in triples_fr:
             cl = triple[2]
             if "owl#Thing" not in cl:
                 cl = cl.replace(DBPEDIA_ONTOLOGY_URI, '')

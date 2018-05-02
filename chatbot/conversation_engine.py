@@ -56,7 +56,7 @@ NEUTRAL_REPLY = ["Okay, We will see that later.",
                  "Ok, maybe later"]
 
 SALUTATION = ["""I have no more questions to ask.<br>
-                 You will find your mapping in 'results' folder.<br>
+                 You will find your mapping below.<br>
                  Feel free to improve the quality of the mapping using <a href="http://rml.io/" target="_blank">RML</a>.<br>
                  Have a good day!"""]
 

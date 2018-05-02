@@ -59,7 +59,7 @@
               </div>
 
               <div v-else>
-                <div class="btn-group" role="group">
+                <div>
                   <button class="btn btn-secondary btn-margin" v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)">
                     {{ associated_class.class }} ({{ associated_class.field_name }})
                   </button>
