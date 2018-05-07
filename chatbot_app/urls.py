@@ -37,7 +37,7 @@ url_chatbot = [
 ]
 
 url_root = [
-    url(r'', chatbot_form, name='root_chatbot_form')
+    url(r'^$', chatbot_form, name='root_chatbot_form')
 ]
 
 urlpatterns = url_api
