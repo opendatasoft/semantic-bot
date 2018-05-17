@@ -28,7 +28,7 @@ def serialize(confirmed_correspondances, dataset_id):
 
 
 def add_class_map(rdf_mapping, class_correspondance, dataset_id):
-    subject_id = URIRef("#{}".format(class_correspondance['class']))
+    subject_id = URIRef("#{}-{}".format(class_correspondance['class'], class_correspondance['field_name']))
     logical_source = rml['logicalSource']
     logical_source_node = BNode()
     rdf_mapping.add((subject_id, logical_source, logical_source_node))
@@ -52,7 +52,7 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
 
 
 def add_predicate_map(rdf_mapping, property_correspondance, class_correspondances):
-    subject_id = URIRef("#{}".format(property_correspondance['associated_class']))
+    subject_id = URIRef("#{}-{}".format(property_correspondance['associated_class'], property_correspondance['associated_field']))
     predicate_map = rr['predicateObjectMap']
     node = BNode()
     rdf_mapping.add((subject_id, predicate_map, node))
