@@ -63,15 +63,17 @@ def add_predicate_map(rdf_mapping, property_correspondance, class_correspondance
     class_correspondance = get_class(field_name, class_correspondances)
     if class_correspondance:
         # Target of the predicate is a resource (URI)
-        parent_map_id = URIRef("#{}".format(class_correspondance['class']))
+        parent_map_id = URIRef("#{}-{}".format(class_correspondance['class'], class_correspondance['field_name']))
         if parent_map_id != subject_id:
             rdf_mapping.add((object_node, rr['parentTriplesMap'], parent_map_id))
-    else:
-        # Target of the predicate is a field value (Term)
-        field_type = property_correspondance['type']
-        rdf_mapping.add((object_node, rml['reference'], Literal("$.{}".format(field_name))))
-        if field_type in RDF_TYPE:
-            rdf_mapping.add((object_node, rr['datatype'], RDF_TYPE[field_type]))
+            return
+        else:
+            field_name = class_correspondance['field_name']
+    # Target of the predicate is a field value (Term)
+    field_type = property_correspondance['type']
+    rdf_mapping.add((object_node, rml['reference'], Literal("$.{}".format(field_name))))
+    if field_type in RDF_TYPE:
+        rdf_mapping.add((object_node, rr['datatype'], RDF_TYPE[field_type]))
 
 
 def get_class(field_name, class_correspondances):
