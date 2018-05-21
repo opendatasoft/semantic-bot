@@ -59,22 +59,22 @@
             <div class="col-lg-12">
               <div v-if="yes_no_questions" >
                 <div class="btn-group" role="group">
-                  <button type="button" v-on:click="user_input_no()" class="btn btn-secondary btn-no">No</button>
-                  <button type="button" v-on:click="user_input_yes()" class="btn btn-secondary btn-yes">Yes</button>
+                  <button type="button" v-on:click="user_input_no()" class="btn btn-secondary btn-no" :disabled="is_finished">No</button>
+                  <button type="button" v-on:click="user_input_yes()" class="btn btn-secondary btn-yes" :disabled="is_finished">Yes</button>
                 </div>
                 <div>
-                  <button type="button" v-on:click="user_input_idk()" class="btn btn-link">I don't know, pass this one...</button>
+                  <button type="button" v-on:click="user_input_idk()" class="btn btn-link" :disabled="is_finished">I don't know, pass this one...</button>
                 </div>
               </div>
 
               <div v-else>
                 <div>
-                  <button class="btn btn-secondary btn-margin" v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)">
+                  <button class="btn btn-secondary btn-margin" v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)" :disabled="is_finished">
                     {{ associated_class.class }} ({{ associated_class.field_name }})
                   </button>
                 </div>
                 <div>
-                  <button class="btn btn-margin btn-link" type="button" v-on:click="user_input_property_class(null)">
+                  <button class="btn btn-margin btn-link" type="button" v-on:click="user_input_property_class(null)" :disabled="is_finished">
                     None of those
                   </button>
                 </div>

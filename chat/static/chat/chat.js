@@ -73,6 +73,7 @@ var chat = new Vue({
           //There is no class to link properties with
           this.$http.get('/api/conversation/error/no-classes').then(response => {
             this.push_bot_message(response.body['text']);
+            this.is_finished = true;
           });
         }
       // 3. Return the rml mapping
