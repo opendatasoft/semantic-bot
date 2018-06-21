@@ -12,6 +12,14 @@ a:hover {
   text-decoration: none;
 }
 
+p {
+  color: #053D61
+}
+
+h3 {
+  color: #053D61
+}
+
 .noselect {
   pointer-events: none;
   -webkit-touch-callout: none; /* iOS Safari */
@@ -82,7 +90,7 @@ a:hover {
   border-color: #1B6698;
 }
 .btn-yes {
-  border-top-right-radius: 3px; 
+  border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   color: #0ABFBF;
   background-color: transparent;
@@ -104,6 +112,21 @@ a:hover {
   color: #fff;
   background-color: #FF515A;
   border-color: #FF515A;
+}
+.btn-about {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  color: #0ABFBF;
+  background-color: transparent;
+  border-color: #0ABFBF;
+  position: fixed;
+  top: -4px;
+  right: 0px;
+}
+.btn-about:hover {
+  color: #fff;
+  background-color: #0ABFBF;
+  border-color: #0ABFBF;
 }
 .btn-link,
 .btn-toggle {
