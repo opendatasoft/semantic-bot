@@ -6,13 +6,13 @@ DBPEDIA_ONTOLOGY_URI = "http://dbpedia.org/ontology/"
 FR_DBPEDIA_RESOURCE_URI = "http://fr.dbpedia.org/resource/{resource_name}"
 
 try:
-    eng_dbpedia = HDTDocument("dbpedia_dump/en/instance_type.hdt")
+    eng_dbpedia = HDTDocument("data_dumps/dbpedia/en/instance_type.hdt")
 except RuntimeError:
-    raise RuntimeError("DBpedia english dump not found: Put dbpedia dump into dbpedia_dump folder")
+    raise RuntimeError("DBpedia english dump not found: Put dbpedia dump into data_dumps/dbpedia/en/ folder")
 try:
-    fr_dbpedia = HDTDocument("dbpedia_dump/fr/instance_type.hdt")
+    fr_dbpedia = HDTDocument("data_dumps/dbpedia/fr/instance_type.hdt")
 except RuntimeError:
-    raise RuntimeError("DBpedia french dump not found: Put dbpedia dump into dbpedia_dump folder")
+    raise RuntimeError("DBpedia french dump not found: Put dbpedia dump into data_dumps/dbpedia/fr/ folder")
 
 
 def entity_types_request(query, language='en'):
