@@ -15,11 +15,11 @@ except RuntimeError:
     raise RuntimeError("DBpedia french dump not found: Put dbpedia dump into dbpedia_dump folder")
 
 
-def entity_types_request(query, lang='en'):
+def entity_types_request(query, language='en'):
     if query:
         query = query.encode("utf-8")
         query = to_dbpedia_format(query)
-        if lang == 'fr':
+        if language == 'fr':
             subject_query_fr = FR_DBPEDIA_RESOURCE_URI.format(resource_name=query)
             (triples, cardinality) = fr_dbpedia.search_triples(subject_query_fr, "", "")
         else:

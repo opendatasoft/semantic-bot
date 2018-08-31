@@ -20,17 +20,18 @@ def hasNoNumbers(value):
 
 
 def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
-    candidate_correspondances = {'classes': get_dataset_classes(ods_dataset_records),
+    language = get_dataset_language(ods_dataset_metas)
+    candidate_correspondances = {'classes': get_dataset_classes(ods_dataset_records, language),
                                  'properties': get_dataset_properties(ods_dataset_metas)}
     return candidate_correspondances
 
 
-def get_dataset_classes(ods_dataset_records):
+def get_dataset_classes(ods_dataset_records, language='en'):
     candidates_classes = {}
     for record in ods_dataset_records:
         for field, value in record['fields'].iteritems():
             if hasNoNumbers(value):
-                types = DBPediaNER.entity_types_request(value)
+                types = DBPediaNER.entity_types_request(value, language)
                 if types:
                     if field in candidates_classes:
                         candidates_classes[field].extend(types)
@@ -96,3 +97,10 @@ def is_valid(lov_result):
         except (requests.Timeout, ConnectionError):
             return False
     return True
+
+
+def get_dataset_language(ods_dataset_metas):
+    if 'metas' in ods_dataset_metas:
+        if 'language' in ods_dataset_metas['metas']:
+            return ods_dataset_metas['metas']['language']
+    return 'eng'
