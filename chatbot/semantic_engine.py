@@ -21,12 +21,12 @@ def hasNoNumbers(value):
 
 def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
     language = get_dataset_language(ods_dataset_metas)
-    candidate_correspondances = {'classes': get_dataset_classes(ods_dataset_records, language),
+    candidate_correspondances = {'classes': get_dataset_classes(ods_dataset_records, ods_dataset_metas, language),
                                  'properties': get_dataset_properties(ods_dataset_metas)}
     return candidate_correspondances
 
 
-def get_dataset_classes(ods_dataset_records, language='en'):
+def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     candidates_classes = {}
     for record in ods_dataset_records:
         for field, value in record['fields'].iteritems():
@@ -42,6 +42,10 @@ def get_dataset_classes(ods_dataset_records, language='en'):
         common_class = Counter(classes).most_common(1)[0][0]
         class_correspondance = get_class_correspondance(common_class)
         if class_correspondance:
+            field_meta = get_field(ods_dataset_metas, field)
+            class_correspondance['label'] = field
+            if field_meta and field_meta['label']:
+                class_correspondance['label'] = field_meta['label']
             class_correspondance['field_name'] = field
             correspondances.append(class_correspondance)
     return correspondances
@@ -55,6 +59,7 @@ def get_dataset_properties(ods_dataset_metas):
             prop = "{} date".format(smart_str(prop))
         property_correspondance = get_property_correspondance(prop)
         if property_correspondance:
+            property_correspondance['label'] = field['label']
             property_correspondance['field_name'] = field['name']
             property_correspondance['type'] = field['type']
             properties.append(property_correspondance)
@@ -104,3 +109,10 @@ def get_dataset_language(ods_dataset_metas):
         if 'language' in ods_dataset_metas['metas']:
             return ods_dataset_metas['metas']['language']
     return 'eng'
+
+
+def get_field(ods_dataset_metas, field_name):
+    for field in ods_dataset_metas['fields']:
+        if field['name'] == field_name:
+            return field
+    return None
