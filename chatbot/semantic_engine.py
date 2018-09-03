@@ -5,7 +5,7 @@ from django.utils.encoding import smart_str
 
 import utils.lov_api as LovApi
 import utils.dbpedia_ner as DBPediaNER
-import utils.wikidata_ner as WikiDataNER
+# import utils.wikidata_ner as WikiDataNER
 import utils.requester as Requester
 from requests.exceptions import ConnectionError
 
@@ -32,8 +32,10 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     for record in ods_dataset_records:
         for field, value in record['fields'].iteritems():
             if hasNoNumbers(value):
-                # types = DBPediaNER.entity_types_request(value, language)
-                types = WikiDataNER.entity_types_request(value, language)
+                types = DBPediaNER.entity_types_request(value, language)
+                # if not types:
+                    # DBPedia can't find a type for this field
+                    # types = WikiDataNER.entity_types_request(value, language)
                 if types:
                     if field in candidates_classes:
                         candidates_classes[field].extend(types)

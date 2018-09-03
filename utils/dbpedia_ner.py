@@ -5,6 +5,8 @@ DBPEDIA_ONTOLOGY_URI = "http://dbpedia.org/ontology/"
 
 FR_DBPEDIA_RESOURCE_URI = "http://fr.dbpedia.org/resource/{resource_name}"
 
+TYPES_TO_IGNORE = ['owl#Thing']
+
 try:
     eng_dbpedia = HDTDocument("data_dumps/dbpedia/en/instance_type.hdt")
 except RuntimeError:
@@ -28,7 +30,7 @@ def entity_types_request(query, language='en'):
         classes = []
         for triple in triples:
             cl = triple[2]
-            if "owl#Thing" not in cl:
+            if not is_ignored(cl):
                 cl = cl.replace(DBPEDIA_ONTOLOGY_URI, '')
                 classes.append(cl)
         if classes:
@@ -40,3 +42,9 @@ def to_dbpedia_format(query):
     query = query.title()
     query = query.replace(' ', '_')
     return query
+
+
+def is_ignored(class_name):
+    for type_to_ignore in TYPES_TO_IGNORE:
+        if type_to_ignore in class_name:
+            return True

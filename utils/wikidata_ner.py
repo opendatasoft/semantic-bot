@@ -4,6 +4,8 @@ SCHEMA_NAME = "http://schema.org/name"
 WIKIDATA_TYPE = 'http://www.wikidata.org/prop/P31'
 WIKIDATA_TYPE_STATEMENT = 'http://www.wikidata.org/prop/statement/P31'
 
+TYPES_TO_IGNORE = ['Wikimedia disambiguation page', 'Album', 'album']
+
 try:
     wikidata = HDTDocument("data_dumps/wikidata/wikidata-20170313-all-BETA.hdt")
 except RuntimeError:
@@ -30,9 +32,16 @@ def entity_types_request(query, language='en'):
                     (triples_class_name, cardinality) = wikidata.search_triples(entity_class, SCHEMA_NAME, "")
                     for triple in triples_class_name:
                         class_name = triple[2]
-                        if '@en' in class_name:
-                            classes.append(class_name.replace('@en', '').replace('"', ''))
-                            break
+                        if '@en' in class_name and '@en-' not in class_name:
+                            if not is_ignored(class_name):
+                                classes.append(class_name.split('@')[0].replace('"', ''))
+                                break
         if classes:
             return classes
     return None
+
+
+def is_ignored(class_name):
+    for type_to_ignore in TYPES_TO_IGNORE:
+        if type_to_ignore in class_name:
+            return True
