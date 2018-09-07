@@ -8,8 +8,11 @@ Ontology Mapping ChatBot is a  semi-interactive ontology mapping algorithm. It p
 DBpedia is wikipedia in RDF format with ontologies to describe resources.
 Chatbot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
+## Wikidata
+Wikidata is an other dataset that is used for named entity recognition by the chatbot.
+
 ## LOV (Linked Open Vocabularies)
-LOV is a ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
+LOV is an ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
 
 ## Ontology (The curse word)
 
@@ -39,7 +42,7 @@ pip install pybind11==2.2.2
 pip install -r requirements.txt
 ```
 
-Download `hdt` version of DBPedia instance type dataset [here](https://eu.ftp.opendatasoft.com/bmoreau/chatbot_dbpedia_dump.zip) and override `/dbpedia_dump`
+Download `hdt` versions of DBPedia and Wikidata datasets [here](https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip) and override `/data_dumps`
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
@@ -114,7 +117,7 @@ Conversations API is used to translate possible correspondences into Human Reada
 
 # How it works?
 ## 1 Class matching
-It use a local dump of DBPedia to find classes corresponding to dataset's fields using named entity recognition.
+It use a local dumps of DBPedia and Wikidata to find classes corresponding to dataset's fields using named entity recognition.
 N-first values of each fields are analysed and corresponding classes names are returned.
 
 Each class name is sent to Class LOV API. Class LOV API returns class URI and class description. Those informations are stored in chatbot's candidate correspondances dict.
