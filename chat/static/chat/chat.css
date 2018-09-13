@@ -8,16 +8,18 @@ a {
   color: #5b94d3;
 }
 a:hover {
-  color: #5bd38c;
+  color: #1B6698;
   text-decoration: none;
 }
 
 p {
-  color: #053D61
+  color: #053D61;
+  margin: 10px auto;
 }
 
 h3 {
-  color: #053D61
+  color: #053D61;
+  font-weight: 300;
 }
 
 .noselect {
@@ -243,4 +245,111 @@ h3 {
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;
+}
+
+/* ABOUT */
+
+.modal-dialog {
+  max-width: 633px;
+}
+
+.about-section {
+  margin: 10px auto 33px;
+}
+
+/* Hubspot */
+input.hs-button.primary.large {
+    background: none;
+    box-shadow: none;
+    text-shadow: none;
+    border-radius: 3px;
+    border: 0;
+    color: #ffffff; 
+
+    padding: 4px 15px;
+    font-size: 1rem;
+    line-height: 2;
+    font-weight: 400;
+
+    background-image: -webkit-linear-gradient(left,#003C63,#1B6698);
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+input.hs-button.primary.large:hover {
+    background: none;
+    box-shadow: none;
+    text-shadow: none;
+    border-radius: 3px;
+    border: 0;
+    color: #ffffff;
+    background-color: #1B6698;
+}
+
+fieldset input.hs-input {
+    height: 35px !important;
+    font-weight: 100;
+}
+
+textarea.hs-input {
+    height: 133px !important;
+    font-weight: 100 !important;
+}
+fieldset input.hs-input, textarea.hs-input, select.hs-input {
+    display: inline-block;
+    width: 210px;
+    padding: 4px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 17px !important;
+    font-weight: normal;
+    line-height: 21px !important;
+    color: #666;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    box-shadow: none;
+}
+
+ul.hs-error-msgs.inputs-list label {
+    color: #003C63;
+}
+.legal-consent-container .field.hs-form-field {
+    margin-bottom: -20px !important;
+}
+.inputs-list li input {
+    margin: 0px 3px 0px 0px;
+}
+
+input.hs-input:focus {
+    box-shadow: none !important;
+    border:0;
+}
+
+label {
+    float: none;
+    width: auto;
+    font-weight: 300 !important;
+    text-align: left;
+    line-height: 20px !important;
+    padding-top: 0;
+    margin-bottom: 4px;
+    font-size: 15px !important;
+}
+
+fieldset.form-columns-1 .hs-input {
+    width: 100% !important;
+}
+
+.form-columns-2 .hs-input,
+.form-columns-2 textarea.hs-input {
+    box-sizing: border-box;
+    max-width: 500px;
+    width: 97% !important;
+}
+
+.legal-consent-container .hs-field-desc.checkbox-desc {
+    margin: 0;
+    text-align: left;
 }

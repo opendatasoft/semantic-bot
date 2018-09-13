@@ -9,46 +9,79 @@ document.write(`
         </button>
       </div>
       <div class="modal-body">
-        <h3> OpenDataSoft </h3>
-        <p>
-          OpenDataSoft is an online platform designed to quickly facilitate the publication,
-          sharing and re-use of data by business users and stimulate the creation of new applications.
-        <br>
-          <a href="https://www.opendatasoft.com/">www.opendatasoft.com</a>.
-        <br>
-        </p>
-        <p>
-          Data network is a dataset library accesible for everyone. It gathers public datasets from all users in one place.
-        <br>
-          <a href="https://data.opendatasoft.com/">data.opendatasoft.com</a>.
-        </p>
-        <h3> Semantic </h3>
-        <p>
-          <a href="https://en.wikipedia.org/wiki/Semantic_Web">Semantic web</a> technologies are used on OpenDataSoft platform
-          to improve data interoperability. It facilitates data discoverability and data consumption.
-          Semantic powered features such as semantic filters or automatic federation of datasets will make OpenDataSoft plateform smarter.
-        </p>
-        <p>
-          A documentation about how semantic web is used on OpenDataSoft platform is
-          available at <a href="hhttps://help.opendatasoft.com/apis/tpf/">help.opendatasoft.com/apis/tpf</a>.
-        </p>
-        <h3> Chatbot </h3>
-        <p>
-          Integrating data in the semantic web is not an easy task.
-          The goal of this chatbot is to assist you in this process.
-        <br>
-          Chatbot will generate an <a href="http://rml.io/">RML</a>. mapping file that can be uploaded to OpenDataSoft plateform to define how your dataset should be described in semantic formats.
-        <br>
-          This tool is powered with linked data from
-          <a href="http://lov.okfn.org/">Linked Open Vocabularies</a>, <a href="https://wiki.dbpedia.org/">DBpedia</a> and <a href="https://www.wikidata.org/">Wikidata</a>.
-        </p>
-        <h3> Contact </h3>
-        <a href="TO DO">Hubspot</a>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        <div class="about-section">
+          <h3><i class="far fa-heart"></i> OpenDataSoft</h3>
+          <p>
+            OpenDataSoft is an online platform designed to quickly facilitate the publication,
+            sharing and re-use of data by business users and stimulate the creation of new applications.
+          </p>
+          <a href="https://www.opendatasoft.com/" target="_blank">Learn more about OpenDataSoft</a>.
+
+          <p>
+            The data network is a data catalog available for everyone. It gathers public and open datasets published by every OpenDataSoft's users in one place.
+          </p>
+          <a href="https://data.opendatasoft.com/" target="_blank">Explore the data network</a>.
+        </div>
+
+        <div class="about-section">
+          <h3><i class="fas fa-share-alt"></i> Semantic at OpenDataSoft</h3>
+          <p>
+            <a href="https://en.wikipedia.org/wiki/Semantic_Web" target="_blank">Semantic web</a> technologies are used on OpenDataSoft platform
+            to improve data interoperability. It improves data discoverability and data consumption.
+            Semantic powered features such as semantic filters or automatic federation of datasets will make OpenDataSoft plateform smarter for it's users.
+          </p>
+          <p>
+            A documentation about <a href="hhttps://help.opendatasoft.com/apis/tpf/" target="_blank">how semantic web is used on OpenDataSoft</a> is available.
+          </p>
+        </div>
+
+        <div class="about-section">
+          <h3><i class="far fa-comment-alt"></i> Chatbot</h3>
+          <p>
+            Integrating data in the semantic web is not an easy task. The goal of this chatbot is to assist you in this process.
+          </p>
+          <p>
+            Chatbot will generate an <a href="http://rml.io/" target="_blank">RML</a>. mapping file that can be uploaded to OpenDataSoft plateform to define how your dataset should be described in semantic formats.
+          </p>
+          <p>
+            This tool is powered with linked data from
+            <a href="http://lov.okfn.org/" target="_blank">Linked Open Vocabularies</a>, <a href="https://wiki.dbpedia.org/" target="_blank">DBpedia</a> and <a href="https://www.wikidata.org/" target="_blank">Wikidata</a>.
+          </p>
+        </div>
+
+        <div class="about-section">
+          <h3><i class="fas fa-graduation-cap"></i> Research</h3>
+          <p>
+            Semantic web at OpenDataSoft is lead by Benjamin Moreau. You can <a href="https://scholar.google.fr/citations?user=TGDeQO0AAAAJ&hl=fr" target="_blank">learn more about his work</a> and feel free to adress him a message!
+          </p>
+        </div>
+
+        <div class="about-section">
+          <h3><i class="fab fa-github"></i> Open source</h3>
+          The code source for this bot is open under MIT license on <a href="https://github.com/opendatasoft/ontology-mapping-chatbot" target="_blank">Github</a>.
+        </div>
+
+        <div class="about-section">
+          <h3><i class="far fa-envelope"></i> Reach out</h3>
+        <!--[if lte IE 8]>
+          <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2-legacy.js"></script>
+        <![endif]-->
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
+        <script>
+          hbspt.forms.create({
+            portalId: "2041226",
+            formId: "7384c995-db10-415d-910c-8bd4090abb91"
+          });
+        </script>
       </div>
     </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   </div>
+</div>
 </div>
 `);
