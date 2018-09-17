@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="{% static "chat/chat.css" %}">
+  <link rel="icon" type="image/png" href="{% static "chat/favicon.ico" %}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>OpenDataSoft - Semantic Chatbot</title>
@@ -12,10 +13,16 @@
   <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
 </head>
 <body class="Global-container">
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-secondary btn-about" data-toggle="modal" data-target="#aboutModal">About</button>
+  <nav class="ods-front-header portal-header-wrapper">
+    <div class="portal-navigation">
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-secondary btn-about" data-toggle="modal" data-target="#aboutModal">About</button>
+    </div>
+  </nav>
   <div class="container">
-    <div class="row"></div>
+    <div class="portal-logo-wrapper">
+      <img src="{% static "chat/semantic-chatbot-logo.png" %}" class="ods-front-header__logo">
+    </div>
     <div class="row">
       <div class="col-lg-2">
       </div>
@@ -106,6 +113,96 @@
   </div>
 </div>
 {% endverbatim %}
+<!-- Footer -->
+  <div class="ods-footer">
+    <div class="ods-footer-lists">
+      <a href="https://opendatasoft.com"
+      target="_blank">
+      <img src="{% static "chat/1000_white.png" %}" alt="OpenDataSoft logo" class="ods-footer__logo"> 
+    </a>
+    <div class="lists">
+      <ul class="">
+        <li>
+          <h3>
+            OpenDataSoft <i class="fa fa-globe" aria-hidden="true"></i>
+          </h3>
+        </li>
+        <li>
+          <a href="https://www.opendatasoft.com/about-us/" target="_blank">About us</a>
+        </li>
+        <li>
+          <a href="https://legal.opendatasoft.com/en/terms-of-use.html" target="_blank">Terms of use</a>
+        </li>
+
+        <li>
+          <a href="https://www.opendatasoft.com/resources/" target="_blank">Ressources</a>
+        </li>
+        <li>
+          <a href="https://legal.opendatasoft.com/en/privacy-policy.html" target="_blank">Privacy</a>
+        </li>
+
+      </ul>
+
+      <ul class="">
+        <li>
+          <h3>
+            Tech Center <i class="fa fa-code" aria-hidden="true"></i>
+          </h3>
+        </li>
+        <li>
+          <a href="https://help.opendatasoft.com/en/home" target="_blank">Help center</a>
+        </li>
+
+        <li>
+          <a href="https://github.com/opendatasoft" target="_blank">Github</a>
+        </li>
+        <li>
+          <a href="https://vimeo.com/channels/howtoopendatasoft" target="_blank">Tutorials</a>
+        </li>
+      </ul>
+
+      <ul class="">
+        <li>
+          <h3>
+            Contact <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
+          </h3>
+        </li>
+        <li>
+          <a href="https://www.opendatasoft.com/contact/" target="_blank">Contact</a>
+        </li>
+        <li>
+          <a href="https://twitter.com/opendatasoft" target="_blank">Twitter</a>
+        </li>
+        <li>
+          <a href="https://www.facebook.com/opendatasoft/" target="_blank">Facebook</a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/company/opendatasoft/" target="_blank">Linkedin</a>
+        </li>
+        <li>
+          <a href="https://vimeo.com/opendatasoft" target="_blank">Vimeo</a>
+        </li>
+      </ul>
+      <ul class="">
+        <li>
+          <h3>
+            Awesomeness <i class="fa fa-heartbeat" aria-hidden="true"></i>
+          </h3>
+        </li>
+        <li>
+          <a href="https://entreprises.live/pages/home/" target="_blank">Entreprises.live</a>
+        </li>
+        <li>
+          <a href="https://www.datastro.eu/pages/home/" target="_blank">Datastro</a>
+        </li>
+        <li>
+          <a href="http://opendataamerica.com/" target="_blank">OpenDataAmerica</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <!-- aboutModal -->
 <script src="{% static "chat/about.js" %}"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.js" crossorigin="anonymous"></script>
