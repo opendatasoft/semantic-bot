@@ -8,8 +8,8 @@ Ontology Mapping ChatBot is a  semi-interactive ontology mapping algorithm. It p
 DBpedia is wikipedia in RDF format with ontologies to describe resources.
 Chatbot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
-## Wikidata
-Wikidata is an other dataset that is used for named entity recognition by the chatbot.
+## YAGO
+YAGO is an other dataset that is used for named entity recognition by the chatbot.
 
 ## LOV (Linked Open Vocabularies)
 LOV is an ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
