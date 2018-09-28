@@ -42,26 +42,9 @@ pip install pybind11==2.2.2
 pip install -r requirements.txt
 ```
 
-Download `hdt` versions of DBPedia and Wikidata datasets (splited in parts of 1Go) and override `/data_dumps`
+Download `hdt` versions of DBPedia and YAGO datasets and override `/data_dumps`
 ```
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.zip
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z01
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z02
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z03
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z04
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z05
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z06
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z07
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z08
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z09
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z10
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z11
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z12
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z13
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z14
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z15
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z16
-https://eu.ftp.opendatasoft.com/bmoreau/dataset_dumps.z17
+https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
 ```
 
 # Run the demo
