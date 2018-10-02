@@ -51,21 +51,21 @@ h3 {
 }
 
 .Chat-container {
-  background: #FCFFFF;
-  border: 0px solid;
-  border-radius: 3px;
-  margin: 70px 0;
-  padding-top: 16px;
-  -webkit-box-shadow: 24px 7px 46px 7px rgba(0,0,0,0.31);
-  -moz-box-shadow: 24px 7px 46px 7px rgba(0,0,0,0.31);
-  box-shadow: 24px 7px 46px 7px rgba(0,0,0,0.31);
+    background: #FCFFFF;
+    margin: 70px 0;
+    border: 1px solid #e4e4e4;
+    padding: 0px;
+    border-radius: 3px;
+    box-shadow: 0px 1px 5px gainsboro;
+    -moz-box-shadow: 0px 1px 5px gainsboro;
+    -webkit-box-shadow: 0px 1px 5px gainsboro;
 }
 
 .Messages-container {
   background: #DFE6ED;
-  border: 1px solid #ddd;
+/*  border: 1px solid #ddd;*/
   padding-top: 16px;
-  height: 500px;
+  height: 433px;
   overflow-y: scroll;
   overflow-x: hidden;
   border-radius: 3px;
@@ -108,14 +108,16 @@ h3 {
 .btn-yes {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
-  color: #0ABFBF;
+  color: #0B81A3;
   background-color: transparent;
-  border-color: #0ABFBF;
+  border-color: #0B81A3;
 }
 .btn-yes:hover {
   color: #fff;
-  background-color: #0ABFBF;
-  border-color: #0ABFBF;
+  /*background-color: #0ABFBF;
+  border-color: #0ABFBF;*/
+  border: 0;
+  background-image: -webkit-linear-gradient(left,#1B6698,#0B81A3);
 }
 .btn-no {
   border-top-left-radius: 3px;
@@ -126,8 +128,10 @@ h3 {
 }
 .btn-no:hover {
   color: #fff;
-  background-color: #FF515A;
-  border-color: #FF515A;
+  /*background-color: #FF515A;
+  border-color: #FF515A;*/
+  border: 0;
+  background-image: -webkit-linear-gradient(left,#CD5C5C,#FF515A);
 }
 .btn-about {
   background: none;
@@ -171,7 +175,7 @@ h3 {
 }
 .alert {
   border-radius: 3px;
-  margin: 1rem auto;
+  margin: 6px auto;
   max-width: 90%;
 }
 .alert-bot {
@@ -182,8 +186,9 @@ h3 {
 
 .alert-user {
   color: #FFFFFF;
-  background-color: #0B81A3;
-  border-color: #ddd;
+  /*background-color: #0B81A3;
+  border-color: #ddd;*/
+  background-image: -webkit-linear-gradient(left,#1B6698,#0B81A3);
 }
 
 ::-webkit-scrollbar {
@@ -391,7 +396,7 @@ fieldset.form-columns-1 .hs-input {
   text-align: center;
 }
 .ods-front-header__logo {
-  height: 133px;
+  height: 90px;
 }
 .text-search {
   margin: 166px auto;
