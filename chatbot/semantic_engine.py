@@ -42,7 +42,8 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     correspondances = []
     for field, classes in candidates_classes.iteritems():
         common_class = Counter(classes).most_common(1)[0][0]
-        class_correspondance = get_class_correspondance(common_class)
+        common_class = smart_str(common_class)
+        class_correspondance = get_class_correspondance(common_class, language)
         if class_correspondance:
             field_meta = get_field(ods_dataset_metas, field)
             class_correspondance['label'] = field
@@ -53,13 +54,13 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     return correspondances
 
 
-def get_dataset_properties(ods_dataset_metas):
+def get_dataset_properties(ods_dataset_metas, language='en'):
     properties = []
     for field in ods_dataset_metas['fields']:
-        prop = field['label']
+        prop = smart_str(field['label'])
         if field['type'] in ['datetime', 'date']:
-            prop = "{} date".format(smart_str(prop))
-        property_correspondance = get_property_correspondance(prop)
+            prop = "{} date".format(prop)
+        property_correspondance = get_property_correspondance(prop, language)
         if property_correspondance:
             property_correspondance['label'] = field['label']
             property_correspondance['field_name'] = field['name']
@@ -68,9 +69,9 @@ def get_dataset_properties(ods_dataset_metas):
     return properties
 
 
-def get_property_correspondance(prop):
+def get_property_correspondance(prop, language='en'):
     response = {'uri': '', 'description': prop, 'sub': []}
-    lov_results = LovApi.term_request(prop, term_type='property')["records"]
+    lov_results = LovApi.term_request(prop, term_type='property', language=language)["records"]
     for lov_result in lov_results:
         lov_result = lov_result['record']
         if is_valid(lov_result):
@@ -86,9 +87,9 @@ def get_property_correspondance(prop):
     return None
 
 
-def get_class_correspondance(clss):
+def get_class_correspondance(clss, language='en'):
     response = {'uri': '', 'class': clss, 'description': clss, 'sub': []}
-    lov_results = LovApi.term_request(clss, term_type='class')["records"]
+    lov_results = LovApi.term_request(clss, term_type='class', language=language)["records"]
     for lov_result in lov_results:
         lov_result = lov_result['record']
         if is_valid(lov_result):

@@ -23,6 +23,8 @@ class QueryParameterMissing(Exception):
 def term_request(query, term_type='class', language='en'):
     language_selection_query = "language = '{}' OR language = 'undefined'".format(language)
     if query:
+        query = query.replace("'", "")
+        # ' char reserved in odsql
         query = query.split()
         if term_type == 'class':
             filter_query = _build_filter_query(FIELD_CLASS_PRIORITY, query)
