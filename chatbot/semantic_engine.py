@@ -3,14 +3,12 @@ from bs4 import BeautifulSoup
 import requests
 from django.utils.encoding import smart_str
 
-import utils.lov_api as LovApi
+import utils.lov_ods_api as LovApi
 import utils.dbpedia_ner as DBPediaNER
 import utils.yago_ner as YagoNER
 import utils.requester as Requester
 from requests.exceptions import ConnectionError
 
-LIMIT_SCORE_FIELD = 0.5000000
-LIMIT_SCORE_CLASS = 0.5555555
 CHECK_URI_AVAILABILITY = True
 
 
@@ -71,37 +69,46 @@ def get_dataset_properties(ods_dataset_metas):
 
 
 def get_property_correspondance(prop):
-    response = {'uri': '', 'description': ''}
-    lov_results = LovApi.term_request(prop, term_type='property')["results"]
+    response = {'uri': '', 'description': prop, 'sub': []}
+    lov_results = LovApi.term_request(prop, term_type='property')["records"]
     for lov_result in lov_results:
+        lov_result = lov_result['record']
         if is_valid(lov_result):
-            response['uri'] = lov_result['uri'][0]
-            if lov_result['highlight']:
-                cleaned_description = BeautifulSoup(lov_result['highlight'][lov_result['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
+            response['uri'] = lov_result['fields']['uri']
+            if lov_result['fields']['description'] and len(lov_result['fields']['description']) < 40:
+                cleaned_description = BeautifulSoup(lov_result['fields']['description'], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
+            elif lov_result['fields']['label']:
+                response['description'] = lov_result['fields']['label']
+            if lov_result['fields']['sub_properties']:
+                response['sub'] = list(lov_result['fields']['sub_properties'])
             return response
     return None
 
 
 def get_class_correspondance(clss):
-    response = {'uri': '', 'class': clss, 'description': clss}
-    lov_results = LovApi.term_request(clss, term_type='class')["results"]
+    response = {'uri': '', 'class': clss, 'description': clss, 'sub': []}
+    lov_results = LovApi.term_request(clss, term_type='class')["records"]
     for lov_result in lov_results:
+        lov_result = lov_result['record']
         if is_valid(lov_result):
-            response['uri'] = lov_result['uri'][0]
-            if lov_result['highlight']:
-                cleaned_description = BeautifulSoup(lov_result['highlight'][lov_result['highlight'].keys()[0]][0], "html5lib").get_text().encode('utf8')
+            response['uri'] = lov_result['fields']['uri']
+            if lov_result['fields']['description'] and len(lov_result['fields']['description']) < 40:
+                cleaned_description = BeautifulSoup(lov_result['fields']['description'], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
+            elif lov_result['fields']['label']:
+                cleaned_description = BeautifulSoup(lov_result['fields']['label'], "html5lib").get_text().encode('utf8')
+                response['description'] = cleaned_description
+            if lov_result['fields']['sub_classes']:
+                response['sub'] = list(lov_result['fields']['sub_classes'])
             return response
     return None
 
 
 def is_valid(lov_result):
-    if lov_result < LIMIT_SCORE_FIELD:
-        return False
     if CHECK_URI_AVAILABILITY:
         try:
-            if requests.get(lov_result['uri'][0], timeout=Requester.get_timeout()).status_code != 200:
+            if requests.get(lov_result['fields']['uri'], timeout=Requester.get_timeout()).status_code != 200:
                 return False
         except (requests.Timeout, ConnectionError):
             return False

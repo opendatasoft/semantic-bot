@@ -23,6 +23,7 @@ class QueryParameterMissing(Exception):
 def term_request(query, term_type='class', language='en'):
     language_selection_query = "language = '{}' OR language = 'undefined'".format(language)
     if query:
+        query = query.split()
         if term_type == 'class':
             filter_query = _build_filter_query(FIELD_CLASS_PRIORITY, query)
             url = SEARCH_CLASS_URL
@@ -33,7 +34,6 @@ def term_request(query, term_type='class', language='en'):
         params = {'where': query, 'sort': SORT, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
-        print request.json()
         return request.json()
     else:
         raise QueryParameterMissing
@@ -42,8 +42,9 @@ def term_request(query, term_type='class', language='en'):
 def _build_filter_query(field_priority, query):
     filter_query = None
     for field in field_priority:
-        if filter_query:
-            filter_query = FIELD_FILTER.format(field, query)
-        else:
-            filter_query = "{} OR {}".format(filter_query, FIELD_FILTER.format(field, query))
+        for value in query:
+            if filter_query:
+                filter_query = "{} OR {}".format(filter_query, FIELD_FILTER.format(field, value))
+            else:
+                filter_query = FIELD_FILTER.format(field, value)
     return filter_query
