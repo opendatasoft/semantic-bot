@@ -275,7 +275,7 @@ function update(links, nodes) {
 
     node.append("circle")
         .attr("r", 30)
-        .style("fill", function(d) { return (d.group == "resource") ? "#a5b6d3" : "#E8E8E8"; })
+        .style("fill", function(d) { return (d.group == "resource") ? "#007fa4" : "#E8E8E8"; })
 
     node.append("title")
         .text(function (d) {return d.id;});

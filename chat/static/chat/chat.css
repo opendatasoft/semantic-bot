@@ -139,7 +139,7 @@ h3 {
   text-shadow: none;
   border-radius: 3px;
   border: 0;
-  color: #ffffff; 
+  color: #ffffff;
 
   padding: 4px 15px;
   font-size: 1rem;
@@ -271,6 +271,11 @@ h3 {
   text-align: left;
 }
 
+#mapping_graph {
+  display: block;
+  margin: auto;
+}
+
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;
@@ -293,7 +298,7 @@ input.hs-button.primary.large {
   text-shadow: none;
   border-radius: 3px;
   border: 0;
-  color: #ffffff; 
+  color: #ffffff;
 
   padding: 4px 15px;
   font-size: 1rem;
