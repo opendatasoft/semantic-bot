@@ -82,7 +82,7 @@ def get_property_correspondance(prop, language='en'):
             elif lov_result['fields']['label']:
                 response['description'] = lov_result['fields']['label']
             if lov_result['fields']['sub_properties']:
-                response['sub'] = list(lov_result['fields']['sub_properties'])
+                response['sub'] = eval(lov_result['fields']['sub_properties'])
             return response
     return None
 
@@ -101,7 +101,7 @@ def get_class_correspondance(clss, language='en'):
                 cleaned_description = BeautifulSoup(lov_result['fields']['label'], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
             if lov_result['fields']['sub_classes']:
-                response['sub'] = list(lov_result['fields']['sub_classes'])
+                response['sub'] = eval(lov_result['fields']['sub_classes'])
             return response
     return None
 

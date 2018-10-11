@@ -1,4 +1,5 @@
 from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDFS, XSD
+from urllib import quote
 
 rr = Namespace("http://www.w3.org/ns/r2rml#")
 rml = Namespace("http://semweb.mmlab.be/ns/rml#")
@@ -21,8 +22,10 @@ def serialize(confirmed_correspondances, dataset_id):
     rdf_mapping.bind("rr", rr)
     rdf_mapping.bind("rml", rml)
     for class_correspondance in confirmed_correspondances['classes']:
+        class_correspondance['class'] = quote(class_correspondance['class'])
         add_class_map(rdf_mapping, class_correspondance, dataset_id)
     for property_correspondance in confirmed_correspondances['properties']:
+        property_correspondance['associated_class'] = quote(property_correspondance['associated_class'])
         add_predicate_map(rdf_mapping, property_correspondance, confirmed_correspondances['classes'])
     return rdf_mapping.serialize(format='ttl')
 
@@ -41,6 +44,8 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
     rdf_mapping.add((subject_id, subject_map, subject_map_node))
     rdf_mapping.add((subject_map_node, rr['template'], Literal(SUBJECT_URI.format(dataset_id=dataset_id, class_name=class_correspondance['class'], field_name=class_correspondance['field_name']))))
     rdf_mapping.add((subject_map_node, rr['class'], URIRef(class_correspondance['uri'])))
+    for sub_class in class_correspondance['sub']:
+        rdf_mapping.add((subject_map_node, rr['class'], URIRef(sub_class)))
     # Adding label of the resource
     predicate_map = rr['predicateObjectMap']
     node = BNode()
@@ -57,6 +62,8 @@ def add_predicate_map(rdf_mapping, property_correspondance, class_correspondance
     node = BNode()
     rdf_mapping.add((subject_id, predicate_map, node))
     rdf_mapping.add((node, rr['predicate'], URIRef(property_correspondance['uri'])))
+    for sub_property in property_correspondance['sub']:
+        rdf_mapping.add((node, rr['predicate'], URIRef(sub_property)))
     object_node = BNode()
     rdf_mapping.add((node, rr['objectMap'], object_node))
     field_name = property_correspondance['field_name']
