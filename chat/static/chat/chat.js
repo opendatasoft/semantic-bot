@@ -12,10 +12,13 @@ var chat = new Vue({
     awaiting_user: false,
     yes_no_questions: true,
     is_finished: false,
-    rml_mapping: null
+    rml_mapping: null,
+    source_domain_address: null,
+    language: "en",
   },
   mounted: function(){
       this.bot_introduction();
+      this.get_dataset_metas();
   },
   methods: {
     push_user_message: function (message) {
@@ -31,6 +34,18 @@ var chat = new Vue({
        type: 'bot'
       });
       setTimeout(scroll_chat_to_bottom, 100);
+    },
+    get_dataset_metas: function () {
+      this.$http.get('https://data.opendatasoft.com/api/v2/catalog/datasets/'+this.dataset_id).then(response => {
+        this.source_domain_address = response.body['dataset']['metas']['default']['source_domain_address'];
+        this.language = response.body['dataset']['metas']['default']['language'];
+        mapping_set_url = this.get_mapping_set_url()
+        $('#urlSetMapping').append("<a href=\"" + mapping_set_url + "\" target=\"_blank\">" + mapping_set_url + "</a>")
+      });
+    },
+    get_mapping_set_url: function () {
+      dataset_id = this.dataset_id.split('@')[0];
+      return "https://" + this.source_domain_address + "/publish/" + dataset_id + "/#information";
     },
     bot_introduction: function () {
       // Welcome messages
@@ -86,6 +101,8 @@ var chat = new Vue({
                 this.$http.get('/api/conversation/salutation').then(response => {
                   this.push_bot_message(response.body['text']);
                   this.is_finished = true;
+                  $('#resultModal').modal(show=true);
+                  $('#rmlMapping').text(this.rml_mapping);
                 });
               });
             });
@@ -183,7 +200,14 @@ var chat = new Vue({
         }
       }
     },
+    get_mapping_btn: function () {
+      $('#resultModal').modal(show=true);
+    },
   },
+});
+
+new ClipboardJS('.btn-rml', {
+    container: document.getElementById('resultModal')
 });
 
 // D3JS part for the graph

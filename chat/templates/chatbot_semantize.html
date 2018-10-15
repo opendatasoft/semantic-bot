@@ -53,40 +53,35 @@
             <div class="col-lg-5"></div>
           </div>
           {% verbatim %}
-          <div v-if="rml_mapping != null && is_finished" class="row">
-            <div class="col-lg-2"></div>
-            <div class="col-lg-8 alert alert-bot fadeInLeft">
-              <pre><code>
-                {{ rml_mapping }}
-              </code></pre>
-            </div>
-            <div class="col-lg-2"></div>
-          </div>
         </div>
         <!-- <hr class="my-1"> -->
         <div class="Buttons-container">
           <div class="row">
             <div class="col-lg-12">
-              <div v-if="yes_no_questions" >
-                <div class="btn-group" role="group">
-                  <button type="button" v-on:click="user_input_no()" class="btn btn-secondary btn-no" :disabled="is_finished">No</button>
-                  <button type="button" v-on:click="user_input_yes()" class="btn btn-secondary btn-yes" :disabled="is_finished">Yes</button>
-                </div>
-                <div>
-                  <button type="button" v-on:click="user_input_idk()" class="btn btn-link" :disabled="is_finished">I don't know, pass this one...</button>
-                </div>
+              <div v-if="is_finished && rml_mapping!=null" >
+                <button type="button" v-on:click="get_mapping_btn()" class="btn btn-secondary btn-yes">Get my mapping!</button>
               </div>
-
               <div v-else>
-                <div>
-                  <button class="btn btn-secondary btn-margin" v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)" :disabled="is_finished">
-                    {{ associated_class.class }} ({{ associated_class.field_name }})
-                  </button>
+                <div v-if="yes_no_questions" >
+                  <div class="btn-group" role="group">
+                    <button type="button" v-on:click="user_input_no()" class="btn btn-secondary btn-no" :disabled="is_finished">No</button>
+                    <button type="button" v-on:click="user_input_yes()" class="btn btn-secondary btn-yes" :disabled="is_finished">Yes</button>
+                  </div>
+                  <div>
+                    <button type="button" v-on:click="user_input_idk()" class="btn btn-link" :disabled="is_finished">I don't know, pass this one...</button>
+                  </div>
                 </div>
-                <div>
-                  <button class="btn btn-margin btn-link" type="button" v-on:click="user_input_property_class(null)" :disabled="is_finished">
-                    None of those
-                  </button>
+                <div v-else>
+                  <div>
+                    <button class="btn btn-secondary btn-margin" v-for="associated_class in confirmed_correspondances['classes']" type="button" v-on:click="user_input_property_class(associated_class)" :disabled="is_finished">
+                      {{ associated_class.class }} ({{ associated_class.field_name }})
+                    </button>
+                  </div>
+                  <div>
+                    <button class="btn btn-margin btn-link" type="button" v-on:click="user_input_property_class(null)" :disabled="is_finished">
+                      None of those
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -113,101 +108,146 @@
   </div>
 </div>
 {% endverbatim %}
-<!-- Footer -->
-  <div class="ods-footer">
-    <div class="ods-footer-lists">
-      <a href="https://opendatasoft.com"
-      target="_blank">
-      <img src="{% static "chat/1000_white.png" %}" alt="OpenDataSoft logo" class="ods-footer__logo">
-    </a>
-    <div class="lists">
-      <ul class="">
-        <li>
-          <h3>
-            OpenDataSoft <i class="fa fa-globe" aria-hidden="true"></i>
-          </h3>
-        </li>
-        <li>
-          <a href="https://www.opendatasoft.com/about-us/" target="_blank">About us</a>
-        </li>
-        <li>
-          <a href="https://legal.opendatasoft.com/en/terms-of-use.html" target="_blank">Terms of use</a>
-        </li>
-
-        <li>
-          <a href="https://www.opendatasoft.com/resources/" target="_blank">Ressources</a>
-        </li>
-        <li>
-          <a href="https://legal.opendatasoft.com/en/privacy-policy.html" target="_blank">Privacy</a>
-        </li>
-
-      </ul>
-
-      <ul class="">
-        <li>
-          <h3>
-            Tech Center <i class="fa fa-code" aria-hidden="true"></i>
-          </h3>
-        </li>
-        <li>
-          <a href="https://help.opendatasoft.com/en/home" target="_blank">Help center</a>
-        </li>
-
-        <li>
-          <a href="https://github.com/opendatasoft" target="_blank">Github</a>
-        </li>
-        <li>
-          <a href="https://vimeo.com/channels/howtoopendatasoft" target="_blank">Tutorials</a>
-        </li>
-      </ul>
-
-      <ul class="">
-        <li>
-          <h3>
-            Contact <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
-          </h3>
-        </li>
-        <li>
-          <a href="https://www.opendatasoft.com/contact/" target="_blank">Contact</a>
-        </li>
-        <li>
-          <a href="https://twitter.com/opendatasoft" target="_blank">Twitter</a>
-        </li>
-        <li>
-          <a href="https://www.facebook.com/opendatasoft/" target="_blank">Facebook</a>
-        </li>
-        <li>
-          <a href="https://www.linkedin.com/company/opendatasoft/" target="_blank">Linkedin</a>
-        </li>
-        <li>
-          <a href="https://vimeo.com/opendatasoft" target="_blank">Vimeo</a>
-        </li>
-      </ul>
-      <ul class="">
-        <li>
-          <h3>
-            Awesomeness <i class="fa fa-heartbeat" aria-hidden="true"></i>
-          </h3>
-        </li>
-        <li>
-          <a href="https://entreprises.live/pages/home/" target="_blank">Entreprises.live</a>
-        </li>
-        <li>
-          <a href="https://www.datastro.eu/pages/home/" target="_blank">Datastro</a>
-        </li>
-        <li>
-          <a href="http://opendataamerica.com/" target="_blank">OpenDataAmerica</a>
-        </li>
-      </ul>
+<!-- resultModal -->
+<div class="modal fade bd-example-modal-lg" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Result for dataset {{ dataset_id }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="about-section">
+          <h3><i class="fas fa-share-alt"></i> Your mapping</h3>
+          <div>
+            <pre class="rml-snippet">
+              <button type="button" class="btn btn-secondary btn-about btn-rml" data-clipboard-target="#rmlMapping">Copy mapping</button>
+              <code id="rmlMapping">
+              </code>
+          </pre>
+          </div>
+        </div>
+        <div class="about-section">
+          <h3><i class="fas fa-cogs"></i> Update dataset</h3>
+          <h4>Activate semantic metadata on your domain (do it once)</h4>
+          <h6>1. Go to your backoffice in the Configuration section.</h6>
+          <h6>2. Go to Other metadata and click on Semantic Metadata.</h6>
+          <h6>3. Check 'Activate this metadata template on the portal'.</h6>
+          <h6>4. Click the Save button.</h6>
+          <h4>Upload the mapping on your dataset</h4>
+          <h6>1. Login to your backoffice and follow this link:</h6>
+          <div id="urlSetMapping"></div>
+          <h6>or, go to your backoffice catalog, click on your dataset and go to Information tab.</h6>
+          <h6>2. Go to Semantic Metadata section.</h6>
+          <h6>3. Past your mapping in RML Mapping.</h6>
+          <h6>4. Click Save and Publish your dataset.</h6>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   </div>
 </div>
+</div>
+<!-- Footer -->
+<div class="ods-footer">
+  <div class="ods-footer-lists">
+    <a href="https://opendatasoft.com"
+    target="_blank">
+    <img src="{% static "chat/1000_white.png" %}" alt="OpenDataSoft logo" class="ods-footer__logo">
+  </a>
+  <div class="lists">
+    <ul class="">
+      <li>
+        <h3>
+          OpenDataSoft <i class="fa fa-globe" aria-hidden="true"></i>
+        </h3>
+      </li>
+      <li>
+        <a href="https://www.opendatasoft.com/about-us/" target="_blank">About us</a>
+      </li>
+      <li>
+        <a href="https://legal.opendatasoft.com/en/terms-of-use.html" target="_blank">Terms of use</a>
+      </li>
 
+      <li>
+        <a href="https://www.opendatasoft.com/resources/" target="_blank">Ressources</a>
+      </li>
+      <li>
+        <a href="https://legal.opendatasoft.com/en/privacy-policy.html" target="_blank">Privacy</a>
+      </li>
+
+    </ul>
+
+    <ul class="">
+      <li>
+        <h3>
+          Tech Center <i class="fa fa-code" aria-hidden="true"></i>
+        </h3>
+      </li>
+      <li>
+        <a href="https://help.opendatasoft.com/en/home" target="_blank">Help center</a>
+      </li>
+
+      <li>
+        <a href="https://github.com/opendatasoft" target="_blank">Github</a>
+      </li>
+      <li>
+        <a href="https://vimeo.com/channels/howtoopendatasoft" target="_blank">Tutorials</a>
+      </li>
+    </ul>
+
+    <ul class="">
+      <li>
+        <h3>
+          Contact <i class="fa fa-envelope-open-o" aria-hidden="true"></i>
+        </h3>
+      </li>
+      <li>
+        <a href="https://www.opendatasoft.com/contact/" target="_blank">Contact</a>
+      </li>
+      <li>
+        <a href="https://twitter.com/opendatasoft" target="_blank">Twitter</a>
+      </li>
+      <li>
+        <a href="https://www.facebook.com/opendatasoft/" target="_blank">Facebook</a>
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/company/opendatasoft/" target="_blank">Linkedin</a>
+      </li>
+      <li>
+        <a href="https://vimeo.com/opendatasoft" target="_blank">Vimeo</a>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <h3>
+          Awesomeness <i class="fa fa-heartbeat" aria-hidden="true"></i>
+        </h3>
+      </li>
+      <li>
+        <a href="https://entreprises.live/pages/home/" target="_blank">Entreprises.live</a>
+      </li>
+      <li>
+        <a href="https://www.datastro.eu/pages/home/" target="_blank">Datastro</a>
+      </li>
+      <li>
+        <a href="http://opendataamerica.com/" target="_blank">OpenDataAmerica</a>
+      </li>
+    </ul>
+  </div>
+</div>
+</div>
 <!-- aboutModal -->
 <script src="{% static "chat/about.js" %}"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <script>
   function get_dataset_id() {
     return "{{ dataset_id }}";
@@ -220,6 +260,7 @@
 <!-- d3js for the graph -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="http://d3js.org/d3-selection-multi.v1.js"></script>
+<script src="{% static "chat/clipboard.min.js" %}"></script>
 <script src="{% static "chat/chat.js" %}"></script>
 </body>
 </html>
