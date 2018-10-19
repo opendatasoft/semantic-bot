@@ -12,6 +12,9 @@ body {
   flex-direction: column;
   align-items: center;
 }
+body.Global-container {
+    height: 100vh;
+}
 .container {
   flex: 1 1 auto;
 }
@@ -172,6 +175,10 @@ h3 {
   text-decoration: none;
   background-color: transparent;
   border-color: transparent;
+}
+.btn-rml,
+.btn-rml:hover {
+    margin: 20px;
 }
 .alert {
   border-radius: 3px;
