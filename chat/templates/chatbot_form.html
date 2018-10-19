@@ -25,7 +25,7 @@
     </div>
     <div class="text-search">
       <p>Select a dataset from <a href="https://data.opendatasoft.com" target="_blank">OpenDataSoft's data network</a></p>
-      <input id="textBar" class="form-control form-control-lg" autofocus type="text" placeholder="dataset-id@domain-id">
+      <input id="textBar" class="form-control form-control-lg" autofocus type="text" placeholder="dataset-id@domain-id" autocomplete="off">
       <div class="invalid-feedback">Unknown dataset</div>
     </div>
   </div>
@@ -34,7 +34,7 @@
     <div class="ods-footer-lists">
       <a href="https://opendatasoft.com"
       target="_blank">
-      <img src="{% static "chat/1000_white.png" %}" alt="OpenDataSoft logo" class="ods-footer__logo"> 
+      <img src="{% static "chat/1000_white.png" %}" alt="OpenDataSoft logo" class="ods-footer__logo">
     </a>
     <div class="lists">
       <ul class="">
@@ -125,9 +125,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-<!-- d3js for the graph -->
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="http://d3js.org/d3-selection-multi.v1.js"></script>
+<!-- custom scripts -->
+<script src="{% static "chat/jquery.autocomplete.js" %}"></script>
 <script src="{% static "chat/chat_form.js" %}"></script>
+
+
 </body>
 </html>
