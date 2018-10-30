@@ -2,10 +2,10 @@ var chat_form = new Vue({
   el: '#chat-form',
   data: {
     ods_catalog_url: "https://data.opendatasoft.com/api/datasets/1.0/",
-    ods_suggestion_url: "https://data.opendatasoft.com/api/v2/catalog/datasets?rows=10&pretty=false&timezone=UTC&include_app_metas=false&sort=explore.popularity_score&where=",
+    ods_suggestion_url: "https://data.opendatasoft.com/api/v2/catalog/datasets?rows=20&pretty=false&timezone=UTC&include_app_metas=false&sort=explore.popularity_score&search=",
     suggestions: [],
-    minimum_char_to_suggest: 3,
-    suggestion_timeout_ms: 1000
+    minimum_char_to_suggest: 2,
+    suggestion_timeout_ms: 600
   },
   watch: {
     suggestions: function (val) {
@@ -30,7 +30,7 @@ var chat_form = new Vue({
       });
     },
     get_suggestions: function (query) {
-      this.$http.get(this.ods_suggestion_url + 'title%20like%20%22' + query + '%22%20OR%20datasetid%20like%20%22' + query + '%22').then(response => {
+      this.$http.get(this.ods_suggestion_url + query).then(response => {
         ods_suggestions = [];
         for (var i = 0; i < response.body['datasets'].length; i++){
           title = response.body['datasets'][i]['dataset']['metas']['default']['title'];
