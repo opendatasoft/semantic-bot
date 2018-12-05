@@ -1,6 +1,6 @@
-beautifulsoup4==4.6.0
-html5lib==0.999999999
-rdflib==4.2.2
-requests==2.18.4
-Django==1.11.9
-hdt==1.1.0
+beautifulsoup4==4.6
+html5lib==1.0.1
+rdflib==4.2
+requests==2.18
+Django==1.11
+hdt==1.1
