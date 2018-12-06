@@ -27,6 +27,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+# To be defined in your local_settings
+DATA_API_KEY = None
 
 # Application definition
 
