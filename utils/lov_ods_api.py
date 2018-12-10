@@ -8,9 +8,8 @@ import utils.requester as Requester
 SEARCH_CLASS_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked-open-vocabularies-classes%40public/records"
 SEARCH_PROPERTY_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked-open-vocabularies-properties%40public/records"
 
-# we try to choose the most used vocabulary first
-SORT = '-reused_by_datasets, -occurencies_in_datasets'
-FIELD_CLASS_PRIORITY = ['uri', 'equivalent_classes', 'label', 'description', 'sub_classes']
+# SORT = '-reused_by_datasets, -occurencies_in_datasets'
+FIELD_CLASS_PRIORITY = ['uri', 'equivalent_classes', 'label', 'description']
 FIELD_PROPERTY_PRIORITY = ['uri', 'equivalent_properties', 'label', 'description']
 FIELD_FILTER = "{} like '{}'"
 ROWS = 5
@@ -33,7 +32,7 @@ def term_request(query, term_type='class', language='en'):
             filter_query = _build_filter_query(FIELD_PROPERTY_PRIORITY, query)
             url = SEARCH_PROPERTY_URL
         query = "({}) AND ({})".format(filter_query, language_selection_query)
-        params = {'where': query, 'sort': SORT, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
+        params = {'where': query, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
         return request.json()
