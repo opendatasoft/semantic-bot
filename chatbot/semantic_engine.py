@@ -35,11 +35,6 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
                     # DBPedia can't find a type for this field
                     types = YagoNER.entity_types_request(value, language)
                 if types:
-                    for typ in types:
-                        # we should not consider classes with numbers in it
-                        if not hasNoNumbers(typ):
-                            types.remove(typ)
-                if types:
                     if field in candidates_classes:
                         candidates_classes[field].extend(types)
                     else:
@@ -63,7 +58,7 @@ def get_dataset_properties(ods_dataset_metas, language='en'):
     properties = []
     for field in ods_dataset_metas['fields']:
         prop = smart_str(field['label'])
-        if field['type'] in ['datetime', 'date']:
+        if field['type'] in ['datetime', 'date'] and 'date' not in prop:
             prop = "{} date".format(prop)
         property_correspondance = get_property_correspondance(prop, language)
         if property_correspondance:
