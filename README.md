@@ -33,12 +33,26 @@ RML is a generic mapping language to describe multi-format to RDF transformation
 # Installation
 Assuming you already have `python 2.7` and `pip 9`,
 
-create a new virtualenv.
+Clone the repository and go to the directory `ontology-mapping-chatbot`.
+
+It is strongly recommended to create a new virtualenv.
+
+# Automatic installation
+
+Run the installation script
+
+```bash
+./install.sh
+```
+
+If you get errors, proceed to the manual installation.
+
+# Manual installation
 
 install dependencies with pip (~2 minutes to install hdt)
 
 ```bash
-pip install pybind11==2.2.2
+pip install pybind11>=2.2.2
 pip install -r requirements.txt
 ```
 
