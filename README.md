@@ -37,7 +37,7 @@ Clone the repository and go to the directory `ontology-mapping-chatbot`.
 
 It is strongly recommended to create a new virtualenv.
 
-# Automatic installation
+## Automatic installation
 
 Run the installation script
 
@@ -47,7 +47,7 @@ Run the installation script
 
 If you get errors, proceed to the manual installation.
 
-# Manual installation
+## Manual installation
 
 install dependencies with pip (~2 minutes to install hdt)
 
