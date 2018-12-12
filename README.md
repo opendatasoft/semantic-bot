@@ -49,10 +49,10 @@ If you get errors, proceed to the manual installation.
 
 ## Manual installation
 
-install dependencies with pip (~2 minutes to install hdt)
+install dependencies with pip
 
 ```bash
-pip install pybind11>=2.2.2
+pip install pybind11==2.2.2
 pip install -r requirements.txt
 ```
 
