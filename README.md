@@ -56,10 +56,11 @@ pip install pybind11>=2.2.2
 pip install -r requirements.txt
 ```
 
-Download `hdt` versions of DBPedia and YAGO datasets and override `/data_dumps`
-```
+Download `hdt` versions of DBPedia and YAGO datasets at this address:
+
 https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
-```
+
+and override `/data_dumps`
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
