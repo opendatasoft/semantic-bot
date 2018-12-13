@@ -102,6 +102,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] [%(levelname)s] [%(module)s] %(message)s'
+        }
+    },
+    'handlers': {
+        'chatbot_results': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/chatbot_results.log',
+            'formatter': 'simple'
+        }
+    },
+    'loggers': {
+        'results_logger': {
+            'handlers': ['chatbot_results'],
+            'level': 'INFO',
+            'propagate': False,
+        }
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
