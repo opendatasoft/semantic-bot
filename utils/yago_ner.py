@@ -2,7 +2,7 @@ from hdt import HDTDocument
 
 YAGO_RESOURCE_URI = "http://yago-knowledge.org/resource/{resource_name}"
 
-TYPES_TO_IGNORE = ['owl#Thing']
+TYPES_TO_IGNORE = ['owl#Thing', 'wikicat_ISO_basic_Latin_letters', 'wikicat_Latin_letters', 'wikicat_Vowel_letters']
 
 try:
     yago = HDTDocument("data_dumps/yago/instance_type.hdt")

@@ -9,10 +9,15 @@ SEARCH_CLASS_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked
 SEARCH_PROPERTY_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked-open-vocabularies-properties%40public/records"
 
 # SORT = '-reused_by_datasets, -occurencies_in_datasets'
-FIELD_CLASS_PRIORITY = ['uri', 'equivalent_classes', 'label', 'description']
-FIELD_PROPERTY_PRIORITY = ['uri', 'equivalent_properties', 'label', 'description']
+FIELD_CLASS_PRIORITY = ['uri', 'uri_suffix', 'equivalent_classes_suffix', 'label', 'description']
+FIELD_PROPERTY_PRIORITY = ['uri', 'uri_suffix', 'equivalent_properties_suffix', 'label', 'description']
 FIELD_FILTER = "{} like '{}'"
 ROWS = 5
+
+ONTOLOGIES = [
+    'http://dbpedia.org/ontology/',
+    'http://schema.org/'
+]
 
 
 class QueryParameterMissing(Exception):
@@ -20,10 +25,12 @@ class QueryParameterMissing(Exception):
 
 
 def term_request(query, term_type='class', language='en'):
-    language_selection_query = "language = '{}' OR language = 'undefined'".format(language)
+    language_selection_query = "language = '{}' OR language = 'undefined' OR language = 'en'".format(language)
     if query:
         query = query.replace("'", "")
         # ' char reserved in odsql
+        query = query.replace('_', ' ')
+        query = query.replace('-', ' ')
         query = query.split()
         if term_type == 'class':
             filter_query = _build_filter_query(FIELD_CLASS_PRIORITY, query)
@@ -31,7 +38,8 @@ def term_request(query, term_type='class', language='en'):
         else:
             filter_query = _build_filter_query(FIELD_PROPERTY_PRIORITY, query)
             url = SEARCH_PROPERTY_URL
-        query = "({}) AND ({})".format(filter_query, language_selection_query)
+        ontology_query = _build_ontology_query()
+        query = "({}) {} AND ({})".format(filter_query, ontology_query, language_selection_query)
         params = {'where': query, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
@@ -49,3 +57,15 @@ def _build_filter_query(field_priority, query):
             else:
                 filter_query = FIELD_FILTER.format(field, value)
     return filter_query
+
+
+def _build_ontology_query():
+    ontology_query = ''
+    for ontology in ONTOLOGIES:
+        if ontology_query:
+            ontology_query = "{} OR uri_prefix = '{}'".format(ontology_query, ontology)
+        else:
+            ontology_query = "uri_prefix = '{}'".format(ontology)
+    if ontology_query:
+        return "AND {}".format(ontology_query)
+    return ontology_query

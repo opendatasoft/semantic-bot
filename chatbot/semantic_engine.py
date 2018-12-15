@@ -27,6 +27,7 @@ def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
 
 def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     candidates_classes = {}
+    # Search classes using Named Entity Recognition on instances
     for record in ods_dataset_records:
         for field, value in record['fields'].iteritems():
             if hasNoNumbers(value):
@@ -51,6 +52,17 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
                 class_correspondance['label'] = field_meta['label']
             class_correspondance['field_name'] = field
             correspondances.append(class_correspondance)
+    # Else, Search classes using field name
+    for field in ods_dataset_metas['fields']:
+        if field['name'] not in candidates_classes:
+            field_name = smart_str(field['label'])
+            if field['type'] in ['datetime', 'date'] and 'date' not in field_name:
+                field_name = "{} date".format(field_name)
+            class_correspondance = get_class_correspondance(field_name, language)
+            if class_correspondance:
+                class_correspondance['label'] = field['label']
+                class_correspondance['field_name'] = field['name']
+                correspondances.append(class_correspondance)
     return correspondances
 
 
@@ -82,7 +94,7 @@ def get_property_correspondance(prop, language='en'):
             elif lov_result['fields']['label']:
                 response['description'] = lov_result['fields']['label']
             if lov_result['fields']['sub_properties']:
-                response['sub'] = eval(lov_result['fields']['sub_properties'])
+                response['sub'] = lov_result['fields']['sub_properties']
             return response
     return None
 
@@ -101,7 +113,7 @@ def get_class_correspondance(clss, language='en'):
                 cleaned_description = BeautifulSoup(lov_result['fields']['label'], "html5lib").get_text().encode('utf8')
                 response['description'] = cleaned_description
             if lov_result['fields']['sub_classes']:
-                response['sub'] = eval(lov_result['fields']['sub_classes'])
+                response['sub'] = lov_result['fields']['sub_classes']
             return response
     return None
 

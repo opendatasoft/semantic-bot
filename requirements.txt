@@ -4,3 +4,4 @@ rdflib>=4.2
 requests>=2.18
 Django>=1.11,<=1.11.17
 hdt>=1.1
+pytest>=4.0.1
