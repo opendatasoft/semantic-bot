@@ -22,10 +22,10 @@ def serialize(confirmed_correspondances, dataset_id):
     rdf_mapping.bind("rr", rr)
     rdf_mapping.bind("rml", rml)
     for class_correspondance in confirmed_correspondances['classes']:
-        class_correspondance['class'] = quote(class_correspondance['class'])
+        class_correspondance['class'] = quote(class_correspondance['class'].encode('utf8'))
         add_class_map(rdf_mapping, class_correspondance, dataset_id)
     for property_correspondance in confirmed_correspondances['properties']:
-        property_correspondance['associated_class'] = quote(property_correspondance['associated_class'])
+        property_correspondance['associated_class'] = quote(property_correspondance['associated_class'].encode('utf8'))
         add_predicate_map(rdf_mapping, property_correspondance, confirmed_correspondances['classes'])
     return rdf_mapping.serialize(format='ttl')
 

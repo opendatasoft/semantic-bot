@@ -1,4 +1,5 @@
 import requests
+from fuzzywuzzy import fuzz
 
 from django.conf import settings
 
@@ -10,17 +11,17 @@ SEARCH_PROPERTY_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/lin
 
 # SORT = '-reused_by_datasets, -occurencies_in_datasets'
 FIELD_CLASS_PRIORITY = ['uri_suffix', 'equivalent_classes_suffix', 'label', 'description']
+FIELD_CLASS_WEIGHT = [5, 1, 2, 1]
 FIELD_PROPERTY_PRIORITY = ['uri_suffix', 'equivalent_properties_suffix', 'label', 'description']
+FIELD_PROPERTY_WEIGHT = [5, 1, 2, 1]
 FIELD_FILTER = "{} like '{}'"
-ROWS = 5
+ROWS = 50
 
 ONTOLOGIES = [
     'http://dbpedia.org/ontology/',
     'http://schema.org/',
     'http://www.w3.org/2006/vcard/ns#',
-    'http://xmlns.com/foaf/0.1/',
-    'http://purl.org/ontology/bibo/'
-    # 'http://www.loc.gov/mads/rdf/v1#'
+    'http://xmlns.com/foaf/0.1/'
 ]
 
 
@@ -35,20 +36,24 @@ def term_request(query, term_type='class', language='en'):
         # ' char reserved in odsql
         query = query.replace('_', ' ')
         query = query.replace('-', ' ')
-        query = query.split()
+        splited_query = query.split()
         if term_type == 'class':
-            filter_query = _build_filter_query(FIELD_CLASS_PRIORITY, query)
+            field_priority = FIELD_CLASS_PRIORITY
+            field_weight = FIELD_CLASS_WEIGHT
+            filter_query = _build_filter_query(FIELD_CLASS_PRIORITY, splited_query)
             url = SEARCH_CLASS_URL
         else:
-            filter_query = _build_filter_query(FIELD_PROPERTY_PRIORITY, query)
+            field_priority = FIELD_PROPERTY_PRIORITY
+            field_weight = FIELD_PROPERTY_WEIGHT
+            filter_query = _build_filter_query(FIELD_PROPERTY_PRIORITY, splited_query)
             url = SEARCH_PROPERTY_URL
         ontology_query = _build_ontology_query()
-        query = "({}) {} AND ({})".format(filter_query, ontology_query, language_selection_query)
-        params = {'where': query, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
+        where = "({}) {} AND ({})".format(filter_query, ontology_query, language_selection_query)
+        params = {'where': where, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
-        print query
-        return request.json()
+        result_set = _custom_scoring(request.json(), field_priority, field_weight, query)
+        return result_set
     else:
         raise QueryParameterMissing
 
@@ -74,3 +79,13 @@ def _build_ontology_query():
     if ontology_query:
         return "AND ({})".format(ontology_query)
     return ontology_query
+
+
+def _custom_scoring(result_set, field_priority, field_weight, query):
+    for result in result_set['records']:
+            score = 0
+            for i, field in enumerate(field_priority):
+                score += field_weight[i] * fuzz.token_sort_ratio(result['record']['fields'][field], query)
+            result['record']['chatbot_score'] = score
+    result_set['records'] = sorted(result_set['records'], key=lambda result: result['record']['chatbot_score'], reverse=True)
+    return result_set

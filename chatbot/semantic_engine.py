@@ -56,8 +56,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     for field in ods_dataset_metas['fields']:
         if field['name'] not in candidates_classes:
             field_name = smart_str(field['label'])
-            if field['type'] in ['datetime', 'date'] and 'date' not in field_name:
-                field_name = "{} date".format(field_name)
+            field_name = enrich_field(field['type'], field_name)
             class_correspondance = get_class_correspondance(field_name, language)
             if class_correspondance:
                 class_correspondance['label'] = field['label']
@@ -70,8 +69,7 @@ def get_dataset_properties(ods_dataset_metas, language='en'):
     properties = []
     for field in ods_dataset_metas['fields']:
         prop = smart_str(field['label'])
-        if field['type'] in ['datetime', 'date'] and 'date' not in prop:
-            prop = "{} date".format(prop)
+        prop = enrich_field(field['type'], prop)
         property_correspondance = get_property_correspondance(prop, language)
         if property_correspondance:
             property_correspondance['label'] = field['label']
@@ -140,3 +138,17 @@ def get_field(ods_dataset_metas, field_name):
         if field['name'] == field_name:
             return field
     return None
+
+
+# Semantically Enrich a field name.
+def enrich_field(field_type, field):
+    # use field type
+    if field_type in ['datetime', 'date'] and 'date' not in field.lower():
+        field = "{} date".format(field)
+    elif 'geo' in field_type and 'geo' not in field:
+        field = "{} geo".format(field)
+    # use synonyms
+    for place_hyponym in ['city', 'region', 'province', 'country', 'ville']:
+        if place_hyponym in field.lower() and 'place' not in field.lower():
+            field = "{} place".format(field)
+    return field

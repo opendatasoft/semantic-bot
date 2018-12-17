@@ -5,3 +5,5 @@ requests>=2.18
 Django>=1.11,<=1.11.17
 hdt>=1.1
 pytest>=4.0.1
+fuzzywuzzy>=0.17.0
+python-Levenshtein>=0.12.0
