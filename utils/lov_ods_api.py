@@ -9,14 +9,18 @@ SEARCH_CLASS_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked
 SEARCH_PROPERTY_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked-open-vocabularies-properties%40public/records"
 
 # SORT = '-reused_by_datasets, -occurencies_in_datasets'
-FIELD_CLASS_PRIORITY = ['uri', 'uri_suffix', 'equivalent_classes_suffix', 'label', 'description']
-FIELD_PROPERTY_PRIORITY = ['uri', 'uri_suffix', 'equivalent_properties_suffix', 'label', 'description']
+FIELD_CLASS_PRIORITY = ['uri_suffix', 'equivalent_classes_suffix', 'label', 'description']
+FIELD_PROPERTY_PRIORITY = ['uri_suffix', 'equivalent_properties_suffix', 'label', 'description']
 FIELD_FILTER = "{} like '{}'"
 ROWS = 5
 
 ONTOLOGIES = [
     'http://dbpedia.org/ontology/',
-    'http://schema.org/'
+    'http://schema.org/',
+    'http://www.w3.org/2006/vcard/ns#',
+    'http://xmlns.com/foaf/0.1/',
+    'http://purl.org/ontology/bibo/'
+    # 'http://www.loc.gov/mads/rdf/v1#'
 ]
 
 
@@ -43,6 +47,7 @@ def term_request(query, term_type='class', language='en'):
         params = {'where': query, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
+        print query
         return request.json()
     else:
         raise QueryParameterMissing
@@ -67,5 +72,5 @@ def _build_ontology_query():
         else:
             ontology_query = "uri_prefix = '{}'".format(ontology)
     if ontology_query:
-        return "AND {}".format(ontology_query)
+        return "AND ({})".format(ontology_query)
     return ontology_query
