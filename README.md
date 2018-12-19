@@ -69,7 +69,7 @@ python manage.py runserver
 
 App should be running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-Go on [http://127.0.0.1:8000/chatbot/{dataset-id}](http://127.0.0.1:8000/chatbot/dataset-id) and replace `dataset-id` with the Data dataset id you want to semantize.
+Or go on [http://127.0.0.1:8000/chatbot/{dataset-id}](http://127.0.0.1:8000/chatbot/dataset-id) and replace `dataset-id` with the Data dataset id you want to semantize.
 
 example: [http://127.0.0.1:8000/chatbot/roman-emperors@public/](http://127.0.0.1:8000/chatbot/roman-emperors@public/)
 
@@ -130,11 +130,11 @@ Conversations API is used to translate possible correspondences into Human Reada
 # How it works?
 ## 1 Class matching
 It use a local dumps of DBPedia and Yago to find classes corresponding to dataset's fields using named entity recognition.
-N-first values of each fields are analysed and corresponding classes names are returned.
+N-first values of each fields are analyzed and corresponding classes names are returned.
 
-Each class name is sent to Class LOV API. Class LOV API returns class URI and class description. Those informations are stored in chatbot's candidate correspondances dict.
+Each class name is sent to Class LOV API. Class LOV API returns class URI and class description. Those informations are stored in chatbot's candidate correspondences dict.
 
-Using class description and field name, class/field associations are proposed to the user. A positive answer dispatch correspondance in chatbot's confirmed correspondance dict. A negative answer dispatch it in denied correspondance dict. Empty answer dispatch it in awaiting correspondance dict.
+Using class description and field name, class/field associations are proposed to the user. A positive answer dispatch correspondence in chatbot's confirmed correspondence dict. A negative answer dispatch it in denied correspondence dict. Empty answer dispatch it in awaiting correspondence dict.
 
 the following figure illustrate the class matching process.
 
