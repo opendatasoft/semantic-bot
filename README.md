@@ -43,6 +43,11 @@ Run the installation script
 ./install.sh
 ```
 
+Then, create a file `chatbot_app/local_settings.py` and add a SECRET key
+```python
+SECRET_KEY = "<SECRET_KEY>"
+```
+
 If you get errors, proceed to the manual installation.
 
 ## Manual installation
@@ -59,6 +64,11 @@ Download `hdt` versions of DBPedia and YAGO datasets at this address:
 https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
 
 and override `/data_dumps`
+
+Finally, create a file `chatbot_app/local_settings.py` and add a SECRET key
+```python
+SECRET_KEY = "<SECRET_KEY>"
+```
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:
