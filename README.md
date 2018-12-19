@@ -83,19 +83,19 @@ Chatbot is powered by an API exposed by this service:
 
 Correspondences are the semantic correspondences between a dataset's field and an ontology. Fields can be linked to classes (Car, Person, ...) or poroperties of class (Engine horsepower, full name, ...).
 
-`GET` `/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondences (powered by Dandelion API).
+`GET` `/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondences (powered by DBpedia, Yago and LOV).
 
-`GET` `/api/{dataset-id}/correspondances/properties` to retrieve field name/properties correspondences (powered by LOV API).
+`GET` `/api/{dataset-id}/correspondances/properties` to retrieve field name/properties correspondences (powered by LOV).
 
 `GET` `/api/{dataset-id}/correspondances/` to retrieve both correspondences.
 
 `POST` `/api/{dataset-id}/correspondances/mapping` to translate a set of correspondences into valid RML mapping file.
 
-`POST` `/api/{dataset-id}/correspondances/confirmed` push confirmed correspondences after semantization (Machine Learning, logs, etc.).
+`POST` `/api/{dataset-id}/correspondances/confirmed` push confirmed correspondences after semantization.
 
-`POST` `/api/{dataset-id}/correspondances/awaiting` push confirmed correspondences after semantization (Machine Learning, logs, etc.).
+`POST` `/api/{dataset-id}/correspondances/awaiting` push confirmed correspondences after semantization.
 
-`POST` `/api/{dataset-id}/correspondances/denied` push denied correspondences after semantization (Machine Learning, logs, etc.).
+`POST` `/api/{dataset-id}/correspondances/denied` push denied correspondences after semantization.
 
 ## Conversation API
 
