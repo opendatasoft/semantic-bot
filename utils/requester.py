@@ -1,6 +1,5 @@
 def create_ods_headers():
-    return {"User-Agent": "OpenDataSoft Chatbot (+http://www.opendatasoft.com)",
-            "From": "admin@opendatasoft.com"}
+    return {"User-Agent": "OpenDataSoft Chatbot"}
 
 
 def get_timeout():
