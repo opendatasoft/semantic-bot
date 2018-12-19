@@ -43,7 +43,7 @@ Run the installation script
 ./install.sh
 ```
 
-Then, create a file `chatbot_app/local_settings.py` and add a SECRET key
+Then, create a file `chatbot_app/local_settings.py` and add a secret key.
 ```python
 SECRET_KEY = "<SECRET_KEY>"
 ```
@@ -65,7 +65,7 @@ https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
 
 and override `/data_dumps`
 
-Finally, create a file `chatbot_app/local_settings.py` and add a SECRET key
+Finally, create a file `chatbot_app/local_settings.py` and add a secret key.
 ```python
 SECRET_KEY = "<SECRET_KEY>"
 ```
