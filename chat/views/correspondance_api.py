@@ -11,6 +11,7 @@ import utils.ods_catalog_api as ODSCatalogApi
 import utils.ods_dataset_api as ODSDatasetApi
 import utils.rml_serializer as RMLSerializer
 import utils.dbpedia_ner as DBPediaNER
+import utils.yago_ner as YagoNER
 import chatbot.semantic_engine as SemanticEngine
 from api_errors import bad_format_correspondance
 
@@ -118,6 +119,8 @@ def get_class(request):
     term = request.GET.get('q', None)
     lang = request.GET.get('lang', 'en')
     classes = DBPediaNER.entity_types_request(term, lang)
+    if not classes:
+        classes = YagoNER.entity_types_request(term, lang)
     response = HttpResponse(
         json.dumps(classes),
         content_type='application/json')

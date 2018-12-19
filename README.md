@@ -1,11 +1,11 @@
 # ontology-mapping-chatbot
 
-Ontology Mapping ChatBot is a  semi-interactive ontology mapping algorithm. It provides an easy-to-use interface (Yes or No questions) in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
+Ontology Mapping ChatBot is a semi-interactive ontology mapping algorithm. It provides an easy-to-use interface (Yes or No questions) in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
 
 # Glossary
 
 ## DBPedia
-DBpedia is wikipedia in RDF format with ontologies to describe resources.
+[DBpedia](https://wiki.dbpedia.org/) is wikipedia in RDF format with ontologies to describe resources.
 Chatbot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
 ## YAGO
@@ -14,8 +14,7 @@ YAGO is an other dataset that is used for named entity recognition by the chatbo
 ## LOV (Linked Open Vocabularies)
 LOV is an ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
 
-## Ontology (The curse word)
-
+## Ontology (Vocabulary)
 An `ontology` is a vocabulary defining the concepts and relationships used to describe an area of concern.
 It's composed of:
 * `classes` (e.g. Car, Building, Person, Disease, Source Code) to represent a concept.
@@ -24,11 +23,10 @@ It's composed of:
 Ontologies can be created for every area of concern and by everyone using RDF (Resource Description Framework), RDFS (RDF Schema) and OWL (Web Ontology Language).
 
 ## HDT
-HDT (Header, Dictionary, Triples) is a compact data structure and binary serialization format for RDF
+[HDT](http://www.rdfhdt.org/) (Header, Dictionary, Triples) is a compact data structure and binary serialization format for RDF
 
 ## RML
-
-RML is a generic mapping language to describe multi-format to RDF transformations.
+[RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations.
 
 # Installation
 Assuming you already have `python 2.7` and `pip 9`,
@@ -129,13 +127,9 @@ Conversations API is used to translate possible correspondences into Human Reada
 
 `GET` `/api/ner?q=[query]&lang=[language]` returns the class of the term in the query.
 
-# Clubhouse
-
-[Link](https://app.clubhouse.io/opendatasoft/epic/11656) to Clubhouse story
-
 # How it works?
 ## 1 Class matching
-It use a local dumps of DBPedia and Wikidata to find classes corresponding to dataset's fields using named entity recognition.
+It use a local dumps of DBPedia and Yago to find classes corresponding to dataset's fields using named entity recognition.
 N-first values of each fields are analysed and corresponding classes names are returned.
 
 Each class name is sent to Class LOV API. Class LOV API returns class URI and class description. Those informations are stored in chatbot's candidate correspondances dict.
