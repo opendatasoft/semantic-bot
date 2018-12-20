@@ -1,5 +1,7 @@
 # ontology-mapping-chatbot
 
+[![Build Status](https://travis-ci.org/opendatasoft/ontology-mapping-chatbot.svg?branch=master)](https://travis-ci.org/opendatasoft/ontology-mapping-chatbot)
+
 Ontology Mapping ChatBot is a semi-interactive ontology mapping algorithm. It provides an easy-to-use interface (Yes or No questions) in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
 
 # Glossary
