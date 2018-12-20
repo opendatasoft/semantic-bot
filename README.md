@@ -43,7 +43,7 @@ Run the installation script
 ./install.sh
 ```
 
-Then, create a file `chatbot_app/local_settings.py` and add a secret key.
+Then, in file `chatbot_app/local_settings.py` update the secret key.
 ```python
 SECRET_KEY = "<SECRET_KEY>"
 ```
