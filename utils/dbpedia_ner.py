@@ -1,11 +1,10 @@
 from hdt import HDTDocument
 
 DBPEDIA_RESOURCE_URI = "http://dbpedia.org/resource/{resource_name}"
-DBPEDIA_ONTOLOGY_URI = "http://dbpedia.org/ontology/"
 
 FR_DBPEDIA_RESOURCE_URI = "http://fr.dbpedia.org/resource/{resource_name}"
 
-TYPES_TO_IGNORE = ['owl#Thing']
+TYPES_TO_IGNORE = ['Thing', 'Agent']
 
 try:
     eng_dbpedia = HDTDocument("data_dumps/dbpedia/en/instance_type.hdt")
@@ -29,9 +28,8 @@ def entity_types_request(query, language='en'):
             (triples, cardinality) = eng_dbpedia.search_triples(subject_query, "", "")
         classes = []
         for triple in triples:
-            cl = triple[2]
+            cl = get_uri_suffix(triple[2])
             if not is_ignored(cl):
-                cl = cl.replace(DBPEDIA_ONTOLOGY_URI, '')
                 classes.append(cl)
         if classes:
             return classes
@@ -46,11 +44,18 @@ def to_dbpedia_format(query):
 
 def is_ignored(class_name):
     for type_to_ignore in TYPES_TO_IGNORE:
-        if type_to_ignore in class_name or not hasNoNumbers(class_name):
+        if type_to_ignore in class_name or hasNumbers(class_name):
             return True
 
 
-def hasNoNumbers(value):
+def hasNumbers(value):
     if isinstance(value, unicode):
-        return not(any(char.isdigit() for char in value))
-    return False
+        return any(char.isdigit() for char in value)
+    return True
+
+
+def get_uri_suffix(uri):
+    if '#' in uri:
+        return uri.rsplit('#', 1)[-1]
+    else:
+        return uri.rsplit('/', 1)[-1]

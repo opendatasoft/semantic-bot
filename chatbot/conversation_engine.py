@@ -33,7 +33,7 @@ SALUTATION = ["""I have no more questions to ask.<br>
                  Feel free to improve the quality of the mapping using <a href="http://rml.io/" target="_blank">RML</a>.<br>
                  Have a good day!"""]
 
-ERROR_LOV_UNVAILABLE = ["""Sorry, Linked Open Vocabulary is unavailable for the moment.<br>
+ERROR_LOV_UNVAILABLE = ["""Sorry, the chatbot is unavailable for the moment.<br>
                            Try again later"""]
 
 ERROR_NO_CONFIRMED_CLASS = ["Sorry, I was not able to semantize your dataset."]

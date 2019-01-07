@@ -1,3 +1,5 @@
+import re
+
 import requests
 from fuzzywuzzy import fuzz
 
@@ -9,7 +11,6 @@ import utils.requester as Requester
 SEARCH_CLASS_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked-open-vocabularies-classes%40public/records"
 SEARCH_PROPERTY_URL = "https://data.opendatasoft.com/api/v2/catalog/datasets/linked-open-vocabularies-properties%40public/records"
 
-# SORT = '-reused_by_datasets, -occurencies_in_datasets'
 FIELD_CLASS_PRIORITY = ['uri_suffix', 'equivalent_classes_suffix', 'label', 'description']
 FIELD_CLASS_WEIGHT = [5, 1, 2, 1]
 FIELD_PROPERTY_PRIORITY = ['uri_suffix', 'equivalent_properties_suffix', 'label', 'description']
@@ -24,6 +25,9 @@ ONTOLOGIES = [
     'http://xmlns.com/foaf/0.1/'
 ]
 
+first_cap_re = re.compile('(.)([A-Z][a-z]+)')
+all_cap_re = re.compile('([a-z0-9])([A-Z])')
+
 
 class QueryParameterMissing(Exception):
     pass
@@ -32,10 +36,7 @@ class QueryParameterMissing(Exception):
 def term_request(query, term_type='class', language='en'):
     language_selection_query = "language = '{}' OR language = 'undefined' OR language = 'en'".format(language)
     if query:
-        query = query.replace("'", "")
-        # ' char reserved in odsql
-        query = query.replace('_', ' ')
-        query = query.replace('-', ' ')
+        query = _clean(query)
         splited_query = query.split()
         if term_type == 'class':
             field_priority = FIELD_CLASS_PRIORITY
@@ -89,3 +90,11 @@ def _custom_scoring(result_set, field_priority, field_weight, query):
             result['record']['chatbot_score'] = score
     result_set['records'] = sorted(result_set['records'], key=lambda result: result['record']['chatbot_score'], reverse=True)
     return result_set
+
+
+def _clean(str):
+    # UnCamel, UnSnake ...
+    s1 = first_cap_re.sub(r'\1_\2', str)
+    s2 = all_cap_re.sub(r'\1_\2', s1).lower()
+    # ' char reserved in odsql
+    return s2.replace('_', ' ').replace('-', ' ').replace("'", "")

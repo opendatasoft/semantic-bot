@@ -9,7 +9,8 @@ import utils.yago_ner as YagoNER
 import utils.requester as Requester
 from requests.exceptions import ConnectionError
 
-CHECK_URI_AVAILABILITY = True
+CHECK_URI_AVAILABILITY = False
+MINIMAL_CHATBOT_SCORE = 700
 
 
 def hasNoNumbers(value):
@@ -52,7 +53,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
                 class_correspondance['label'] = field_meta['label']
             class_correspondance['field_name'] = field
             correspondances.append(class_correspondance)
-    # Else, Search classes using field name
+    # Search classes using field name
     for field in ods_dataset_metas['fields']:
         if field['name'] not in candidates_classes:
             field_name = smart_str(field['label'])
@@ -123,6 +124,8 @@ def is_valid(lov_result):
                 return False
         except (requests.Timeout, ConnectionError):
             return False
+    if lov_result['chatbot_score'] < MINIMAL_CHATBOT_SCORE:
+        return False
     return True
 
 
