@@ -11,7 +11,7 @@ Ontology Mapping ChatBot is a semi-interactive ontology mapping algorithm. It pr
 Chatbot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
 ## YAGO
-YAGO is an other dataset that is used for named entity recognition by the chatbot.
+[YAGO](https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) is an other dataset that is used for named entity recognition by the chatbot.
 
 ## LOV (Linked Open Vocabularies)
 LOV is an ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
@@ -71,6 +71,19 @@ Finally, create a file `chatbot_app/local_settings.py` and add a secret key.
 ```python
 SECRET_KEY = "<SECRET_KEY>"
 ```
+
+## Mapping serializer
+
+Resulting mapping can be serialized using [RML turtle syntax](http://rml.io/spec.html) or [YARRRML](http://rml.io/yarrrml/spec/) (default) syntax.
+To choose between the two serializer, add:
+```python
+MAPPING_SERIALIZER = 'RML'
+```
+or
+```python
+MAPPING_SERIALIZER = 'YARRRML'
+```
+in your `chatbot_app/local_settings.py` file.
 
 # Run the demo
 Navigate to ontology-mapping-chatbot folder and execute:

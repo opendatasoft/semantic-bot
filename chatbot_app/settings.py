@@ -25,6 +25,7 @@ ALLOWED_HOSTS = []
 
 # To be defined in your local_settings
 DATA_API_KEY = None
+MAPPING_SERIALIZER = 'YARRRML'
 
 # Application definition
 
