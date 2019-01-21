@@ -102,7 +102,7 @@ var chat = new Vue({
                   this.push_bot_message(response.body['text']);
                   this.is_finished = true;
                   $('#resultModal').modal(show=true);
-                  $('#rmlMapping').text(this.rml_mapping);
+                  $('#rmlMapping').append(Prism.highlight(this.rml_mapping, Prism.languages.yaml));
                 });
               });
             });

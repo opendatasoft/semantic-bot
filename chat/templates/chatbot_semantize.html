@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="{% static "chat/chat.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% static "chat/prism.css" %}">
   <link rel="icon" type="image/png" href="{% static "chat/favicon.ico" %}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -122,16 +123,15 @@
         <div class="about-section">
           <h3><i class="fas fa-share-alt"></i> Your mapping</h3>
           <div>
-            <pre class="rml-snippet">
+            <pre class="rml-snippet" style="white-space: pre-line;">
               <button type="button" class="btn btn-secondary btn-about btn-rml" data-clipboard-target="#rmlMapping">Copy mapping</button>
-              <code id="rmlMapping">
-              </code>
-          </pre>
+              <code id="rmlMapping" class="language-yaml"></code>
+            </pre>
           </div>
         </div>
         <div class="about-section">
           <h3><i class="fas fa-cogs"></i> Update dataset with the semantic mapping</h3>
-          
+
           <h4>If it's the first time, activate semantic metadata on your domain</h4>
           <ol>
             <li>Ask <a href="mailto:support@opendatasoft.com?Subject=Please%20activate%20metadata%20templates">support</a> to activate metadata templates on your domain,</li>
@@ -266,6 +266,7 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="http://d3js.org/d3-selection-multi.v1.js"></script>
 <script src="{% static "chat/clipboard.min.js" %}"></script>
+<script src="{% static "chat/prism.js" %}"></script>
 <script src="{% static "chat/chat.js" %}"></script>
 </body>
 </html>
