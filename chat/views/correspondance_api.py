@@ -25,7 +25,7 @@ else:
 def get_correspondances(request, dataset_id):
     logging.getLogger("results_logger").info("[{}] Starting semantization".format(dataset_id))
     ods_dataset_metas = ODSCatalogApi.dataset_meta_request(dataset_id)
-    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, 50)['records']
+    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, settings.RECORD_NUMBER)['records']
     correspondances = SemanticEngine.init_correspondances_set(ods_dataset_metas, ods_dataset_records)
     if not correspondances.get('classes'):
         logging.getLogger("results_logger").info("[{}] No correspondances found".format(dataset_id))
@@ -39,7 +39,7 @@ def get_correspondances(request, dataset_id):
 
 @require_http_methods(['GET'])
 def get_classes_correspondances(request, dataset_id):
-    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, 50)['records']
+    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, settings.RECORD_NUMBER)['records']
     correspondances = SemanticEngine.get_dataset_classes(ods_dataset_records)
     response = HttpResponse(
         json.dumps(correspondances),

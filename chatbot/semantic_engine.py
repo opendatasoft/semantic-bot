@@ -1,16 +1,15 @@
 from collections import Counter
 from bs4 import BeautifulSoup
 import requests
+
 from django.utils.encoding import smart_str
+from django.conf import settings
 
 import utils.lov_ods_api as LovApi
 import utils.dbpedia_ner as DBPediaNER
 import utils.yago_ner as YagoNER
 import utils.requester as Requester
 from requests.exceptions import ConnectionError
-
-CHECK_URI_AVAILABILITY = False
-MINIMAL_CHATBOT_SCORE = 700
 
 
 def hasNoNumbers(value):
@@ -122,13 +121,13 @@ def get_class_correspondance(clss, language='en'):
 
 
 def is_valid(lov_result):
-    if CHECK_URI_AVAILABILITY:
+    if settings.CHECK_URI_AVAILABILITY:
         try:
             if requests.get(lov_result['fields']['uri'], timeout=Requester.get_timeout()).status_code != 200:
                 return False
         except (requests.Timeout, ConnectionError):
             return False
-    if lov_result['chatbot_score'] < MINIMAL_CHATBOT_SCORE:
+    if lov_result['chatbot_score'] < settings.MINIMAL_CHATBOT_SCORE:
         return False
     return True
 

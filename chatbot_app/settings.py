@@ -27,6 +27,15 @@ ALLOWED_HOSTS = []
 DATA_API_KEY = None
 MAPPING_SERIALIZER = 'YARRRML'
 
+# If True, all URIs (classes and properties) are used only if available (returns http code 200)
+CHECK_URI_AVAILABILITY = False
+
+# Set the minimal score for an URI to be used by the chatbot (see _custom_scoring function in utils/lov_ods_api)
+MINIMAL_CHATBOT_SCORE = 700
+
+# Set the number of records to retrieve from the dataset (used for Named Entity Recognition)
+RECORD_NUMBER = 50
+
 # Application definition
 
 INSTALLED_APPS = [
