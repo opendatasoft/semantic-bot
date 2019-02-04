@@ -39,10 +39,16 @@ def _add_class_map(rdf_mapping, class_correspondance, dataset_id):
     subject_id = '{}-{}'.format(class_correspondance['class'], class_correspondance['field_name'])
     template = SUBJECT_URI.format(dataset_id=dataset_id, class_name=class_correspondance['class'], field_name=class_correspondance['field_name'])
     class_map = {'source': 'dataset-source', 'subject': template, 'predicateobjects': []}
-    # Adding classe and sub_classes of the resource
-    class_map['predicateobjects'].append(['a', class_correspondance['uri']])
+    # Adding classe, equivalent and sub classes of the resource
+    classes = [class_correspondance['uri']]
+    for eq_class in class_correspondance['eq']:
+        if eq_class not in classes:
+            classes.append(eq_class)
     for sub_class in class_correspondance['sub']:
-        class_map['predicateobjects'].append(['a', sub_class])
+        if sub_class not in classes:
+            classes.append(sub_class)
+    for subject_class in classes:
+        class_map['predicateobjects'].append(['a', subject_class])
     # Adding label of the resource
     class_map['predicateobjects'].append([RDFS_LABEL, '$({})'.format(class_correspondance['field_name'])])
     rdf_mapping['mappings'][subject_id] = class_map
@@ -51,9 +57,14 @@ def _add_class_map(rdf_mapping, class_correspondance, dataset_id):
 
 def _add_predicate_map(rdf_mapping, property_correspondance, class_correspondances):
     subject_id = '{}-{}'.format(property_correspondance['associated_class'], property_correspondance['associated_field'])
+    # Adding property, equivalent and sub properties of the resource
     properties = [property_correspondance['uri']]
+    for eq_property in property_correspondance['eq']:
+        if eq_property not in properties:
+            properties.append(eq_property)
     for sub_property in property_correspondance['sub']:
-        properties.append(sub_property)
+        if sub_property not in properties:
+            properties.append(sub_property)
     field_name = property_correspondance['field_name']
     class_correspondance = _get_class(field_name, class_correspondances)
     if class_correspondance:

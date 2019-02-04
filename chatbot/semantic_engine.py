@@ -34,7 +34,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
             if hasNoNumbers(value):
                 types = DBPediaNER.entity_types_request(value, language)
                 if not types:
-                    # DBPedia can't find a type for this field
+                    # DBPedia could not find any class for this field
                     types = YagoNER.entity_types_request(value, language)
                 if types:
                     if field in candidates_classes:
@@ -81,7 +81,7 @@ def get_dataset_properties(ods_dataset_metas, language='en'):
 
 
 def get_property_correspondance(prop, language='en'):
-    response = {'uri': '', 'description': prop, 'sub': []}
+    response = {'uri': '', 'description': prop, 'sub': [], 'eq': []}
     lov_results = LovApi.term_request(prop, term_type='property', language=language)["records"]
     for lov_result in lov_results:
         lov_result = lov_result['record']
@@ -94,12 +94,14 @@ def get_property_correspondance(prop, language='en'):
                 response['description'] = lov_result['fields']['label']
             if lov_result['fields']['sub_properties']:
                 response['sub'] = lov_result['fields']['sub_properties']
+            if lov_result['fields']['equivalent_properties']:
+                response['eq'] = lov_result['fields']['equivalent_properties']
             return response
     return None
 
 
 def get_class_correspondance(clss, language='en'):
-    response = {'uri': '', 'class': clss, 'description': clss, 'sub': []}
+    response = {'uri': '', 'class': clss, 'description': clss, 'sub': [], 'eq': []}
     lov_results = LovApi.term_request(clss, term_type='class', language=language)["records"]
     for lov_result in lov_results:
         lov_result = lov_result['record']
@@ -113,6 +115,8 @@ def get_class_correspondance(clss, language='en'):
                 response['description'] = cleaned_description
             if lov_result['fields']['sub_classes']:
                 response['sub'] = lov_result['fields']['sub_classes']
+            if lov_result['fields']['equivalent_classes']:
+                response['eq'] = lov_result['fields']['equivalent_classes']
             return response
     return None
 

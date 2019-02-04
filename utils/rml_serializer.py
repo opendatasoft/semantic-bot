@@ -44,6 +44,9 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
     rdf_mapping.add((subject_id, subject_map, subject_map_node))
     rdf_mapping.add((subject_map_node, rr['template'], Literal(SUBJECT_URI.format(dataset_id=dataset_id, class_name=class_correspondance['class'], field_name=class_correspondance['field_name']))))
     rdf_mapping.add((subject_map_node, rr['class'], URIRef(class_correspondance['uri'])))
+    # equivalent and sub classes are also classes of the subject
+    for eq_class in class_correspondance['eq']:
+        rdf_mapping.add((subject_map_node, rr['class'], URIRef(eq_class)))
     for sub_class in class_correspondance['sub']:
         rdf_mapping.add((subject_map_node, rr['class'], URIRef(sub_class)))
     # Adding label of the resource
@@ -62,6 +65,9 @@ def add_predicate_map(rdf_mapping, property_correspondance, class_correspondance
     node = BNode()
     rdf_mapping.add((subject_id, predicate_map, node))
     rdf_mapping.add((node, rr['predicate'], URIRef(property_correspondance['uri'])))
+    # equivalent and sub properties are also properties of the subject
+    for eq_property in property_correspondance['eq']:
+        rdf_mapping.add((node, rr['predicate'], URIRef(eq_property)))
     for sub_property in property_correspondance['sub']:
         rdf_mapping.add((node, rr['predicate'], URIRef(sub_property)))
     object_node = BNode()
