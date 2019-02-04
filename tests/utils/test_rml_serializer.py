@@ -6,6 +6,7 @@ from rdflib import Graph, URIRef
 
 TEST_CORRESPONDANCES = {
   "classes": [{
+    "eq": [],
     "sub": ["http://schema.org/Intangible"],
     "uri": "http://schema.org/BusTrip",
     "label": "Bus (ID)",
@@ -13,6 +14,7 @@ TEST_CORRESPONDANCES = {
     "class": "Bus (ID)",
     "description": "A trip on a commercial bus line."
   }, {
+    "eq": [],
     "sub": ["http://schema.org/MoveAction"],
     "uri": "http://schema.org/DepartAction",
     "label": "Depart",
@@ -20,6 +22,7 @@ TEST_CORRESPONDANCES = {
     "class": "Depart date",
     "description": "DepartAction"
   }, {
+    "eq": [],
     "sub": ["http://www.w3.org/2006/vcard/ns#RelatedType"],
     "uri": "http://www.w3.org/2006/vcard/ns#Date",
     "label": "Arrivee",
@@ -27,6 +30,7 @@ TEST_CORRESPONDANCES = {
     "class": "Arrivee date",
     "description": "Date"
   }, {
+    "eq": [],
     "sub": [],
     "uri": "http://schema.org/DateTime",
     "label": "Depart (theorique)",
@@ -34,6 +38,7 @@ TEST_CORRESPONDANCES = {
     "class": "Depart (theorique) date",
     "description": "DateTime"
   }, {
+    "eq": [],
     "sub": [],
     "uri": "http://schema.org/DateTime",
     "label": "Arrivee (theorique)",
@@ -41,6 +46,7 @@ TEST_CORRESPONDANCES = {
     "class": "Arrivee (theorique) date",
     "description": "DateTime"
   }, {
+    "eq": ["http://schema.org/Geo"],
     "sub": ["http://ontology.eil.utoronto.ca/icontact.owl#SchemaOrgThing", "http://rdfs.co/juso/Geometry", "http://schema.org/StructuredValue"],
     "uri": "http://schema.org/GeoCoordinates",
     "label": "Coordonnees",
@@ -48,6 +54,7 @@ TEST_CORRESPONDANCES = {
     "class": "Coordonnees geo",
     "description": "GeoCoordinates"
   }, {
+    "eq": [],
     "sub": ["http://dbpedia.org/ontology/PopulatedPlace"],
     "uri": "http://dbpedia.org/ontology/Settlement",
     "label": "Destination",
@@ -56,6 +63,7 @@ TEST_CORRESPONDANCES = {
     "description": "settlement"
   }],
   "properties": [{
+    "eq": [],
     "sub": [],
     "field_name": "numerobus",
     "uri": "http://schema.org/busNumber",
@@ -65,6 +73,7 @@ TEST_CORRESPONDANCES = {
     "associated_class": "Bus (ID)",
     "associated_field": "idbus"
   }, {
+    "eq": [],
     "sub": ["http://rdfs.co/juso/geometry"],
     "field_name": "coordonnees",
     "uri": "http://schema.org/geo",
@@ -74,6 +83,7 @@ TEST_CORRESPONDANCES = {
     "associated_class": "Depart (theorique) date",
     "associated_field": "departtheorique"
   }, {
+    "eq": ["http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#participatesWith"],
     "sub": ["http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#coparticipatesWith"],
     "field_name": "destination",
     "uri": "http://dbpedia.org/ontology/destination",
@@ -98,6 +108,8 @@ class TestRMLSerializer(object):
             assert URIRef(class_correspondance['uri']) in rdf_mapping_classes
             for sub_classe in class_correspondance['sub']:
                 assert URIRef(sub_classe) in rdf_mapping_classes
+            for eq_classe in class_correspondance['eq']:
+                assert URIRef(eq_classe) in rdf_mapping_classes
 
     def test_RML_mapping_properties(self):
         rdf_mapping = RMLSerializer.serialize(TEST_CORRESPONDANCES, 'dataset_test')
@@ -109,3 +121,5 @@ class TestRMLSerializer(object):
             assert URIRef(property_correspondance['uri']) in rdf_mapping_properties
             for sub_property in property_correspondance['sub']:
                 assert URIRef(sub_property) in rdf_mapping_properties
+            for eq_property in property_correspondance['eq']:
+                assert URIRef(eq_property) in rdf_mapping_properties
