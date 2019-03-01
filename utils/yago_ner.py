@@ -29,7 +29,7 @@ def entity_types_request(query, language='en'):
 
 
 def to_yago_format(query):
-    query = query.title()
+    query = query.decode().title()
     query = query.replace(' ', '_')
     return query
 
@@ -48,6 +48,6 @@ def is_ignored(class_name):
 
 
 def hasNoNumbers(value):
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return not(any(char.isdigit() for char in value))
     return False

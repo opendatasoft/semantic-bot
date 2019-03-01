@@ -31,7 +31,7 @@ Ontologies can be created for every area of concern and by everyone using RDF (R
 [RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations.
 
 # Installation
-Assuming you already have `python 2.7` and `pip 9`,
+Assuming you already have `python 3` and `pip`,
 
 Clone the repository and go to the directory `ontology-mapping-chatbot`.
 
@@ -57,7 +57,7 @@ If you get errors, proceed to the manual installation.
 install dependencies with pip
 
 ```bash
-pip install pybind11==2.2.2
+pip install pybind11==2.2.4
 pip install -r requirements.txt
 ```
 

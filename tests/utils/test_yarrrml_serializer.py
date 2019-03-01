@@ -103,7 +103,7 @@ class TestRMLSerializer(object):
         rdf_mapping_classes = []
         assert rdf_mapping.get('mappings')
         assert len(rdf_mapping['mappings']) == 7
-        for key, mapping in rdf_mapping['mappings'].iteritems():
+        for key, mapping in rdf_mapping['mappings'].items():
             assert mapping.get('predicateobjects')
             for predicate_object in mapping.get('predicateobjects'):
                 if 'a' in predicate_object:
@@ -119,9 +119,8 @@ class TestRMLSerializer(object):
         rdf_mapping = RMLSerializer.serialize(TEST_CORRESPONDANCES, 'dataset_test')
         rdf_mapping = yaml.safe_load(rdf_mapping)
         rdf_mapping_properties = []
-        for key, mapping in rdf_mapping['mappings'].iteritems():
+        for key, mapping in rdf_mapping['mappings'].items():
             for predicate_object in mapping.get('predicateobjects'):
-                print predicate_object
                 if isinstance(predicate_object, dict):
                     rdf_mapping_properties.append(predicate_object['predicates'])
                 else:

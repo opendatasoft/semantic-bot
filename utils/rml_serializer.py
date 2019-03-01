@@ -1,5 +1,5 @@
 from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDFS, XSD
-from urllib import quote
+from urllib.parse import quote
 
 rr = Namespace("http://www.w3.org/ns/r2rml#")
 rml = Namespace("http://semweb.mmlab.be/ns/rml#")

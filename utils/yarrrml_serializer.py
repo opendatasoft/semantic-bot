@@ -1,5 +1,5 @@
 import yaml
-from urllib import quote
+from urllib.parse import quote
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
 

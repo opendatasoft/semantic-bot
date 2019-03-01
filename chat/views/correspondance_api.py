@@ -5,7 +5,7 @@ from django.http.response import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 
-import json
+import simplejson as json
 import logging
 
 import utils.ods_catalog_api as ODSCatalogApi
@@ -13,7 +13,7 @@ import utils.ods_dataset_api as ODSDatasetApi
 import utils.dbpedia_ner as DBPediaNER
 import utils.yago_ner as YagoNER
 import chatbot.semantic_engine as SemanticEngine
-from api_errors import bad_format_correspondance
+from .api_errors import bad_format_correspondance
 
 if settings.MAPPING_SERIALIZER == 'YARRRML':
     import utils.yarrrml_serializer as MappingSerializer
@@ -67,9 +67,9 @@ def get_rml_mapping(request, dataset_id):
         response = HttpResponse(
             rml_mapping,
             content_type='text')
-        response['Content-Disposition'] = 'attachment; filename="{}.rml"'.format(dataset_id)
+        response['Content-Disposition'] = 'attachment; filename="{}.yaml"'.format(dataset_id)
         response['Access-Control-Allow-Origin'] = '*'
-        with open('results/{}.rml'.format(dataset_id), 'w') as outfile:
+        with open('results/{}.yaml'.format(dataset_id), 'w') as outfile:
             outfile.write(rml_mapping)
         logging.getLogger("results_logger").info("[{}] semantization complete".format(dataset_id))
     except (ValueError, KeyError):

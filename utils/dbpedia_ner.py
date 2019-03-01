@@ -37,7 +37,7 @@ def entity_types_request(query, language='en'):
 
 
 def to_dbpedia_format(query):
-    query = query.title()
+    query = query.decode().title()
     query = query.replace(' ', '_')
     return query
 
@@ -49,7 +49,7 @@ def is_ignored(class_name):
 
 
 def hasNumbers(value):
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return any(char.isdigit() for char in value)
     return True
 

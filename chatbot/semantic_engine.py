@@ -13,7 +13,7 @@ from requests.exceptions import ConnectionError
 
 
 def hasNoNumbers(value):
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return not(any(char.isdigit() for char in value))
     return False
 
@@ -29,7 +29,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
     candidates_classes = {}
     # Search classes using Named Entity Recognition on instances
     for record in ods_dataset_records:
-        for field, value in record['fields'].iteritems():
+        for field, value in record['fields'].items():
             if hasNoNumbers(value):
                 types = DBPediaNER.entity_types_request(value, language)
                 if not types:
@@ -41,7 +41,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
                     else:
                         candidates_classes[field] = types
     correspondances = []
-    for field, classes in candidates_classes.iteritems():
+    for field, classes in candidates_classes.items():
         common_class = Counter(classes).most_common(1)[0][0]
         common_class = smart_str(common_class)
         class_correspondance = get_class_correspondance(common_class, language)

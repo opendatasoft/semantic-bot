@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 from django.http.response import HttpResponse
 from django.views.decorators.http import require_http_methods
 
-import json
+import simplejson as json
 
 import chatbot.conversation_engine as ConversationEngine
-from api_errors import bad_format_correspondance
+from .api_errors import bad_format_correspondance
 
 
 @require_http_methods(['GET'])

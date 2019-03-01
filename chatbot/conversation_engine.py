@@ -48,20 +48,20 @@ def instructions():
 
 
 def class_question(field_name, class_description, uri):
-    field_name = EMPHASIS.format(field_name.encode("utf-8"))
-    class_description = EMPHASIS.format(class_description.encode("utf-8"))
+    field_name = EMPHASIS.format(field_name)
+    class_description = EMPHASIS.format(class_description)
     return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description, uri=uri)
 
 
 def property_question(field_name, predicate_description, uri):
-    field_name = EMPHASIS.format(field_name.encode("utf-8"))
-    predicate_description = EMPHASIS.format(predicate_description.encode('utf-8'))
+    field_name = EMPHASIS.format(field_name)
+    predicate_description = EMPHASIS.format(predicate_description)
     return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, uri=uri)
 
 
 def property_class_question(field_name, predicate_description, uri):
-    field_name = EMPHASIS.format(field_name.encode("utf-8"))
-    predicate_description = EMPHASIS.format(predicate_description.encode("utf-8"))
+    field_name = EMPHASIS.format(field_name)
+    predicate_description = EMPHASIS.format(predicate_description)
     return random.choice(PROPERTY_CLASS_QUESTIONS).format(predicate_description=predicate_description, field_name=field_name, uri=uri)
 
 
