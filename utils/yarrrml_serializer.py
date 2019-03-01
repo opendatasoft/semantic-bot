@@ -6,7 +6,7 @@ RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
 RDF_TYPE = {
     'boolean': 'http://www.w3.org/2001/XMLSchema#boolean',
     'date': 'http://www.w3.org/2001/XMLSchema#date',
-    'datetime': 'http://www.w3.org/2001/XMLSchema#datetime',
+    'datetime': 'http://www.w3.org/2001/XMLSchema#dateTime',
     'int': 'http://www.w3.org/2001/XMLSchema#int',
     'double': 'http://www.w3.org/2001/XMLSchema#double'
 }

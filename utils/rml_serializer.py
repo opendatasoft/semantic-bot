@@ -8,7 +8,7 @@ ql = Namespace('http://semweb.mmlab.be/ns/ql#')
 RDF_TYPE = {
     'boolean': XSD.boolean,
     'date': XSD.date,
-    'datetime': XSD.datetime,
+    'datetime': XSD.dateTime,
     'int': XSD.int,
     'double': XSD.double
 }
