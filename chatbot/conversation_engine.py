@@ -23,7 +23,7 @@ PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' t
                       "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something.",
                       "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something?"]
 
-PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the property of wich object?",
+PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the property of which object?",
                             "Select the object that have <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) as a property.",
                             "Select the object that have the property <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name})."]
 
@@ -33,7 +33,7 @@ SALUTATION = ["""I have no more questions to ask.<br>
                  Feel free to improve the quality of the mapping using <a href="http://rml.io/" target="_blank">RML</a>.<br>
                  Have a good day!"""]
 
-ERROR_LOV_UNVAILABLE = ["""Sorry, the chatbot is unavailable for the moment.<br>
+ERROR_LOV_UNAVAILABLE = ["""Sorry, the chatbot is unavailable for the moment.<br>
                            Try again later"""]
 
 ERROR_NO_CONFIRMED_CLASS = ["Sorry, I was not able to semantize your dataset."]
@@ -70,7 +70,7 @@ def salutation():
 
 
 def error_lov_unavailable():
-    return random.choice(ERROR_LOV_UNVAILABLE)
+    return random.choice(ERROR_LOV_UNAVAILABLE)
 
 
 def error_no_confirmed_class():

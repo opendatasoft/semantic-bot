@@ -31,7 +31,7 @@ Ontologies can be created for every area of concern and by everyone using RDF (R
 [RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations.
 
 # Installation
-Assuming you already have `python 3` and `pip`,
+Assuming you already have `python 3.6` and `pip`,
 
 Clone the repository and go to the directory `ontology-mapping-chatbot`.
 
