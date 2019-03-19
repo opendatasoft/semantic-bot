@@ -27,7 +27,7 @@ def serialize(confirmed_correspondances, dataset_id):
     for property_correspondance in confirmed_correspondances['properties']:
         property_correspondance['associated_class'] = quote(property_correspondance['associated_class'].encode('utf8'))
         rdf_mapping = _add_predicate_map(rdf_mapping, property_correspondance, confirmed_correspondances['classes'])
-    return yaml.safe_dump(rdf_mapping)
+    return yaml.safe_dump(rdf_mapping, default_flow_style=None)
 
 
 def _add_source(rdf_mapping, dataset_id):
