@@ -46,7 +46,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
         common_class = smart_str(common_class)
         class_correspondance = get_class_correspondance(common_class, language)
         if class_correspondance:
-            field_meta = get_field(ods_dataset_metas, field)
+            field_meta = get_field_metas(ods_dataset_metas, field)
             class_correspondance['label'] = field
             if field_meta and field_meta['label']:
                 class_correspondance['label'] = field_meta['label']
@@ -121,6 +121,15 @@ def get_class_correspondance(clss, language='en'):
 
 
 def is_valid(lov_result):
+    """
+        Checks if a result from linked open vocabulary (class or property) is good enough to be used by the chatbot
+
+        Conditions are:
+        - URI is available (returns HTTP code 200) activated if CHECK_URI_AVAILABILITY is set to True in configuration
+        - Chatbot score of the result is equal or higher to the MINIMAL_CHATBOT_SCORE defined in configuration
+        configuration is in your chatbot_app.local_settings.
+        chatbot score is computed in utils.lov_ods_api._chatbot_score function.
+    """
     if settings.CHECK_URI_AVAILABILITY:
         try:
             if requests.get(lov_result['fields']['uri'], timeout=Requester.get_timeout()).status_code != 200:
@@ -133,27 +142,38 @@ def is_valid(lov_result):
 
 
 def get_dataset_language(ods_dataset_metas):
+    """Gets the ISO 639-1 language code of the dataset. Default is 'eng'"""
     if 'metas' in ods_dataset_metas:
         if 'language' in ods_dataset_metas['metas']:
             return ods_dataset_metas['metas']['language']
     return 'eng'
 
 
-def get_field(ods_dataset_metas, field_name):
+def get_field_metas(ods_dataset_metas, field_name):
+    """Finds the field in the dataset metadata using the field name"""
     for field in ods_dataset_metas['fields']:
         if field['name'] == field_name:
             return field
     return None
 
 
-# Semantically Enrich a field name.
 def enrich_field(field_type, field):
+    """
+      Semantically enrich a field name with its type
+
+      :Example:
+
+      >> enrich_field('date', birth)
+      'birth date'
+
+      .. todo:: Generalizing the research of hyponyms using a lexical database such as wordnet
+    """
     # use field type
     if field_type in ['datetime', 'date'] and 'date' not in field.lower():
         field = "{} date".format(field)
     elif 'geo' in field_type and 'geo' not in field:
         field = "{} geo".format(field)
-    # use synonyms
+    # use hyponyms
     for place_hyponym in ['city', 'region', 'province', 'country', 'ville']:
         if place_hyponym in field.lower() and 'place' not in field.lower():
             field = "{} place".format(field)

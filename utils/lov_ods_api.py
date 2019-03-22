@@ -53,7 +53,7 @@ def term_request(query, term_type='class', language='en'):
         params = {'where': where, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
-        result_set = _custom_scoring(request.json(), field_priority, field_weight, query)
+        result_set = _chatbot_score(request.json(), field_priority, field_weight, query)
         return result_set
     else:
         raise QueryParameterMissing
@@ -82,7 +82,7 @@ def _build_ontology_query():
     return ontology_query
 
 
-def _custom_scoring(result_set, field_priority, field_weight, query):
+def _chatbot_score(result_set, field_priority, field_weight, query):
     for result in result_set['records']:
             score = 0
             for i, field in enumerate(field_priority):
