@@ -1,5 +1,6 @@
 import random
 
+
 EMPHASIS = "<b>{}</b>"
 
 GREETINGS = ["Hello,",
@@ -18,19 +19,19 @@ CLASS_QUESTIONS = ["It seems that field {field_name} contains <a href='{uri}' ta
                    "Does the field {field_name} in your dataset contains <a href='{uri}' target='_blank'>{class_description}</a>?",
                    "Does the dataset contains <a href='{uri}' target='_blank'>{class_description}</a> in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something. Is it true?",
-                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something.",
-                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something.",
-                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of something?"]
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>?",
+                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
+                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
+                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>?"]
 
-PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the property of which object?",
-                            "Select the object that have <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) as a property.",
-                            "Select the object that have the property <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name})."]
+PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the characteristic of which object?",
+                            "Select the object that have <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) as a characteristic.",
+                            "Select the object that have the characteristic <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name})."]
 
 
 SALUTATION = ["""I have no more questions to ask.<br>
                  You will find your mapping below.<br>
-                 Feel free to improve the quality of the mapping using <a href="http://rml.io/" target="_blank">RML</a>.<br>
+                 Feel free to improve the quality of the mapping using <a href="https://help.opendatasoft.com/apis/tpf/#rml-mapping" target="_blank">RML</a>.<br>
                  Have a good day!"""]
 
 ERROR_LOV_UNAVAILABLE = ["""Sorry, the chatbot is unavailable for the moment.<br>
