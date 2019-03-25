@@ -1,6 +1,6 @@
 import random
 
-
+# HTML tag used to accentuate a text
 EMPHASIS = "<b>{}</b>"
 
 GREETINGS = ["Hello,",
@@ -41,38 +41,54 @@ ERROR_NO_CONFIRMED_CLASS = ["Sorry, I was not able to semantize your dataset."]
 
 
 def greeting():
+    """Returns the first string that will be sent to the user"""
     return random.choice(GREETINGS)
 
 
 def instructions():
+    """Returns the string that briefly explains how the chatbot works"""
     return random.choice(INSTRUCTIONS)
 
 
 def class_question(field_name, class_description, uri):
+    """
+        Returns the string that proposes a class correspondance to the user
+
+        Asks if a field is containing resources of a specific class of an ontology
+    """
     field_name = EMPHASIS.format(field_name)
     class_description = EMPHASIS.format(class_description)
     return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description, uri=uri)
 
 
 def property_question(field_name, predicate_description, uri):
+    """
+        Returns the string that proposes a property correspondance to the user
+
+        Asks if a field represents a specific property of an ontology
+    """
     field_name = EMPHASIS.format(field_name)
     predicate_description = EMPHASIS.format(predicate_description)
     return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, uri=uri)
 
 
 def property_class_question(field_name, predicate_description, uri):
+    """Returns the string that ask the user to define domain of the property"""
     field_name = EMPHASIS.format(field_name)
     predicate_description = EMPHASIS.format(predicate_description)
     return random.choice(PROPERTY_CLASS_QUESTIONS).format(predicate_description=predicate_description, field_name=field_name, uri=uri)
 
 
 def salutation():
+    """Returns the last string that will be sent to the user when a mapping is proposed"""
     return random.choice(SALUTATION)
 
 
 def error_lov_unavailable():
+    """Returns the string that will be sent to the user if lov service is unavailable"""
     return random.choice(ERROR_LOV_UNAVAILABLE)
 
 
 def error_no_confirmed_class():
+    """Returns the last string that will be sent to the user when no mapping could be proposed"""
     return random.choice(ERROR_NO_CONFIRMED_CLASS)

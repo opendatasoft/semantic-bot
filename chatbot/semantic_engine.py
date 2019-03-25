@@ -36,7 +36,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
         Then, find the corresponding class in ontologies using Linked Open Vocabularies
     """
     candidates_classes = {}
-    # Search classes using Named Entity Recognition on instances
+    # Search for instances of the dataset in resources of knowledge graphs and retrieve class of the resource
     for record in ods_dataset_records:
         for field, value in record['fields'].items():
             if has_no_numbers(value):
@@ -61,7 +61,7 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
                 class_correspondance['label'] = field_meta['label']
             class_correspondance['field_name'] = field
             correspondances.append(class_correspondance)
-    # Search classes using field name
+    # Use the field name as the class to search
     for field in ods_dataset_metas['fields']:
         if field['name'] not in candidates_classes:
             field_name = smart_str(field['label'])

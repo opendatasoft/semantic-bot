@@ -24,6 +24,6 @@ def get_patterns(root_path):
     patterns = sorted([
         (key, value[0][0][0])
         for key, value in resolver.reverse_dict.items()
-        if isinstance(key, basestring) and (not(root_path) or root_path in value[0][0][0])
+        if isinstance(key, (str, bytes)) and (not(root_path) or root_path in value[0][0][0])
     ])
     return patterns
