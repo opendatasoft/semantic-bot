@@ -12,13 +12,14 @@ import utils.requester as Requester
 from requests.exceptions import ConnectionError
 
 
-def hasNoNumbers(value):
-    if isinstance(value, str):
-        return not(any(char.isdigit() for char in value))
-    return False
-
-
 def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
+    """
+        Initialises the correspondances set object
+
+        A correspondances (mappings, associations...) set is a python dict object containing:
+        1. Correspondances between classes in ontologies and fields of a dataset
+        2. Correspondances between properties in ontologies and fields of a dataset
+    """
     language = get_dataset_language(ods_dataset_metas)
     candidate_correspondances = {'classes': get_dataset_classes(ods_dataset_records, ods_dataset_metas, language),
                                  'properties': get_dataset_properties(ods_dataset_metas)}
@@ -26,11 +27,19 @@ def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
 
 
 def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
+    """
+        Initialises the correspondances between classes in ontologies and fields of the dataset
+
+        Uses two approaches:
+        First, try to search classe of instances in knowledge graphs (ex. OpenDataSoft -> Company)
+        Else, uses field name as the class to search
+        Then, find the corresponding class in ontologies using Linked Open Vocabularies
+    """
     candidates_classes = {}
     # Search classes using Named Entity Recognition on instances
     for record in ods_dataset_records:
         for field, value in record['fields'].items():
-            if hasNoNumbers(value):
+            if has_no_numbers(value):
                 types = DBPediaNER.entity_types_request(value, language)
                 if not types:
                     # DBPedia could not find any class for this field
@@ -66,6 +75,12 @@ def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
 
 
 def get_dataset_properties(ods_dataset_metas, language='en'):
+    """
+        Initialises the correspondances between properties in ontologies and fields of the dataset
+
+        Uses field name as the property to search for
+        find the corresponding property in ontologies using Linked Open Vocabularies (LOV)
+    """
     properties = []
     for field in ods_dataset_metas['fields']:
         prop = smart_str(field['label'])
@@ -80,6 +95,17 @@ def get_dataset_properties(ods_dataset_metas, language='en'):
 
 
 def get_property_correspondance(prop, language='en'):
+    """
+        Create a property correspondance object for the string 'prop'
+
+        Searches for the property 'prop' in LOV
+        Returns a property correspondances or None if not found or not good enough
+        A property correspondance object is:
+        - The URI of the property
+        - The human readable description of the property
+        - A list of properties URI which the property is a sub-property of (birthDate -subClassOf-> date)
+        - A list of properties URI that are equivalents to the property
+    """
     response = {'uri': '', 'description': prop, 'sub': [], 'eq': []}
     lov_results = LovApi.term_request(prop, term_type='property', language=language)["records"]
     for lov_result in lov_results:
@@ -100,6 +126,17 @@ def get_property_correspondance(prop, language='en'):
 
 
 def get_class_correspondance(clss, language='en'):
+    """
+        Create a class correspondance object for the string 'clss'
+
+        Searches for the class 'clss' in LOV
+        Returns a class correspondances or None if not found or not good enough
+        A class correspondance object is:
+        - The URI of the class
+        - The human readable description of the class
+        - A list of class URI which the class is a sub-class of (Car -subClassOf-> Vehicle)
+        - A list of properties URI that are equivalents to the class
+    """
     response = {'uri': '', 'class': clss, 'description': clss, 'sub': [], 'eq': []}
     lov_results = LovApi.term_request(clss, term_type='class', language=language)["records"]
     for lov_result in lov_results:
@@ -178,3 +215,10 @@ def enrich_field(field_type, field):
         if place_hyponym in field.lower() and 'place' not in field.lower():
             field = "{} place".format(field)
     return field
+
+
+def has_no_numbers(value):
+    """Checks if the string does not contains numbers"""
+    if isinstance(value, str):
+        return not(any(char.isdigit() for char in value))
+    return False

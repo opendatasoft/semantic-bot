@@ -43,11 +43,11 @@ def clean_yago_class(class_name):
 
 def is_ignored(class_name):
     for type_to_ignore in TYPES_TO_IGNORE:
-        if type_to_ignore in class_name or not hasNoNumbers(class_name):
+        if type_to_ignore in class_name or not has_no_numbers(class_name):
             return True
 
 
-def hasNoNumbers(value):
+def has_no_numbers(value):
     if isinstance(value, str):
         return not(any(char.isdigit() for char in value))
     return False
