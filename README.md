@@ -175,3 +175,17 @@ Using property description, user is asked to confirm property/field association 
 the following figure illustrate the property matching process.
 
 ![Property process](img/property_process.png "Property process")
+
+# Logs
+`logs` folder contains data about the usage of the chatbot:
+ * Number of semantized dataset
+ * Number of cancelled semantization
+ * Number of failed semantization
+ * Average time to semantize a dataset
+ * Field/URI (class or property) associations
+ 
+Analyse logs with:
+
+```bash
+python logs/log_analyser.py logs/chatbot_results.log
+```
