@@ -94,37 +94,6 @@ def get_dataset_properties(ods_dataset_metas, language='en'):
     return properties
 
 
-def get_property_correspondance(prop, language='en'):
-    """
-        Create a property correspondance object for the string 'prop'
-
-        Searches for the property 'prop' in LOV
-        Returns a property correspondances or None if not found or not good enough
-        A property correspondance object is:
-        - The URI of the property
-        - The human readable description of the property
-        - A list of properties URI which the property is a sub-property of (birthDate -subClassOf-> date)
-        - A list of properties URI that are equivalents to the property
-    """
-    response = {'uri': '', 'description': prop, 'sub': [], 'eq': []}
-    lov_results = LovApi.term_request(prop, term_type='property', language=language)["records"]
-    for lov_result in lov_results:
-        lov_result = lov_result['record']
-        if is_valid(lov_result):
-            response['uri'] = lov_result['fields']['uri']
-            if lov_result['fields']['description'] and len(lov_result['fields']['description']) < 40:
-                cleaned_description = BeautifulSoup(lov_result['fields']['description'], "html5lib").get_text().encode('utf8')
-                response['description'] = cleaned_description
-            elif lov_result['fields']['label']:
-                response['description'] = lov_result['fields']['label']
-            if lov_result['fields']['sub_properties']:
-                response['sub'] = lov_result['fields']['sub_properties']
-            if lov_result['fields']['equivalent_properties']:
-                response['eq'] = lov_result['fields']['equivalent_properties']
-            return response
-    return None
-
-
 def get_class_correspondance(clss, language='en'):
     """
         Create a class correspondance object for the string 'clss'
@@ -137,24 +106,84 @@ def get_class_correspondance(clss, language='en'):
         - A list of class URI which the class is a sub-class of (Car -subClassOf-> Vehicle)
         - A list of properties URI that are equivalents to the class
     """
-    response = {'uri': '', 'class': clss, 'description': clss, 'sub': [], 'eq': []}
     lov_results = LovApi.term_request(clss, term_type='class', language=language)["records"]
     for lov_result in lov_results:
         lov_result = lov_result['record']
         if is_valid(lov_result):
-            response['uri'] = lov_result['fields']['uri']
-            if lov_result['fields']['description'] and len(lov_result['fields']['description']) < 40:
-                cleaned_description = BeautifulSoup(lov_result['fields']['description'], "html5lib").get_text().encode('utf8')
-                response['description'] = cleaned_description
-            elif lov_result['fields']['label']:
-                cleaned_description = BeautifulSoup(lov_result['fields']['label'], "html5lib").get_text().encode('utf8')
-                response['description'] = cleaned_description
-            if lov_result['fields']['sub_classes']:
-                response['sub'] = lov_result['fields']['sub_classes']
-            if lov_result['fields']['equivalent_classes']:
-                response['eq'] = lov_result['fields']['equivalent_classes']
-            return response
+            return _lov_to_class_correspondance(lov_result, clss)
     return None
+
+
+def _lov_to_class_correspondance(lov_result, clss):
+    """ Generate a class correspondance from a lov result """
+    class_correspondance = {'uri': '', 'class': clss, 'description': clss, 'sub': [], 'eq': []}
+    class_correspondance['uri'] = lov_result['fields']['uri']
+    if lov_result['fields']['description'] and len(lov_result['fields']['description']) < 40:
+        cleaned_description = BeautifulSoup(lov_result['fields']['description'], "html5lib").get_text().encode('utf8')
+        class_correspondance['description'] = cleaned_description
+    elif lov_result['fields']['label']:
+        cleaned_description = BeautifulSoup(lov_result['fields']['label'], "html5lib").get_text().encode('utf8')
+        class_correspondance['description'] = cleaned_description
+    if lov_result['fields']['sub_classes']:
+        class_correspondance['sub'] = lov_result['fields']['sub_classes']
+    if lov_result['fields']['equivalent_classes']:
+        class_correspondance['eq'] = lov_result['fields']['equivalent_classes']
+    return class_correspondance
+
+
+def get_property_correspondance(prop, language='en'):
+    """
+        Create a property correspondance object for the string 'prop'
+
+        Searches for the property 'prop' in LOV
+        Returns a property correspondances or None if not found or not good enough
+        A property correspondance object is:
+        - The URI of the property
+        - The human readable description of the property
+        - A list of properties URI which the property is a sub-property of (birthDate -subClassOf-> date)
+        - A list of properties URI that are equivalents to the property
+        - A domain that is a class correspondance
+        - A range that is a class correspondance
+    """
+    lov_results = LovApi.term_request(prop, term_type='property', language=language)["records"]
+    for lov_result in lov_results:
+        lov_result = lov_result['record']
+        if is_valid(lov_result):
+            return _lov_to_property_correspondance(lov_result, prop, language)
+    return None
+
+
+def _lov_to_property_correspondance(lov_result, prop, language):
+    """ Generate a property correspondance from a lov result """
+    property_correspondance = {'uri': '', 'description': prop, 'sub': [], 'eq': [], 'domain': None, 'range': None}
+    property_correspondance['uri'] = lov_result['fields']['uri']
+    if lov_result['fields']['description'] and len(lov_result['fields']['description']) < 40:
+        cleaned_description = BeautifulSoup(lov_result['fields']['description'], "html5lib").get_text().encode('utf8')
+        property_correspondance['description'] = cleaned_description
+    elif lov_result['fields']['label']:
+        property_correspondance['description'] = lov_result['fields']['label']
+    if lov_result['fields']['sub_properties']:
+        property_correspondance['sub'] = lov_result['fields']['sub_properties']
+    if lov_result['fields']['equivalent_properties']:
+        property_correspondance['eq'] = lov_result['fields']['equivalent_properties']
+    if lov_result['fields']['domain0']:
+        domain_lov_results = LovApi.lookup_uri(uri=lov_result['fields']['domain0'],
+                                               term_type='class',
+                                               language=language)["records"]
+        if domain_lov_results:
+            domain_lov_result = domain_lov_results[0]['record']
+            clss = _get_uri_suffix(lov_result['fields']['domain0'])
+            property_correspondance['domain'] = _lov_to_class_correspondance(domain_lov_result, clss)
+    if lov_result['fields']['range'] and 'http://www.w3.org/2001/XMLSchema#' not in lov_result['fields']['range']:
+        # range is a class and not a XSD datatype
+        domain_lov_results = LovApi.lookup_uri(uri=lov_result['fields']['range'],
+                                               term_type='class',
+                                               language=language)["records"]
+        if domain_lov_results:
+            domain_lov_result = domain_lov_results[0]['record']
+            clss = _get_uri_suffix(lov_result['fields']['range'])
+            property_correspondance['range'] = _lov_to_class_correspondance(domain_lov_result, clss)
+    return property_correspondance
 
 
 def is_valid(lov_result):
@@ -196,12 +225,12 @@ def get_field_metas(ods_dataset_metas, field_name):
 
 def enrich_field(field_type, field):
     """
-      Semantically enrich a field name with its type
+        Semantically enrich a field name with its type
 
-      :Example:
+        :Example:
 
-      >> enrich_field('date', birth)
-      'birth date'
+        >> enrich_field('date', birth)
+        'birth date'
 
       .. todo:: Generalizing the research of hyponyms using a lexical database such as wordnet
     """
@@ -222,3 +251,20 @@ def has_no_numbers(value):
     if isinstance(value, str):
         return not(any(char.isdigit() for char in value))
     return False
+
+
+def _get_uri_suffix(uri):
+    """
+        Returns the suffix (local name) of th uri
+
+        :Example:
+
+        >> _get_uri_suffix('http://example.org/test')
+          'test'
+        >> _get_uri_suffix('http://example.org/page#test2')
+          'test2'
+    """
+    if '#' in uri:
+        return uri.rsplit('#', 1)[-1]
+    else:
+        return uri.rsplit('/', 1)[-1]

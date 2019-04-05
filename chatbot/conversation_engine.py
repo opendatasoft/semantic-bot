@@ -19,10 +19,10 @@ CLASS_QUESTIONS = ["It seems that field {field_name} contains <a href='{uri}' ta
                    "Does the field {field_name} in your dataset contains <a href='{uri}' target='_blank'>{class_description}</a>?",
                    "Does the dataset contains <a href='{uri}' target='_blank'>{class_description}</a> in the field {field_name}?"]
 
-PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>?",
-                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
-                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>.",
-                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a>?"]
+PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}?",
+                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}.",
+                      "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}. Am I right?",
+                      "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}?"]
 
 PROPERTY_CLASS_QUESTIONS = ["<a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) is the characteristic of which object?",
                             "Select the object that have <a href='{uri}' target='_blank'>{predicate_description}</a>({field_name}) as a characteristic.",
@@ -61,7 +61,7 @@ def class_question(field_name, class_description, uri):
     return random.choice(CLASS_QUESTIONS).format(field_name=field_name, class_description=class_description, uri=uri)
 
 
-def property_question(field_name, predicate_description, uri):
+def property_question(field_name, predicate_description, uri, domain_uri, domain_description):
     """
         Returns the string that proposes a property correspondance to the user
 
@@ -69,7 +69,11 @@ def property_question(field_name, predicate_description, uri):
     """
     field_name = EMPHASIS.format(field_name)
     predicate_description = EMPHASIS.format(predicate_description)
-    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, uri=uri)
+    if not domain_uri:
+        domain = 'something'
+    else:
+        domain = "<a href='{domain_uri}' target='_blank'>{domain_description}</a>".format(domain_uri=domain_uri, domain_description=domain_description)
+    return random.choice(PROPERTY_QUESTIONS).format(field_name=field_name, predicate_description=predicate_description, uri=uri, domain=domain)
 
 
 def property_class_question(field_name, predicate_description, uri):
