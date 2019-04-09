@@ -11,7 +11,11 @@ var chat = new Vue({
         current_correspondance: {},
         current_correspondance_type: 'classes',
         awaiting_user: false,
-        yes_no_questions: true,
+        // Show or hide selector to interact with user
+        yes_no_selector: true,
+        class_selector: false,
+        field_selector: false,
+        get_mapping_selector: false,
         is_finished: false,
         rml_mapping: null,
         source_domain_address: null,
@@ -76,30 +80,30 @@ var chat = new Vue({
             });
         },
         next_semantize: function () {
-            // 1. Confirm class correspondances
             if (this.correspondances['classes'].length > 0) {
+                // 1. Confirm class correspondances
                 this.current_correspondance_type = 'classes';
                 this.current_correspondance = this.correspondances['classes'].pop();
                 this.$http.post('/api/conversation/question/class', this.current_correspondance).then(response => {
                     this.push_bot_message(response.body['text']);
                     this.awaiting_user = true;
                 });
-                // 2. Confirm properties correspondances
             } else if (this.correspondances['properties'].length > 0) {
+                // 2. Confirm properties correspondances
                 this.current_correspondance_type = 'properties';
                 this.current_correspondance = this.correspondances['properties'].pop();
                 this.$http.post('/api/conversation/question/property', this.current_correspondance).then(response => {
                     this.push_bot_message(response.body['text']);
                     this.awaiting_user = true;
                 });
-                // 3. Check if correspondances are confirmed
             } else if (this.confirmed_correspondances['classes'].length < 0) {
+                // 3. Check if correspondances are confirmed
                 this.$http.get('/api/conversation/error/no-classes').then(response => {
                     this.push_bot_message(response.body['text']);
                     this.is_finished = true;
                 });
-                // 4. Return the rml mapping
             } else {
+                // 4. Return the rml mapping
                 this.$http.post('/api/' + this.dataset_id + '/correspondances/confirmed', this.confirmed_correspondances).then(response => {
                     this.$http.post('/api/' + this.dataset_id + '/correspondances/awaiting', this.awaiting_correspondances).then(response => {
                         this.$http.post('/api/' + this.dataset_id + '/correspondances/denied', this.denied_correspondances).then(response => {
@@ -108,6 +112,9 @@ var chat = new Vue({
                                 this.$http.get('/api/conversation/salutation').then(response => {
                                     this.push_bot_message(response.body['text']);
                                     this.is_finished = true;
+                                    // switch selector
+                                    this.hide_selectors();
+                                    this.get_mapping_selector = true
                                     $('#resultModal').modal(show = true);
                                     $('#rmlMapping').append(Prism.highlight(this.rml_mapping, Prism.languages.yaml));
                                 });
@@ -117,6 +124,12 @@ var chat = new Vue({
                 });
             }
         },
+        hide_selectors: function () {
+            this.yes_no_selector = false;
+            this.class_selector = false;
+            this.field_selector = false;
+            this.get_mapping_selector = false;
+        },
         user_input_yes: function () {
             if (this.awaiting_user) {
                 this.awaiting_user = false;
@@ -124,7 +137,9 @@ var chat = new Vue({
                 if (this.current_correspondance_type === 'properties') {
                     this.$http.post('/api/conversation/question/property-class', this.current_correspondance).then(response => {
                         this.push_bot_message(response.body['text']);
-                        this.yes_no_questions = false;
+                        //update selector
+                        this.hide_selectors();
+                        this.class_selector = true;
                         this.awaiting_user = true;
                     });
                 } else {
@@ -159,35 +174,32 @@ var chat = new Vue({
             }
         },
         user_input_property_class: function (associated_class) {
-            if ((this.awaiting_user) && (!this.yes_no_questions)) {
+            if (this.awaiting_user) {
                 if (associated_class == null) {
                     this.awaiting_user = false;
                     this.push_user_message('None of those');
                     this.current_correspondance['associated_class'] = [];
                     this.current_correspondance['associated_field'] = [];
                     this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-                    this.yes_no_questions = true;
+                    //update selector
+                    this.hide_selectors();
+                    this.yes_no_selector = true;
                     setTimeout(function () {
                         chat.next_semantize()
                     }, 1000);
                 } else {
                     this.awaiting_user = false;
                     this.push_user_message(associated_class['class']);
-                    /*
-                    this.$http.get('/api/conversation/answer/positive').then(response => {
-                      this.push_bot_message(response.body['text']);
-                    */
                     this.current_correspondance['associated_class'] = associated_class['class'];
                     this.current_correspondance['associated_field'] = associated_class['field_name'];
                     this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
-                    this.yes_no_questions = true;
+                    //update selector
+                    this.hide_selectors();
+                    this.yes_no_selector = true;
                     update_graph(this.current_correspondance, this.current_correspondance_type);
                     setTimeout(function () {
                         chat.next_semantize()
                     }, 1000);
-                    /*
-                    });
-                    */
                 }
             }
         },
