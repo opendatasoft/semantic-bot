@@ -16,16 +16,35 @@ var chat = new Vue({
         class_selector: false,
         field_selector: false,
         get_mapping_selector: false,
+        // autocomplete on fields
+        suggestions: [],
+        selected_field: null,
         is_finished: false,
         rml_mapping: null,
         source_domain_address: null,
         language: "en",
+    },
+    watch: {
+        field_selector: function () {
+            this.reset_field_selector();
+        },
+        suggestions: function () {
+            this.reset_field_selector();
+        }
     },
     mounted: function () {
         this.bot_introduction();
         this.get_dataset_metas();
     },
     methods: {
+        reset_field_selector: function () {
+            $('#fieldTextBar').autocomplete({
+                lookup: this.suggestions,
+                onSelect: function (suggestion) {
+                    chat.selected_field = suggestion;
+                }
+            });
+        },
         push_user_message: function (message) {
             this.messages.push({
                 text: message,
@@ -48,11 +67,12 @@ var chat = new Vue({
                 this.language = response.body['dataset']['metas']['default']['language'];
                 // Compute url to mapping form
                 mapping_set_url = this.get_mapping_set_url();
-                $('#urlSetMapping').append("<a href=\"" + mapping_set_url + "\" target=\"_blank\">" + mapping_set_url + "</a>")
+                $('#urlSetMapping').append("<a href=\"" + mapping_set_url + "\" target=\"_blank\">" + mapping_set_url + "</a>");
                 // dataset fields
                 for (i = 0; i < response.body['dataset']['fields'].length; i++) {
                     response.body['dataset']['fields'][i]['class'] = null;
-                    this.dataset_fields[response.body['dataset']['fields'][i]['name']] = response.body['dataset']['fields'][i]
+                    this.dataset_fields[response.body['dataset']['fields'][i]['name']] = response.body['dataset']['fields'][i];
+                    this.suggestions.push({"value": response.body['dataset']['fields'][i]['label'], "data": response.body['dataset']['fields'][i]['name']});
                 }
             });
         },
@@ -69,6 +89,8 @@ var chat = new Vue({
                     // Retrieve all correspondances (classes and properties)
                     this.$http.get('/api/' + this.dataset_id + '/correspondances').then(response => {
                         this.correspondances = response.body;
+                        // Initialize field selector
+                        this.reset_field_selector();
                         this.next_semantize();
                     }, response => {
                         this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
@@ -139,7 +161,7 @@ var chat = new Vue({
                         this.push_bot_message(response.body['text']);
                         //update selector
                         this.hide_selectors();
-                        this.class_selector = true;
+                        this.field_selector = true;
                         this.awaiting_user = true;
                     });
                 } else {
@@ -203,10 +225,62 @@ var chat = new Vue({
                 }
             }
         },
+        user_input_property_field: function (associated_field) {
+            if (this.awaiting_user) {
+                if (associated_class == null) {
+                    this.awaiting_user = false;
+                    this.push_user_message('None of those');
+                    this.current_correspondance['associated_class'] = [];
+                    this.current_correspondance['associated_field'] = [];
+                    this.denied_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+                    //update selector
+                    this.hide_selectors();
+                    this.yes_no_selector = true;
+                    setTimeout(function () {
+                        chat.next_semantize()
+                    }, 1000);
+                } else {
+                    this.awaiting_user = false;
+                    this.push_user_message(associated_field.value);
+                    // update domain and range class correspondances
+                    this.current_correspondance['domain']['label'] = associated_field.value;
+                    this.current_correspondance['domain']['field_name'] = associated_field.data;
+                    this.current_correspondance['range']['label'] = this.current_correspondance['label'];
+                    this.current_correspondance['range']['field_name'] = this.current_correspondance['field_name'];
+                    this.current_correspondance['associated_class'] = this.current_correspondance['domain']['class'];
+                    this.current_correspondance['associated_field'] = associated_field.data;
+                    this.confirmed_correspondances['classes'].push(this.current_correspondance['domain']);
+                    this.confirmed_correspondances['classes'].push(this.current_correspondance['range']);
+                    this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
+                    //update selector
+                    this.hide_selectors();
+                    this.yes_no_selector = true;
+                    update_graph(this.current_correspondance['domain'], 'classes');
+                    update_graph(this.current_correspondance['range'], 'classes');
+                    update_graph(this.current_correspondance, this.current_correspondance_type);
+                    setTimeout(function () {
+                        chat.next_semantize()
+                    }, 1000);
+                }
+            }
+        },
         get_mapping_btn: function () {
             $('#resultModal').modal(show = true);
         },
     },
+});
+
+$(function () {
+    $('.Global-container').keypress(function (e) {
+        if (chat.field_selector && e.which === 13) {
+            if (chat.selected_field.data in chat.dataset_fields) {
+                document.getElementById("fieldTextBar").classList.remove("is-invalid");
+                chat.user_input_property_field(chat.selected_field);
+            } else {
+                document.getElementById("fieldTextBar").classList.add("is-invalid");
+            }
+        }
+    })
 });
 
 new ClipboardJS('.btn-rml', {
