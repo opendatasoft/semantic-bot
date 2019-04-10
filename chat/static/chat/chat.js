@@ -25,9 +25,6 @@ var chat = new Vue({
         language: "en",
     },
     watch: {
-        field_selector: function () {
-            this.reset_field_selector();
-        },
         suggestions: function () {
             this.reset_field_selector();
         }
@@ -89,8 +86,6 @@ var chat = new Vue({
                     // Retrieve all correspondances (classes and properties)
                     this.$http.get('/api/' + this.dataset_id + '/correspondances').then(response => {
                         this.correspondances = response.body;
-                        // Initialize field selector
-                        this.reset_field_selector();
                         this.next_semantize();
                     }, response => {
                         this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
@@ -227,7 +222,7 @@ var chat = new Vue({
         },
         user_input_property_field: function (associated_field) {
             if (this.awaiting_user) {
-                if (associated_class == null) {
+                if (associated_field == null) {
                     this.awaiting_user = false;
                     this.push_user_message('None of those');
                     this.current_correspondance['associated_class'] = [];
@@ -245,18 +240,20 @@ var chat = new Vue({
                     // update domain and range class correspondances
                     this.current_correspondance['domain']['label'] = associated_field.value;
                     this.current_correspondance['domain']['field_name'] = associated_field.data;
-                    this.current_correspondance['range']['label'] = this.current_correspondance['label'];
-                    this.current_correspondance['range']['field_name'] = this.current_correspondance['field_name'];
+                    if (this.current_correspondance['range']) {
+                        this.current_correspondance['range']['label'] = this.current_correspondance['label'];
+                        this.current_correspondance['range']['field_name'] = this.current_correspondance['field_name'];
+                        this.confirmed_correspondances['classes'].push(this.current_correspondance['range']);
+                        update_graph(this.current_correspondance['range'], 'classes');
+                    }
                     this.current_correspondance['associated_class'] = this.current_correspondance['domain']['class'];
                     this.current_correspondance['associated_field'] = associated_field.data;
                     this.confirmed_correspondances['classes'].push(this.current_correspondance['domain']);
-                    this.confirmed_correspondances['classes'].push(this.current_correspondance['range']);
+                    update_graph(this.current_correspondance['domain'], 'classes');
                     this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
                     //update selector
                     this.hide_selectors();
                     this.yes_no_selector = true;
-                    update_graph(this.current_correspondance['domain'], 'classes');
-                    update_graph(this.current_correspondance['range'], 'classes');
                     update_graph(this.current_correspondance, this.current_correspondance_type);
                     setTimeout(function () {
                         chat.next_semantize()
@@ -276,6 +273,7 @@ $(function () {
             if (chat.selected_field.data in chat.dataset_fields) {
                 document.getElementById("fieldTextBar").classList.remove("is-invalid");
                 chat.user_input_property_field(chat.selected_field);
+                document.getElementById("fieldTextBar").value = '';
             } else {
                 document.getElementById("fieldTextBar").classList.add("is-invalid");
             }

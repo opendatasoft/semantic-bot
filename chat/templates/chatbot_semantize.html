@@ -62,7 +62,7 @@
                     <div class="Buttons-container">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div v-if="yes_no_selector">
+                                <div v-show="yes_no_selector">
                                     <div class="btn-group" role="group">
                                         <button type="button" v-on:click="user_input_no()"
                                                 class="btn btn-secondary btn-no" :disabled="is_finished">No
@@ -77,7 +77,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div v-else-if="class_selector">
+                                <div v-show="class_selector">
                                     <div>
                                         <button class="btn btn-secondary btn-margin"
                                                 v-for="associated_class in confirmed_correspondances['classes']"
@@ -93,7 +93,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div v-else-if="field_selector">
+                                <div v-show="field_selector">
                                     <div class="col-lg-6 offset-lg-3 field-selector-container">
                                         <input id="fieldTextBar" class="form-control" autofocus type="text"
                                                placeholder="Field name" autocomplete="off" :disabled="is_finished">
@@ -106,7 +106,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div v-else-if="get_mapping_selector">
+                                <div v-show="get_mapping_selector">
                                     <button type="button" v-on:click="get_mapping_btn()"
                                             class="btn btn-secondary btn-yes">Get my mapping!
                                     </button>

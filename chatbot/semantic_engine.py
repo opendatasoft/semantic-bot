@@ -11,6 +11,13 @@ import utils.yago_ner as YagoNER
 import utils.requester as Requester
 from requests.exceptions import ConnectionError
 
+# Default class
+THING_CLASS_CORRESPONDANCE = {'uri': 'http://schema.org/Thing',
+                              'class': 'Thing',
+                              'description': 'something',
+                              'sub': [],
+                              'eq': []}
+
 
 def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
     """
@@ -174,6 +181,10 @@ def _lov_to_property_correspondance(lov_result, prop, language):
             domain_lov_result = domain_lov_results[0]['record']
             clss = _get_uri_suffix(lov_result['fields']['domain0'])
             property_correspondance['domain'] = _lov_to_class_correspondance(domain_lov_result, clss)
+        else:
+            property_correspondance['domain'] = THING_CLASS_CORRESPONDANCE
+    else:
+        property_correspondance['domain'] = THING_CLASS_CORRESPONDANCE
     if lov_result['fields']['range'] and 'http://www.w3.org/2001/XMLSchema#' not in lov_result['fields']['range']:
         # range is a class and not a XSD datatype
         domain_lov_results = LovApi.lookup_uri(uri=lov_result['fields']['range'],
