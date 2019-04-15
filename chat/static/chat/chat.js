@@ -1,30 +1,3 @@
-// Overide jquery autocomplete format result to custom how field suggestions are displayed
-$.Autocomplete.defaults.formatResult = function _formatResult(suggestion, currentValue) {
-
-    var utils = $.Autocomplete.utils;
-
-    var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
-
-    if (suggestion.class) {
-        return '<b>' + suggestion.value
-                .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/&lt;(\/?strong)&gt;/g, '<$1>') + '</b>'
-            + ' (' + suggestion.class + ')';
-    } else {
-        return '<b>' + suggestion.value
-            .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/&lt;(\/?strong)&gt;/g, '<$1>') + '</b>';
-    }
-};
-
 var chat = new Vue({
     el: '#chat-app',
     data: {
@@ -65,6 +38,31 @@ var chat = new Vue({
                 },
                 minChars: 0,
                 maxHeight: 200,
+                formatResult: function _formatResult(suggestion, currentValue) {
+
+                    var utils = $.Autocomplete.utils;
+
+                    var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
+
+                    if (suggestion.class) {
+                        return '<b>' + suggestion.value
+                                .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;')
+                                .replace(/&lt;(\/?strong)&gt;/g, '<$1>') + '</b>'
+                            + ' (' + suggestion.class + ')';
+                    } else {
+                        return '<b>' + suggestion.value
+                            .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;')
+                            .replace(/&lt;(\/?strong)&gt;/g, '<$1>') + '</b>';
+                    }
+                }
             });
         },
         push_user_message: function (message) {
@@ -306,6 +304,7 @@ var chat = new Vue({
     },
 });
 
+
 $(function () {
     $('.Global-container').keypress(function (e) {
         if (chat.field_selector && e.which === 13) {
@@ -328,8 +327,6 @@ new ClipboardJS('.btn-rml', {
 // -----------------------
 // D3JS part for the graph
 // -----------------------
-
-
 var nodes = [];
 var links = [];
 
@@ -448,13 +445,13 @@ function update(links, nodes) {
         .attr("dy", 0)
         .append("tspan")
         .text(function (d) {
-            return d.label;
+            return d.field_label;
         });
     node.select("text").append("tspan")
         .attr("x", "0")
         .attr("dy", "1em")
         .text(function (d) {
-            return "(" + d.field_name + ")";
+            return "(" + d.label + ")";
         });
 
     simulation
@@ -479,7 +476,6 @@ function ticked() {
         .attr("y2", function (d) {
             return d.target.y;
         });
-
     node
         .attr("transform", function (d) {
             return "translate(" + d.x + ", " + d.y + ")";
@@ -514,37 +510,49 @@ function dragged(d) {
 }
 
 function update_graph(correspondance, correspondance_type) {
+    existing_node_id = get_node_id(correspondance.field_name);
     if (correspondance_type === "classes") {
-        nodes.push({
-            id: correspondance.field_name,
-            field_name: correspondance.field_name,
-            label: correspondance.class,
-            group: 'resource'
-        });
+        if (existing_node_id) {
+            // Update the class of the corresponding field
+            if (! nodes[existing_node_id]['label'] || nodes[existing_node_id]['label'] === 'Thing') {
+                nodes[existing_node_id]['label'] = correspondance.class;
+            }
+        }else {
+            nodes.push({
+                id: correspondance.field_name,
+                field_name: correspondance.field_name,
+                field_label: correspondance.label,
+                label: correspondance.class,
+                group: 'resource'
+            });
+        }
     } else {
-        existing_node = get_node_id(correspondance.field_name, correspondance);
-        if (existing_node == null) {
-            id = correspondance.field_name + "_value"
-            nodes.push({id: id, field_name: correspondance.field_name, label: 'Dataset Field', group: 'value'});
-            links.push({source: correspondance.associated_field, target: id, label: correspondance.description})
+        if (existing_node_id == null || nodes[existing_node_id].id === correspondance.associated_field) {
+            id = correspondance.field_name + "_value";
+            nodes.push({
+                id: id,
+                field_name: correspondance.field_name,
+                field_label: correspondance.label,
+                label: 'Dataset Field',
+                group: 'value'
+            });
+            links.push({source: correspondance.associated_field, target: id, label: correspondance.description});
         } else {
             links.push({
                 source: correspondance.associated_field,
-                target: existing_node,
+                target: correspondance.field_name,
                 label: correspondance.description
-            })
+            });
         }
     }
     update(links, nodes);
     simulation.alphaTarget(0.3).restart();
 }
 
-function get_node_id(field_name, correspondance) {
+function get_node_id(field_name) {
     for (i in nodes) {
         if (field_name === nodes[i].id) {
-            if (nodes[i].id !== correspondance.associated_field) {
-                return nodes[i].id;
-            }
+            return i;
         }
     }
     return null
