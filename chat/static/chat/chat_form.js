@@ -5,7 +5,7 @@ $.Autocomplete.defaults.formatResult = function _formatResult(suggestion, curren
         return suggestion.value + ' [' + suggestion.data + ']';
     }
 
-    var utils = $.Autocomplete.utils
+    var utils = $.Autocomplete.utils;
 
     var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 

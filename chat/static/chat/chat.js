@@ -1,3 +1,30 @@
+// Overide jquery autocomplete format result to custom how field suggestions are displayed
+$.Autocomplete.defaults.formatResult = function _formatResult(suggestion, currentValue) {
+
+    var utils = $.Autocomplete.utils;
+
+    var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
+
+    if (suggestion.class) {
+        return '<b>' + suggestion.value
+                .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/&lt;(\/?strong)&gt;/g, '<$1>') + '</b>'
+            + ' (' + suggestion.class + ')';
+    } else {
+        return '<b>' + suggestion.value
+            .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/&lt;(\/?strong)&gt;/g, '<$1>') + '</b>';
+    }
+};
+
 var chat = new Vue({
     el: '#chat-app',
     data: {
@@ -35,7 +62,9 @@ var chat = new Vue({
                 lookup: this.suggestions,
                 onSelect: function (suggestion) {
                     chat.selected_field = suggestion;
-                }
+                },
+                minChars: 0,
+                maxHeight: 200,
             });
         },
         push_user_message: function (message) {
@@ -65,7 +94,9 @@ var chat = new Vue({
                 for (i = 0; i < response.body['dataset']['fields'].length; i++) {
                     response.body['dataset']['fields'][i]['class'] = null;
                     this.dataset_fields[response.body['dataset']['fields'][i]['name']] = response.body['dataset']['fields'][i];
-                    this.suggestions.push({"value": response.body['dataset']['fields'][i]['label'], "data": response.body['dataset']['fields'][i]['name']});
+                    this.suggestions.push({"value": response.body['dataset']['fields'][i]['label'],
+                                           "data": response.body['dataset']['fields'][i]['name'],
+                                           "class": null});
                 }
             });
         },
@@ -159,6 +190,7 @@ var chat = new Vue({
                     // class correspondance
                     this.confirmed_correspondances['classes'].push(this.current_correspondance);
                     this.dataset_fields[this.current_correspondance['field_name']]['class'] = this.current_correspondance['class'];
+                    this.update_class_suggestions(this.current_correspondance['class'], this.current_correspondance['field_name']);
                     update_graph(this.current_correspondance, this.current_correspondance_type);
                     setTimeout(function () {
                         chat.next_semantize()
@@ -240,11 +272,13 @@ var chat = new Vue({
                         this.current_correspondance['range']['label'] = this.current_correspondance['label'];
                         this.current_correspondance['range']['field_name'] = this.current_correspondance['field_name'];
                         this.confirmed_correspondances['classes'].push(this.current_correspondance['range']);
+                        this.update_class_suggestions(this.current_correspondance['range']['class'], this.current_correspondance['range']['field_name']);
                         update_graph(this.current_correspondance['range'], 'classes');
                     }
                     this.current_correspondance['associated_class'] = this.current_correspondance['domain']['class'];
                     this.current_correspondance['associated_field'] = associated_field.data;
                     this.confirmed_correspondances['classes'].push(this.current_correspondance['domain']);
+                    this.update_class_suggestions(this.current_correspondance['domain']['class'], this.current_correspondance['domain']['field_name']);
                     update_graph(this.current_correspondance['domain'], 'classes');
                     this.confirmed_correspondances[this.current_correspondance_type].push(this.current_correspondance);
                     //update selector
@@ -252,13 +286,22 @@ var chat = new Vue({
                     this.yes_no_selector = true;
                     update_graph(this.current_correspondance, this.current_correspondance_type);
                     setTimeout(function () {
-                        chat.next_semantize()
+                        chat.next_semantize();
                     }, 1000);
                 }
             }
         },
         get_mapping_btn: function () {
             $('#resultModal').modal(show = true);
+        },
+        update_class_suggestions: function (clss, field_name) {
+            for (i = 0; i < this.suggestions.length; i++) {
+                if (this.suggestions[i]['data'] === field_name) {
+                    if ((! this.suggestions[i]['class']) || (this.suggestions[i]['class'] === 'Thing')){
+                        this.suggestions[i]['class'] = clss;
+                    }
+                }
+            }
         },
     },
 });
@@ -281,7 +324,12 @@ new ClipboardJS('.btn-rml', {
     container: document.getElementById('resultModal')
 });
 
+
+// -----------------------
 // D3JS part for the graph
+// -----------------------
+
+
 var nodes = [];
 var links = [];
 
@@ -386,7 +434,7 @@ function update(links, nodes) {
         .attr("r", 30)
         .style("fill", function (d) {
             return (d.group === "resource") ? "#007fa4" : "#E8E8E8";
-        })
+        });
 
     node.append("title")
         .text(function (d) {
@@ -455,7 +503,7 @@ function ticked() {
 }
 
 function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
 }
