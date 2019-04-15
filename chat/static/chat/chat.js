@@ -1,3 +1,10 @@
+// -----------------------
+// Graph parameters
+// -----------------------
+// nodes are growing proportionally to its number of predicates
+var node_growing_factor = 2;
+var node_init_radius = 30;
+
 var chat = new Vue({
     el: '#chat-app',
     data: {
@@ -354,7 +361,13 @@ function update(links, nodes) {
         .attrs({
             'id': 'arrowhead',
             'viewBox': '-0 -5 10 10',
-            'refX': 30,
+            'refX': function (d) {
+                if (d) {
+                    return d.target.radius;
+                } else {
+                    return node_init_radius;
+                }
+            },
             'refY': 0,
             'orient': 'auto',
             'markerWidth': 13,
@@ -428,7 +441,9 @@ function update(links, nodes) {
         );
 
     node.append("circle")
-        .attr("r", 30)
+        .attr("r", function (d) {
+            return (d.radius);
+        })
         .style("fill", function (d) {
             return (d.group === "resource") ? "#007fa4" : "#E8E8E8";
         });
@@ -523,7 +538,8 @@ function update_graph(correspondance, correspondance_type) {
                 field_name: correspondance.field_name,
                 field_label: correspondance.label,
                 label: correspondance.class,
-                group: 'resource'
+                group: 'resource',
+                radius : node_init_radius
             });
         }
     } else {
@@ -533,6 +549,7 @@ function update_graph(correspondance, correspondance_type) {
                 id: id,
                 field_name: correspondance.field_name,
                 field_label: correspondance.label,
+                radius : node_init_radius,
                 label: 'Dataset Field',
                 group: 'value'
             });
@@ -544,6 +561,9 @@ function update_graph(correspondance, correspondance_type) {
                 label: correspondance.description
             });
         }
+        // Node is growing proportionally to its number of predicates
+        source_node_id = get_node_id(correspondance.associated_field);
+        nodes[source_node_id].radius += node_growing_factor;
     }
     update(links, nodes);
     simulation.alphaTarget(0.3).restart();
