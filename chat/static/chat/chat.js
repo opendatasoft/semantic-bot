@@ -24,17 +24,13 @@ var chat = new Vue({
         source_domain_address: null,
         language: "en",
     },
-    watch: {
-        suggestions: function () {
-            this.reset_field_selector();
-        }
-    },
     mounted: function () {
         this.bot_introduction();
         this.get_dataset_metas();
+        this.init_field_selector();
     },
     methods: {
-        reset_field_selector: function () {
+        init_field_selector: function () {
             $('#fieldTextBar').autocomplete({
                 lookup: this.suggestions,
                 onSelect: function (suggestion) {

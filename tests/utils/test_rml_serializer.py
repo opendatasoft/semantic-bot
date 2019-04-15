@@ -15,6 +15,14 @@ TEST_CORRESPONDANCES = {
     "description": "A trip on a commercial bus line."
   }, {
     "eq": [],
+    "sub": [],
+    "uri": "http://schema.org/Thing",
+    "label": "Bus (ID)",
+    "field_name": "idbus",
+    "class": "Thing",
+    "description": "Something"
+  }, {
+    "eq": [],
     "sub": ["http://schema.org/MoveAction"],
     "uri": "http://schema.org/DepartAction",
     "label": "Depart",
