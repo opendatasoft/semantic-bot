@@ -2,10 +2,13 @@
 // Graph parameters
 // -----------------------
 // nodes are growing proportionally to its number of predicates
-var node_growing_factor = 2;
-var node_init_radius = 30;
+const node_growing_factor = 2;
+const node_init_radius = 30;
+const link_color = '#999';
+const node_resource_color = '#007fa4';
+const node_value_color = '#E8E8E8';
 
-var chat = new Vue({
+let chat = new Vue({
     el: '#chat-app',
     data: {
         dataset_id: get_dataset_id(),
@@ -334,18 +337,20 @@ new ClipboardJS('.btn-rml', {
 // -----------------------
 // D3JS part for the graph
 // -----------------------
-var nodes = [];
-var links = [];
+let nodes = [];
+let links = [];
+let edgepaths;
+let edgelabels;
 
-var colors = d3.scaleOrdinal(d3.schemeCategory10);
+let colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-var svg = d3.select("svg"),
+let svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height"),
     node,
     link;
 
-var simulation = d3.forceSimulation()
+let simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function (d) {
         return d.id;
     }).distance(150).strength(1))
@@ -376,7 +381,7 @@ function update(links, nodes) {
         })
         .append('svg:path')
         .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-        .attr('fill', '#999')
+        .attr('fill', link_color)
         .style('stroke', 'none');
 
     link = svg.selectAll(".link")
@@ -416,7 +421,7 @@ function update(links, nodes) {
                 return 'edgelabel' + i
             },
             'font-size': 12,
-            'fill': '#aaa'
+            'fill': link_color
         });
 
     edgelabels.append('textPath')
@@ -445,7 +450,7 @@ function update(links, nodes) {
             return (d.radius);
         })
         .style("fill", function (d) {
-            return (d.group === "resource") ? "#007fa4" : "#E8E8E8";
+            return (d.group === "resource") ? node_resource_color : node_value_color;
         });
 
     node.append("title")
@@ -504,8 +509,8 @@ function ticked() {
         if (d.target.x < d.source.x) {
             var bbox = this.getBBox();
 
-            rx = bbox.x + bbox.width / 2;
-            ry = bbox.y + bbox.height / 2;
+            let rx = bbox.x + bbox.width / 2;
+            let ry = bbox.y + bbox.height / 2;
             return 'rotate(180 ' + rx + ' ' + ry + ')';
         } else {
             return 'rotate(0)';
@@ -525,7 +530,7 @@ function dragged(d) {
 }
 
 function update_graph(correspondance, correspondance_type) {
-    existing_node_id = get_node_id(correspondance.field_name);
+    let existing_node_id = get_node_id(correspondance.field_name);
     if (correspondance_type === "classes") {
         if (existing_node_id) {
             // Update the class of the corresponding field
@@ -544,7 +549,7 @@ function update_graph(correspondance, correspondance_type) {
         }
     } else {
         if (existing_node_id == null || nodes[existing_node_id].id === correspondance.associated_field) {
-            id = correspondance.field_name + "_value";
+            let id = correspondance.field_name + "_value";
             nodes.push({
                 id: id,
                 field_name: correspondance.field_name,
@@ -562,7 +567,7 @@ function update_graph(correspondance, correspondance_type) {
             });
         }
         // Node is growing proportionally to its number of predicates
-        source_node_id = get_node_id(correspondance.associated_field);
+        let source_node_id = get_node_id(correspondance.associated_field);
         nodes[source_node_id].radius += node_growing_factor;
     }
     update(links, nodes);
@@ -578,7 +583,7 @@ function get_node_id(field_name) {
     return null
 }
 
-var chart = $("#chart"),
+let chart = $("#chart"),
     aspect = chart.width() / chart.height(),
     container = chart.parent();
 $(window).on("resize", function () {
