@@ -43,16 +43,31 @@ let chat = new Vue({
         init_field_selector: function () {
             $('#fieldTextBar').autocomplete({
                 lookup: this.suggestions,
+                /**
+                 * Updates the 'selected_field' variable with the field_name when a suggested field is selected
+                 *
+                 * @param {{value: String, data: String, class: String}} suggestion -
+                 * The selected field object from suggestions array
+                 */
                 onSelect: function (suggestion) {
                     chat.selected_field = suggestion;
                 },
                 minChars: 0,
                 maxHeight: 200,
+                /**
+                 * Format field suggestion in the 'autocomplete #textBar' listbox
+                 *
+                 * @param {{value: String, data: String, class: String}} suggestion -
+                 * A field suggestion from suggestions array
+                 * @param {String} currentValue - The current value typed in #fieldTextBar
+                 *
+                 * @returns {String} Returns the HTML representation of the suggestion
+                 */
                 formatResult: function _formatResult(suggestion, currentValue) {
 
-                    var utils = $.Autocomplete.utils;
+                    let utils = $.Autocomplete.utils;
 
-                    var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
+                    let pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 
                     if (suggestion.class) {
                         return '<b>' + suggestion.value
@@ -75,6 +90,11 @@ let chat = new Vue({
                 }
             });
         },
+        /**
+         * Sends a message from the user to the chat
+         *
+         * @param {String} message - The message of the user
+         */
         push_user_message: function (message) {
             this.messages.push({
                 text: message,
@@ -82,6 +102,11 @@ let chat = new Vue({
             });
             setTimeout(scroll_chat_to_bottom, 100);
         },
+        /**
+         * Sends a message from the bot to the chat
+         *
+         * @param {String} message - The message of the bot
+         */
         push_bot_message: function (message) {
             chat.messages.push({
                 text: message,
@@ -89,6 +114,7 @@ let chat = new Vue({
             });
             setTimeout(scroll_chat_to_bottom, 100);
         },
+        /** Retrieve dataset metadatas from the catalog api v2 of OpenDataSoft DATA Network */
         get_dataset_metas: function () {
             this.$http.get('https://data.opendatasoft.com/api/v2/catalog/datasets/' + this.dataset_id).then(response => {
                 // domain url
@@ -108,10 +134,16 @@ let chat = new Vue({
                 }
             });
         },
+        /**
+         * Get the url where RDF mapping of the dataset can be updated
+         *
+         * @returns {String} message - The url where RDF mapping of the dataset can be updated
+         */
         get_mapping_set_url: function () {
             dataset_id = this.dataset_id.split('@')[0];
             return "https://" + this.source_domain_address + "/publish/" + dataset_id + "/#information";
         },
+        /** Sends welcome messages, Retrieve dataset correspondances and Initialize semantization */
         bot_introduction: function () {
             // Welcome messages
             this.$http.get('/api/conversation/greeting').then(response => {
@@ -131,6 +163,7 @@ let chat = new Vue({
                 });
             });
         },
+        /** Processes the next correspondance or finish the semantization and returns the RDF mapping */
         next_semantize: function () {
             if (this.correspondances['classes'].length > 0) {
                 // 1. Confirm class correspondances
@@ -176,12 +209,14 @@ let chat = new Vue({
                 });
             }
         },
+        /** Hides all selectors (for user interaction with bot) */
         hide_selectors: function () {
             this.yes_no_selector = false;
             this.class_selector = false;
             this.field_selector = false;
             this.get_mapping_selector = false;
         },
+        /** Processes a positive response (Yes) from the user */
         user_input_yes: function () {
             if (this.awaiting_user) {
                 this.awaiting_user = false;
@@ -206,6 +241,7 @@ let chat = new Vue({
                 }
             }
         },
+        /** Processes a neutral response (I don't know) from the user */
         user_input_idk: function () {
             if (this.awaiting_user) {
                 this.awaiting_user = false;
@@ -216,6 +252,7 @@ let chat = new Vue({
                 }, 1000);
             }
         },
+        /** Processes a negative response (No) from the user */
         user_input_no: function () {
             if (this.awaiting_user) {
                 this.awaiting_user = false;
@@ -226,6 +263,12 @@ let chat = new Vue({
                 }, 1000);
             }
         },
+        /**
+         * Processes a class as a response from the user
+         *
+         * @param {{uri: String, class: String, description: String, sub: Array, eq: Array}} associated_class -
+         * An accepted class correspondance that will be the domain of the current property correspondance.
+         */
         user_input_property_class: function (associated_class) {
             if (this.awaiting_user) {
                 if (associated_class == null) {
@@ -256,6 +299,14 @@ let chat = new Vue({
                 }
             }
         },
+        /**
+         * Processes a field of the dataset as a response from the user.
+         * If property have a domain, selected field is converted as an accepted class correspondance
+         * and become the domain of that property. Same for the range (but with the field that represents the property).
+         *
+         * @param {{value: String, data: String, class: String}} associated_field -
+         * A field that will be the domain of the current property correspondance.
+         */
         user_input_property_field: function (associated_field) {
             if (this.awaiting_user) {
                 if (associated_field == null) {
@@ -299,9 +350,17 @@ let chat = new Vue({
                 }
             }
         },
+        /** Shows the button that can shows the mapping modal */
         get_mapping_btn: function () {
             $('#resultModal').modal(show = true);
         },
+        /**
+         * Update a field suggestion in the suggestions array with its accepted class correspondance
+         *
+         * @param {String} clss - The class of the field
+         *
+         * @param {String} field_name - The field_name of the field
+         */
         update_class_suggestions: function (clss, field_name) {
             for (i = 0; i < this.suggestions.length; i++) {
                 if (this.suggestions[i]['data'] === field_name) {
@@ -314,7 +373,7 @@ let chat = new Vue({
     },
 });
 
-
+/** Executed when Enter Key (13) is pressed and field selector is shown */
 $(function () {
     $('.Global-container').keypress(function (e) {
         if (chat.field_selector && e.which === 13) {
@@ -359,6 +418,13 @@ let simulation = d3.forceSimulation()
 
 update(links, nodes);
 
+/**
+ * Re-Instantiates the graph of the mapping
+ *
+ * @param {Array} links - All the links between nodes (properties/predicates)
+ *
+ * @param {Array} nodes - All the nodes of the graph (resources and values/subjects and objects)
+ */
 function update(links, nodes) {
     svg.selectAll("*").remove();
 
@@ -482,6 +548,7 @@ function update(links, nodes) {
         .links(links);
 }
 
+/** Controls the positions of the nodes, links and labels */
 function ticked() {
     link
         .attr("x1", function (d) {
@@ -518,17 +585,26 @@ function ticked() {
     });
 }
 
+/** Enables drag and drop of nodes in the graph */
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
 }
 
+/** Controls position of nodes when drag and drop action is finished*/
 function dragged(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
 }
 
+/**
+ * Adds a new class or property correspondance to nodes and links graph arrays
+ *
+ * @param {Object} correspondance - A class or property correspondance
+ *
+ * @param {String} correspondance_type - the type of the correspondance ('classes' or 'properties')
+ */
 function update_graph(correspondance, correspondance_type) {
     let existing_node_id = get_node_id(correspondance.field_name);
     if (correspondance_type === "classes") {
@@ -574,6 +650,13 @@ function update_graph(correspondance, correspondance_type) {
     simulation.alphaTarget(0.3).restart();
 }
 
+/**
+ * Gets the index of the node corresponding to a specific field in the nodes array
+ *
+ * @param {String} field_name - the field_name of the field
+ *
+ * @returns {Number} - the index of the corresponding field in the nodes array
+ */
 function get_node_id(field_name) {
     for (i in nodes) {
         if (field_name === nodes[i].id) {
