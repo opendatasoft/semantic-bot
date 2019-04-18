@@ -78,7 +78,7 @@ def _add_predicate_map(rdf_mapping, property_correspondance, class_correspondanc
     class_correspondance = _get_class(field_name, class_correspondances)
     if class_correspondance:
         # Target of the predicate is a resource (URI)
-        parent_map_id = '{}-{}'.format(class_correspondance['class'], class_correspondance['field_name'])
+        parent_map_id = 'field-{}'.format(class_correspondance['field_name'])
         if parent_map_id != mapping_id:
             for prop in properties:
                 rdf_mapping['mappings'][mapping_id]['predicateobjects'].append({'objects': [{'mapping': parent_map_id}],
