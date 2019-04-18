@@ -33,10 +33,13 @@ let chat = new Vue({
         rml_mapping: null,
         source_domain_address: null,
         language: "en",
+        // time to compute correspondances (user waiting)
+        server_time: Date.now(),
+        // time to answer correspondances (user interacting)
+        client_time: null
     },
     mounted: function () {
         this.bot_introduction();
-        this.get_dataset_metas();
         this.init_field_selector();
     },
     methods: {
@@ -132,6 +135,11 @@ let chat = new Vue({
                                            "data": response.body['dataset']['fields'][i]['name'],
                                            "class": null});
                 }
+            }, response => {
+                this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
+                    this.push_bot_message(response.body['text']);
+                    this.is_finished = true;
+                });
             });
         },
         /**
@@ -153,7 +161,14 @@ let chat = new Vue({
                     // Retrieve all correspondances (classes and properties)
                     this.$http.get('/api/' + this.dataset_id + '/correspondances').then(response => {
                         this.correspondances = response.body;
-                        this.next_semantize();
+                        this.get_dataset_metas();
+                        if (! this.is_finished) {
+                            this.next_semantize();
+                            // start client time
+                            this.client_time = Date.now();
+                        }
+                        // compute server time
+                        this.server_time = Math.floor((Date.now() - this.server_time)/1000);
                     }, response => {
                         this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
                             this.push_bot_message(response.body['text']);
@@ -166,7 +181,7 @@ let chat = new Vue({
         /** Processes the next correspondance or finish the semantization and returns the RDF mapping */
         next_semantize: function () {
             if (this.correspondances['classes'].length > 0) {
-                // 1. Confirm class correspondances
+                // 1. Process class correspondances
                 this.current_correspondance_type = 'classes';
                 this.current_correspondance = this.correspondances['classes'].pop();
                 this.$http.post('/api/conversation/question/class', this.current_correspondance).then(response => {
@@ -174,21 +189,29 @@ let chat = new Vue({
                     this.awaiting_user = true;
                 });
             } else if (this.correspondances['properties'].length > 0) {
-                // 2. Confirm properties correspondances
+                // 2. Process properties correspondances
                 this.current_correspondance_type = 'properties';
                 this.current_correspondance = this.correspondances['properties'].pop();
                 this.$http.post('/api/conversation/question/property', this.current_correspondance).then(response => {
                     this.push_bot_message(response.body['text']);
                     this.awaiting_user = true;
                 });
-            } else if (this.confirmed_correspondances['classes'].length < 0) {
-                // 3. Check if correspondances are confirmed
+            } else if (this.confirmed_correspondances['classes'].length < 1) {
+                // 3. Check if at least one class correspondance is confirmed
                 this.$http.get('/api/conversation/error/no-classes').then(response => {
                     this.push_bot_message(response.body['text']);
                     this.is_finished = true;
                 });
             } else {
                 // 4. Return the rml mapping
+                // compute client time
+                this.client_time = Math.floor((Date.now() - this.client_time)/1000);
+                // Sends fields metas along correspondance to log it
+                this.confirmed_correspondances['fields'] = this.dataset_fields;
+                this.confirmed_correspondances['server_time'] = this.server_time;
+                this.confirmed_correspondances['client_time'] = this.client_time;
+                this.awaiting_correspondances['fields'] = this.dataset_fields;
+                this.denied_correspondances['fields'] = this.dataset_fields;
                 this.$http.post('/api/' + this.dataset_id + '/correspondances/confirmed', this.confirmed_correspondances).then(response => {
                     this.$http.post('/api/' + this.dataset_id + '/correspondances/awaiting', this.awaiting_correspondances).then(response => {
                         this.$http.post('/api/' + this.dataset_id + '/correspondances/denied', this.denied_correspondances).then(response => {
@@ -199,7 +222,7 @@ let chat = new Vue({
                                     this.is_finished = true;
                                     // switch selector
                                     this.hide_selectors();
-                                    this.get_mapping_selector = true
+                                    this.get_mapping_selector = true;
                                     $('#resultModal').modal(show = true);
                                     $('#rmlMapping').append(Prism.highlight(this.rml_mapping, Prism.languages.yaml));
                                 });
@@ -350,7 +373,7 @@ let chat = new Vue({
                 }
             }
         },
-        /** Shows the button that can shows the mapping modal */
+        /** Shows the mapping modal */
         get_mapping_btn: function () {
             $('#resultModal').modal(show = true);
         },

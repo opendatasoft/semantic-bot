@@ -20,6 +20,10 @@ if settings.MAPPING_SERIALIZER == 'YARRRML':
 else:
     import utils.rml_serializer as MappingSerializer
 
+LOG_TEMPLATE_CLASS = '[{}] [Class] [{}] field:[{}] uri:[{}] field_type:[{}] field_is_facet:[{}]'
+LOG_TEMPLATE_PROPERTY = '[{}] [Property] [{}] field_domain:[{}] class_domain[{}] -- uri:[{}] --> field_range:[{}] field_type:[{}] field_is_facet:[{}]'
+LOG_TEMPLATE_TIME = '[{}] [Time] server_time:[{}] client_time:[{}]'
+
 
 @require_http_methods(['GET'])
 def get_correspondances(request, dataset_id):
@@ -82,6 +86,9 @@ def result_confirmed_correspondances(request, dataset_id):
     try:
         confirmed_correspondances = json.loads(request.body)
         _correspondances_logger(dataset_id, confirmed_correspondances, 'CONFIRMED')
+        logging.getLogger("results_logger").info(LOG_TEMPLATE_TIME.format(dataset_id,
+                                                                          confirmed_correspondances.get('server_time'),
+                                                                          confirmed_correspondances.get('client_time')))
         response = HttpResponse(
             json.dumps(confirmed_correspondances),
             content_type='application/json')
@@ -134,15 +141,24 @@ def get_class(request):
 
 
 def _correspondances_logger(dataset_id, correspondances, decision):
+    fields_metas = correspondances['fields']
     for correspondance_class in correspondances.get('classes'):
-        logging.getLogger("results_logger").info("[{}] [Class] [{}] field:[{}] uri:[{}]".format(dataset_id,
-                                                                                                decision,
-                                                                                                correspondance_class.get('field_name'),
-                                                                                                correspondance_class.get('uri')))
+        field_type = fields_metas.get(correspondance_class.get('field_name')).get('type')
+        field_is_facet = 'facet' in fields_metas.get(correspondance_class.get('field_name')).get('annotations')
+        logging.getLogger("results_logger").info(LOG_TEMPLATE_CLASS.format(dataset_id,
+                                                                           decision,
+                                                                           correspondance_class.get('field_name'),
+                                                                           correspondance_class.get('uri'),
+                                                                           field_type,
+                                                                           field_is_facet))
     for correspondance_prop in correspondances.get('properties'):
-        logging.getLogger("results_logger").info("[{}] [Property] [{}] field_domain:[{}] class_domain[{}] -- uri:[{}] --> field_range:[{}]".format(dataset_id,
-                                                                                                                                                   decision,
-                                                                                                                                                   correspondance_prop.get('associated_field'),
-                                                                                                                                                   correspondance_prop.get('associated_class'),
-                                                                                                                                                   correspondance_prop.get('uri'),
-                                                                                                                                                   correspondance_prop.get('field_name')))
+        field_type = fields_metas.get(correspondance_prop.get('field_name')).get('type')
+        field_is_facet = 'facet' in fields_metas.get(correspondance_prop.get('field_name')).get('annotations')
+        logging.getLogger("results_logger").info(LOG_TEMPLATE_PROPERTY.format(dataset_id,
+                                                                              decision,
+                                                                              correspondance_prop.get('associated_field'),
+                                                                              correspondance_prop.get('associated_class'),
+                                                                              correspondance_prop.get('uri'),
+                                                                              correspondance_prop.get('field_name'),
+                                                                              field_type,
+                                                                              field_is_facet))
