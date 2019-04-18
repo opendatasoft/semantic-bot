@@ -36,8 +36,10 @@ def _add_source(rdf_mapping, dataset_id):
 
 
 def _add_class_map(rdf_mapping, class_correspondance, dataset_id):
-    subject_id = '{}-{}'.format(class_correspondance['class'], class_correspondance['field_name'])
-    template = SUBJECT_URI.format(dataset_id=dataset_id, class_name=class_correspondance['class'], field_name=class_correspondance['field_name'])
+    mapping_id = 'field-{}'.format(class_correspondance['field_name'])
+    template = SUBJECT_URI.format(dataset_id=dataset_id,
+                                  class_name=class_correspondance['class'],
+                                  field_name=class_correspondance['field_name'])
     class_map = {'source': 'dataset-source', 'subject': template, 'predicateobjects': []}
     # Adding classe, equivalent and sub classes of the resource
     classes = [class_correspondance['uri']]
@@ -49,14 +51,21 @@ def _add_class_map(rdf_mapping, class_correspondance, dataset_id):
             classes.append(sub_class)
     for subject_class in classes:
         class_map['predicateobjects'].append(['a', subject_class])
-    # Adding label of the resource
-    class_map['predicateobjects'].append([RDFS_LABEL, '$({})'.format(class_correspondance['field_name'])])
-    rdf_mapping['mappings'][subject_id] = class_map
+    if mapping_id not in rdf_mapping['mappings']:
+        # Adding label of the resource
+        class_map['predicateobjects'].append([RDFS_LABEL, '$({})'.format(class_correspondance['field_name'])])
+        # Adding the new mapping
+        rdf_mapping['mappings'][mapping_id] = class_map
+    else:
+        # Update the existing mapping
+        for predicate_object in class_map['predicateobjects']:
+            if predicate_object not in rdf_mapping['mappings'][mapping_id]['predicateobjects']:
+                rdf_mapping['mappings'][mapping_id]['predicateobjects'].append(predicate_object)
     return rdf_mapping
 
 
 def _add_predicate_map(rdf_mapping, property_correspondance, class_correspondances):
-    subject_id = '{}-{}'.format(property_correspondance['associated_class'], property_correspondance['associated_field'])
+    mapping_id = 'field-{}'.format(property_correspondance['associated_field'])
     # Adding property, equivalent and sub properties of the resource
     properties = [property_correspondance['uri']]
     for eq_property in property_correspondance['eq']:
@@ -69,10 +78,11 @@ def _add_predicate_map(rdf_mapping, property_correspondance, class_correspondanc
     class_correspondance = _get_class(field_name, class_correspondances)
     if class_correspondance:
         # Target of the predicate is a resource (URI)
-        parent_map_id = '{}-{}'.format(class_correspondance['class'], class_correspondance['field_name'])
-        if parent_map_id != subject_id:
+        parent_map_id = 'field-{}'.format(class_correspondance['field_name'])
+        if parent_map_id != mapping_id:
             for prop in properties:
-                rdf_mapping['mappings'][subject_id]['predicateobjects'].append({'objects': [{'mapping': parent_map_id}], 'predicates': prop})
+                rdf_mapping['mappings'][mapping_id]['predicateobjects'].append({'objects': [{'mapping': parent_map_id}],
+                                                                                'predicates': prop})
             return rdf_mapping
         else:
             field_name = class_correspondance['field_name']
@@ -80,10 +90,12 @@ def _add_predicate_map(rdf_mapping, property_correspondance, class_correspondanc
     field_type = property_correspondance['type']
     if field_type in RDF_TYPE:
         for prop in properties:
-            rdf_mapping['mappings'][subject_id]['predicateobjects'].append([prop, '$({})'.format(field_name), RDF_TYPE[field_type]])
+            rdf_mapping['mappings'][mapping_id]['predicateobjects'].append([prop,
+                                                                            '$({})'.format(field_name),
+                                                                            RDF_TYPE[field_type]])
     else:
         for prop in properties:
-            rdf_mapping['mappings'][subject_id]['predicateobjects'].append([prop, '$({})'.format(field_name)])
+            rdf_mapping['mappings'][mapping_id]['predicateobjects'].append([prop, '$({})'.format(field_name)])
     return rdf_mapping
 
 

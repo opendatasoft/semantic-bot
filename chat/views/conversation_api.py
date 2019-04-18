@@ -114,7 +114,12 @@ def get_property_question(request):
         field_name = correspondance['label']
         uri = correspondance['uri']
         predicate_description = correspondance['description']
-        message = {'text': ConversationEngine.property_question(field_name, predicate_description, uri)}
+        domain_uri = None
+        domain_description = None
+        if correspondance['domain']:
+            domain_uri = correspondance['domain'].get('uri')
+            domain_description = correspondance['domain'].get('description')
+        message = {'text': ConversationEngine.property_question(field_name, predicate_description, uri, domain_uri, domain_description)}
         response = HttpResponse(
             json.dumps(message),
             content_type='application/json')
@@ -128,10 +133,13 @@ def get_property_question(request):
 def get_property_class_question(request):
     try:
         correspondance = json.loads(request.body)
-        field_name = correspondance['label']
-        uri = correspondance['uri']
         predicate_description = correspondance['description']
-        message = {'text': ConversationEngine.property_class_question(field_name, predicate_description, uri)}
+        domain_uri = None
+        domain_description = None
+        if correspondance['domain']:
+            domain_uri = correspondance['domain'].get('uri')
+            domain_description = correspondance['domain'].get('description')
+        message = {'text': ConversationEngine.property_class_question(predicate_description, domain_uri, domain_description)}
         response = HttpResponse(
             json.dumps(message),
             content_type='application/json')

@@ -31,7 +31,7 @@ def serialize(confirmed_correspondances, dataset_id):
 
 
 def add_class_map(rdf_mapping, class_correspondance, dataset_id):
-    subject_id = URIRef("#{}-{}".format(class_correspondance['class'], class_correspondance['field_name']))
+    subject_id = URIRef("#field-{}".format(class_correspondance['field_name']))
     logical_source = rml['logicalSource']
     logical_source_node = BNode()
     rdf_mapping.add((subject_id, logical_source, logical_source_node))
@@ -42,7 +42,10 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
     subject_map_node = BNode()
     subject_map = rr['subjectMap']
     rdf_mapping.add((subject_id, subject_map, subject_map_node))
-    rdf_mapping.add((subject_map_node, rr['template'], Literal(SUBJECT_URI.format(dataset_id=dataset_id, class_name=class_correspondance['class'], field_name=class_correspondance['field_name']))))
+    rdf_mapping.add((subject_map_node, rr['template'],
+                     Literal(SUBJECT_URI.format(dataset_id=dataset_id,
+                                                class_name=class_correspondance['class'],
+                                                field_name=class_correspondance['field_name']))))
     rdf_mapping.add((subject_map_node, rr['class'], URIRef(class_correspondance['uri'])))
     # equivalent and sub classes are also classes of the subject
     for eq_class in class_correspondance['eq']:
@@ -60,7 +63,7 @@ def add_class_map(rdf_mapping, class_correspondance, dataset_id):
 
 
 def add_predicate_map(rdf_mapping, property_correspondance, class_correspondances):
-    subject_id = URIRef("#{}-{}".format(property_correspondance['associated_class'], property_correspondance['associated_field']))
+    subject_id = URIRef("#field-{}".format(property_correspondance['associated_field']))
     predicate_map = rr['predicateObjectMap']
     node = BNode()
     rdf_mapping.add((subject_id, predicate_map, node))
@@ -76,7 +79,7 @@ def add_predicate_map(rdf_mapping, property_correspondance, class_correspondance
     class_correspondance = get_class(field_name, class_correspondances)
     if class_correspondance:
         # Target of the predicate is a resource (URI)
-        parent_map_id = URIRef("#{}-{}".format(class_correspondance['class'], class_correspondance['field_name']))
+        parent_map_id = URIRef("#field-{}".format(class_correspondance['field_name']))
         if parent_map_id != subject_id:
             rdf_mapping.add((object_node, rr['parentTriplesMap'], parent_map_id))
             return
