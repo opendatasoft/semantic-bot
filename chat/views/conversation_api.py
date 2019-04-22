@@ -1,17 +1,18 @@
 from __future__ import unicode_literals
 
+import simplejson as json
+import logging
 
 from django.http.response import HttpResponse
 from django.views.decorators.http import require_http_methods
-
-import simplejson as json
 
 import chatbot.conversation_engine as ConversationEngine
 from .api_errors import bad_format_correspondance
 
 
 @require_http_methods(['GET'])
-def get_greeting(request):
+def get_greeting(request, dataset_id):
+    logging.getLogger("results_logger").info("[{}] Starting semantization".format(dataset_id))
     message = {'text': ConversationEngine.greeting()}
     response = HttpResponse(
         json.dumps(message),
@@ -21,7 +22,7 @@ def get_greeting(request):
 
 
 @require_http_methods(['GET'])
-def get_instructions(request):
+def get_instructions(request, dataset_id):
     message = {'text': ConversationEngine.instructions()}
     response = HttpResponse(
         json.dumps(message),
@@ -31,37 +32,7 @@ def get_instructions(request):
 
 
 @require_http_methods(['GET'])
-def get_positive_answer(request):
-    message = {'text': ConversationEngine.reply_to_positive()}
-    response = HttpResponse(
-        json.dumps(message),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
-    return response
-
-
-@require_http_methods(['GET'])
-def get_neutral_answer(request):
-    message = {'text': ConversationEngine.reply_to_neutral()}
-    response = HttpResponse(
-        json.dumps(message),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
-    return response
-
-
-@require_http_methods(['GET'])
-def get_negative_answer(request):
-    message = {'text': ConversationEngine.reply_to_negative()}
-    response = HttpResponse(
-        json.dumps(message),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
-    return response
-
-
-@require_http_methods(['GET'])
-def get_salutation(request):
+def get_salutation(request, dataset_id):
     message = {'text': ConversationEngine.salutation()}
     response = HttpResponse(
         json.dumps(message),
@@ -71,7 +42,8 @@ def get_salutation(request):
 
 
 @require_http_methods(['GET'])
-def get_error_no_confirmed_class(request):
+def get_error_no_confirmed_class(request, dataset_id):
+    logging.getLogger("results_logger").info("[{}] No correspondances found".format(dataset_id))
     message = {'text': ConversationEngine.error_no_confirmed_class()}
     response = HttpResponse(
         json.dumps(message),
@@ -81,7 +53,7 @@ def get_error_no_confirmed_class(request):
 
 
 @require_http_methods(['GET'])
-def get_error_lov_unavailable(request):
+def get_error_lov_unavailable(request, dataset_id):
     message = {'text': ConversationEngine.error_lov_unavailable()}
     response = HttpResponse(
         json.dumps(message),
@@ -91,7 +63,7 @@ def get_error_lov_unavailable(request):
 
 
 @require_http_methods(['POST'])
-def get_class_question(request):
+def get_class_question(request, dataset_id):
     try:
         correspondance = json.loads(request.body)
         field_name = correspondance['label']
@@ -108,7 +80,7 @@ def get_class_question(request):
 
 
 @require_http_methods(['POST'])
-def get_property_question(request):
+def get_property_question(request, dataset_id):
     try:
         correspondance = json.loads(request.body)
         field_name = correspondance['label']
@@ -130,7 +102,7 @@ def get_property_question(request):
 
 
 @require_http_methods(['POST'])
-def get_property_class_question(request):
+def get_property_class_question(request, dataset_id):
     try:
         correspondance = json.loads(request.body)
         predicate_description = correspondance['description']

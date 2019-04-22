@@ -19,86 +19,58 @@ THING_CLASS_CORRESPONDANCE = {'uri': 'http://schema.org/Thing',
                               'eq': []}
 
 
-def init_correspondances_set(ods_dataset_metas, ods_dataset_records):
+def get_field_class(ods_dataset_records, field_metas, language='en'):
     """
-        Initialises the correspondances set object
-
-        A correspondances (mappings, associations...) set is a python dict object containing:
-        1. Correspondances between classes in ontologies and fields of a dataset
-        2. Correspondances between properties in ontologies and fields of a dataset
-    """
-    language = get_dataset_language(ods_dataset_metas)
-    candidate_correspondances = {'classes': get_dataset_classes(ods_dataset_records, ods_dataset_metas, language),
-                                 'properties': get_dataset_properties(ods_dataset_metas)}
-    return candidate_correspondances
-
-
-def get_dataset_classes(ods_dataset_records, ods_dataset_metas, language='en'):
-    """
-        Initialises the correspondances between classes in ontologies and fields of the dataset
+        Finds the correspondance between classes in ontologies and one field of the dataset
 
         Uses two approaches:
         First, try to search classe of instances in knowledge graphs (ex. OpenDataSoft -> Company)
         Else, uses field name as the class to search
-        Then, find the corresponding class in ontologies using Linked Open Vocabularies
+        Then, find the corresponding class in ontologies using Linked Open Vocabularies (LOV)
     """
-    candidates_classes = {}
+    field_name = field_metas['name']
+    candidate_classes = []
     # Search for instances of the dataset in resources of knowledge graphs and retrieve class of the resource
     for record in ods_dataset_records:
-        for field, value in record['fields'].items():
+        if field_name in record['record']['fields']:
+            value = record['record']['fields'][field_name]
             if has_no_numbers(value):
                 types = DBPediaNER.entity_types_request(value, language)
                 if not types:
                     # DBPedia could not find any class for this field
                     types = YagoNER.entity_types_request(value, language)
                 if types:
-                    if field in candidates_classes:
-                        candidates_classes[field].extend(types)
-                    else:
-                        candidates_classes[field] = types
-    correspondances = []
-    for field, classes in candidates_classes.items():
-        common_class = Counter(classes).most_common(1)[0][0]
+                    candidate_classes.extend(types)
+    if candidate_classes:
+        common_class = Counter(candidate_classes).most_common(1)[0][0]
         common_class = smart_str(common_class)
         class_correspondance = get_class_correspondance(common_class, language)
-        if class_correspondance:
-            field_meta = get_field_metas(ods_dataset_metas, field)
-            class_correspondance['label'] = field
-            if field_meta and field_meta['label']:
-                class_correspondance['label'] = field_meta['label']
-            class_correspondance['field_name'] = field
-            correspondances.append(class_correspondance)
-    # Use the field name as the class to search
-    for field in ods_dataset_metas['fields']:
-        if field['name'] not in candidates_classes:
-            field_name = smart_str(field['label'])
-            field_name = enrich_field(field['type'], field_name)
-            class_correspondance = get_class_correspondance(field_name, language)
-            if class_correspondance:
-                class_correspondance['label'] = field['label']
-                class_correspondance['field_name'] = field['name']
-                correspondances.append(class_correspondance)
-    return correspondances
+    else:
+        # Use the field label as the class to search
+        field_label = smart_str(field_metas['label'])
+        field_label = enrich_field(field_metas['type'], field_label)
+        class_correspondance = get_class_correspondance(field_label, language)
+    if class_correspondance:
+        class_correspondance['label'] = field_metas['label']
+        class_correspondance['field_name'] = field_name
+    return class_correspondance
 
 
-def get_dataset_properties(ods_dataset_metas, language='en'):
+def get_field_property(field_metas, language='en'):
     """
-        Initialises the correspondances between properties in ontologies and fields of the dataset
+        Finds the correspondances between properties in ontologies and on field of the dataset
 
         Uses field name as the property to search for
         find the corresponding property in ontologies using Linked Open Vocabularies (LOV)
     """
-    properties = []
-    for field in ods_dataset_metas['fields']:
-        prop = smart_str(field['label'])
-        prop = enrich_field(field['type'], prop)
-        property_correspondance = get_property_correspondance(prop, language)
-        if property_correspondance:
-            property_correspondance['label'] = field['label']
-            property_correspondance['field_name'] = field['name']
-            property_correspondance['type'] = field['type']
-            properties.append(property_correspondance)
-    return properties
+    prop = smart_str(field_metas['label'])
+    prop = enrich_field(field_metas['type'], prop)
+    property_correspondance = get_property_correspondance(prop, language)
+    if property_correspondance:
+        property_correspondance['label'] = field_metas['label']
+        property_correspondance['field_name'] = field_metas['name']
+        property_correspondance['type'] = field_metas['type']
+    return property_correspondance
 
 
 def get_class_correspondance(clss, language='en'):
@@ -224,14 +196,6 @@ def get_dataset_language(ods_dataset_metas):
         if 'language' in ods_dataset_metas['metas']:
             return ods_dataset_metas['metas']['language']
     return 'eng'
-
-
-def get_field_metas(ods_dataset_metas, field_name):
-    """Finds the field in the dataset metadata using the field name"""
-    for field in ods_dataset_metas['fields']:
-        if field['name'] == field_name:
-            return field
-    return None
 
 
 def enrich_field(field_type, field):

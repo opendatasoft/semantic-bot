@@ -8,8 +8,6 @@ from django.conf import settings
 import simplejson as json
 import logging
 
-import utils.ods_catalog_api as ODSCatalogApi
-import utils.ods_dataset_api as ODSDatasetApi
 import utils.dbpedia_ner as DBPediaNER
 import utils.yago_ner as YagoNER
 import chatbot.semantic_engine as SemanticEngine
@@ -25,41 +23,40 @@ LOG_TEMPLATE_PROPERTY = '[{}] [Property] [{}] field_domain:[{}] class_domain[{}]
 LOG_TEMPLATE_TIME = '[{}] [Time] server_time:[{}] client_time:[{}]'
 
 
-@require_http_methods(['GET'])
-def get_correspondances(request, dataset_id):
-    logging.getLogger("results_logger").info("[{}] Starting semantization".format(dataset_id))
-    ods_dataset_metas = ODSCatalogApi.dataset_meta_request(dataset_id)
-    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, settings.RECORD_NUMBER)['records']
-    correspondances = SemanticEngine.init_correspondances_set(ods_dataset_metas, ods_dataset_records)
-    if not correspondances.get('classes'):
-        logging.getLogger("results_logger").info("[{}] No correspondances found".format(dataset_id))
-    logging.getLogger("results_logger").info("[{}] Starting semantization".format(dataset_id))
-    response = HttpResponse(
-        json.dumps(correspondances),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
+@require_http_methods(['POST'])
+def get_field_class_correspondance(request, dataset_id):
+    try:
+        json_body = json.loads(request.body)
+        ods_dataset_records = json_body['records']
+        fields = json_body['fields']
+        field_name = request.GET.get('field', None)
+        field_metas = fields[field_name]
+        language = request.GET.get('lang', 'en')
+        class_correspondance = SemanticEngine.get_field_class(ods_dataset_records, field_metas, language)
+        response = HttpResponse(
+            json.dumps(class_correspondance),
+            content_type='application/json')
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
     return response
 
 
-@require_http_methods(['GET'])
-def get_classes_correspondances(request, dataset_id):
-    ods_dataset_records = ODSDatasetApi.dataset_records_request(dataset_id, settings.RECORD_NUMBER)['records']
-    correspondances = SemanticEngine.get_dataset_classes(ods_dataset_records)
-    response = HttpResponse(
-        json.dumps(correspondances),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
-    return response
-
-
-@require_http_methods(['GET'])
-def get_properties_correspondances(request, dataset_id):
-    ods_dataset_metas = ODSCatalogApi.dataset_meta_request(dataset_id)
-    correspondances = SemanticEngine.get_dataset_properties(ods_dataset_metas)
-    response = HttpResponse(
-        json.dumps(correspondances),
-        content_type='application/json')
-    response['Access-Control-Allow-Origin'] = '*'
+@require_http_methods(['POST'])
+def get_field_property_correspondance(request, dataset_id):
+    try:
+        json_body = json.loads(request.body)
+        fields = json_body['fields']
+        field_name = request.GET.get('field', None)
+        field_metas = fields[field_name]
+        language = request.GET.get('lang', 'en')
+        property_correspondance = SemanticEngine.get_field_property(field_metas, language)
+        response = HttpResponse(
+            json.dumps(property_correspondance),
+            content_type='application/json')
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
     return response
 
 

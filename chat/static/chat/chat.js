@@ -8,13 +8,17 @@ const link_color = '#999';
 const node_resource_color = '#007fa4';
 const node_value_color = '#E8E8E8';
 
+// The number of records (<= 100) to retrieve from the dataset (used for Named Entity Recognition)
+const record_number = 40;
+
 let chat = new Vue({
     el: '#chat-app',
     data: {
         dataset_id: get_dataset_id(),
         dataset_fields: {},
+        dataset_records: null,
         messages: [],
-        correspondances: {},
+        correspondances: {'classes': [], 'properties': []},
         confirmed_correspondances: {'classes': [], 'properties': []},
         denied_correspondances: {'classes': [], 'properties': []},
         awaiting_correspondances: {'classes': [], 'properties': []},
@@ -119,7 +123,7 @@ let chat = new Vue({
         },
         /** Retrieve dataset metadatas from the catalog api v2 of OpenDataSoft DATA Network */
         get_dataset_metas: function () {
-            this.$http.get('https://data.opendatasoft.com/api/v2/catalog/datasets/' + this.dataset_id).then(response => {
+            return this.$http.get('https://data.opendatasoft.com/api/v2/catalog/datasets/' + this.dataset_id).then(response => {
                 // domain url
                 this.source_domain_address = response.body['dataset']['metas']['default']['source_domain_address'];
                 // dataset language
@@ -142,6 +146,17 @@ let chat = new Vue({
                 });
             });
         },
+        /** Retrieve records of the dataset from the catalog api v2 of OpenDataSoft DATA Network */
+        get_dataset_records: function () {
+            return this.$http.get("https://data.opendatasoft.com/api/v2/catalog/datasets/"+ this.dataset_id +"/records?rows=" + record_number).then(response => {
+                this.dataset_records = response.body['records'];
+            }, response => {
+                this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
+                    this.push_bot_message(response.body['text']);
+                    this.is_finished = true;
+                });
+            });
+        },
         /**
          * Get the url where RDF mapping of the dataset can be updated
          *
@@ -154,25 +169,52 @@ let chat = new Vue({
         /** Sends welcome messages, Retrieve dataset correspondances and Initialize semantization */
         bot_introduction: function () {
             // Welcome messages
-            this.$http.get('/api/conversation/greeting').then(response => {
+            this.$http.get("/api/" + this.dataset_id + "/conversation/greeting").then(response => {
                 this.push_bot_message(response.body['text']);
-                this.$http.get('/api/conversation/instructions').then(response => {
+                this.$http.get("/api/" + this.dataset_id + "/conversation/instructions").then(response => {
                     this.push_bot_message(response.body['text']);
-                    // Retrieve all correspondances (classes and properties)
-                    this.$http.get('/api/' + this.dataset_id + '/correspondances').then(response => {
-                        this.correspondances = response.body;
-                        this.get_dataset_metas();
-                        if (! this.is_finished) {
-                            this.next_semantize();
-                            // start client time
-                            this.client_time = Date.now();
+                    Promise.all([this.get_dataset_metas(), this.get_dataset_records()]).then(() => {
+                        data = {'records': this.dataset_records, 'fields': this.dataset_fields};
+                        // Retrieve class correspondances
+                        // Should be processed before properties
+                        promises = [];
+                        for (let field_name in this.dataset_fields) {
+                            promises.push( new Promise(function (resolve, reject){
+                                let field_metas = chat.dataset_fields[field_name];
+                                chat.$http.post("/api/" + chat.dataset_id + "/correspondances/field/class?field=" + field_name + "&lang=" + chat.language, data).then(response => {
+                                    if (response.body) {
+                                        chat.correspondances['classes'].push(response.body);
+                                    }
+                                    resolve()
+                                }, response => {
+                                    reject()
+                                });
+                            }));
                         }
-                        // compute server time
-                        this.server_time = Math.floor((Date.now() - this.server_time)/1000);
-                    }, response => {
-                        this.$http.get('/api/conversation/error/lov-unavailable').then(response => {
-                            this.push_bot_message(response.body['text']);
-                            this.is_finished = true;
+                        Promise.all(promises).then(() => {
+                            this.next_semantize();
+                            // User won't wait anymore
+                            this.server_time = Math.floor((Date.now() - this.server_time)/1000);
+                            this.client_time = Date.now();
+                            // Retrieve property correspondances
+                            for (let field_name in this.dataset_fields) {
+                                let field_metas = this.dataset_fields[field_name];
+                                this.$http.post("/api/" + this.dataset_id + "/correspondances/field/property?field=" + field_name + "&lang=" + chat.language, data).then(response => {
+                                    if (response.body) {
+                                        this.correspondances['properties'].push(response.body);
+                                    }
+                                }, response => {
+                                    this.$http.get("/api/" + this.dataset_id + "/conversation/error/lov-unavailable").then(response => {
+                                        this.push_bot_message(response.body['text']);
+                                        this.is_finished = true;
+                                    });
+                                });
+                            }
+                        }).catch(() => {
+                            chat.$http.get("/api/" + chat.dataset_id + "/conversation/error/lov-unavailable").then(response => {
+                                chat.push_bot_message(response.body['text']);
+                                chat.is_finished = true;
+                            });
                         });
                     });
                 });
@@ -184,7 +226,7 @@ let chat = new Vue({
                 // 1. Process class correspondances
                 this.current_correspondance_type = 'classes';
                 this.current_correspondance = this.correspondances['classes'].pop();
-                this.$http.post('/api/conversation/question/class', this.current_correspondance).then(response => {
+                this.$http.post("/api/" + this.dataset_id + "/conversation/question/class", this.current_correspondance).then(response => {
                     this.push_bot_message(response.body['text']);
                     this.awaiting_user = true;
                 });
@@ -192,13 +234,13 @@ let chat = new Vue({
                 // 2. Process properties correspondances
                 this.current_correspondance_type = 'properties';
                 this.current_correspondance = this.correspondances['properties'].pop();
-                this.$http.post('/api/conversation/question/property', this.current_correspondance).then(response => {
+                this.$http.post("/api/" + this.dataset_id + "/conversation/question/property", this.current_correspondance).then(response => {
                     this.push_bot_message(response.body['text']);
                     this.awaiting_user = true;
                 });
             } else if (this.confirmed_correspondances['classes'].length < 1) {
                 // 3. Check if at least one class correspondance is confirmed
-                this.$http.get('/api/conversation/error/no-classes').then(response => {
+                this.$http.get("/api/" + this.dataset_id + "/conversation/error/no-classes").then(response => {
                     this.push_bot_message(response.body['text']);
                     this.is_finished = true;
                 });
@@ -217,7 +259,7 @@ let chat = new Vue({
                         this.$http.post('/api/' + this.dataset_id + '/correspondances/denied', this.denied_correspondances).then(response => {
                             this.$http.post('/api/' + this.dataset_id + '/correspondances/mapping', this.confirmed_correspondances).then(response => {
                                 this.rml_mapping = response.body;
-                                this.$http.get('/api/conversation/salutation').then(response => {
+                                this.$http.get("/api/" + this.dataset_id + "/conversation/salutation").then(response => {
                                     this.push_bot_message(response.body['text']);
                                     this.is_finished = true;
                                     // switch selector
@@ -245,7 +287,7 @@ let chat = new Vue({
                 this.awaiting_user = false;
                 this.push_user_message("Yes.");
                 if (this.current_correspondance_type === 'properties') {
-                    this.$http.post('/api/conversation/question/property-class', this.current_correspondance).then(response => {
+                    this.$http.post("/api/" + this.dataset_id + "/conversation/question/property-class", this.current_correspondance).then(response => {
                         this.push_bot_message(response.body['text']);
                         //update selector
                         this.hide_selectors();
