@@ -9,7 +9,7 @@ const node_resource_color = '#007fa4';
 const node_value_color = '#E8E8E8';
 
 // The number of records (<= 100) to retrieve from the dataset (used for Named Entity Recognition)
-const record_number = 40;
+const record_number = 100;
 
 let chat = new Vue({
     el: '#chat-app',
@@ -174,40 +174,54 @@ let chat = new Vue({
                 this.$http.get("/api/" + this.dataset_id + "/conversation/instructions").then(response => {
                     this.push_bot_message(response.body['text']);
                     Promise.all([this.get_dataset_metas(), this.get_dataset_records()]).then(() => {
-                        data = {'records': this.dataset_records, 'fields': this.dataset_fields};
+                        let data = {'records': this.dataset_records, 'fields': this.dataset_fields};
                         // Retrieve class correspondances
                         // Should be processed before properties
-                        promises = [];
+                        let promises = [];
                         for (let field_name in this.dataset_fields) {
                             promises.push( new Promise(function (resolve, reject){
                                 let field_metas = chat.dataset_fields[field_name];
                                 chat.$http.post("/api/" + chat.dataset_id + "/correspondances/field/class?field=" + field_name + "&lang=" + chat.language, data).then(response => {
                                     if (response.body) {
                                         chat.correspondances['classes'].push(response.body);
-                                    }
-                                    resolve()
+                                        resolve(true);
+                                    }else{resolve(false);}
                                 }, response => {
-                                    reject()
+                                    reject();
                                 });
                             }));
                         }
-                        Promise.all(promises).then(() => {
-                            this.next_semantize();
+                        Promise.all(promises).then((values) => {
+                            // need at least one correspondance to begin semantization
+                            let has_one_correspondance = values.some(function (bool) {return bool;});
+                            if (has_one_correspondance){
+                                this.next_semantize();
+                            }
                             // User won't wait anymore
                             this.server_time = Math.floor((Date.now() - this.server_time)/1000);
                             this.client_time = Date.now();
                             // Retrieve property correspondances
+                            promises = [];
                             for (let field_name in this.dataset_fields) {
-                                let field_metas = this.dataset_fields[field_name];
-                                this.$http.post("/api/" + this.dataset_id + "/correspondances/field/property?field=" + field_name + "&lang=" + chat.language, data).then(response => {
-                                    if (response.body) {
-                                        this.correspondances['properties'].push(response.body);
-                                    }
-                                }, response => {
-                                    this.$http.get("/api/" + this.dataset_id + "/conversation/error/lov-unavailable").then(response => {
-                                        this.push_bot_message(response.body['text']);
-                                        this.is_finished = true;
+                                promises.push( new Promise(function (resolve, reject){
+                                    let field_metas = chat.dataset_fields[field_name];
+                                    chat.$http.post("/api/" + chat.dataset_id + "/correspondances/field/property?field=" + field_name + "&lang=" + chat.language, data).then(response => {
+                                        if (response.body) {
+                                            chat.correspondances['properties'].push(response.body);
+                                            resolve(true);
+                                        }else{resolve(false);}
+                                    }, response => {
+                                        chat.$http.get("/api/" + chat.dataset_id + "/conversation/error/lov-unavailable").then(response => {
+                                            reject();
+                                            chat.push_bot_message(response.body['text']);
+                                            chat.is_finished = true;
+                                        });
                                     });
+                                }));
+                            }
+                            if (! has_one_correspondance){
+                                Promise.all(promises).then((values) => {
+                                    this.next_semantize();
                                 });
                             }
                         }).catch(() => {

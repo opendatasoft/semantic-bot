@@ -121,7 +121,7 @@ $('#textBar').on('input', function (e) {
     }
     timeout = setTimeout(function () {
         var textbar_value = $("#textBar").val();
-        if (textbar_value.length > chat_form.minimum_char_to_suggest) {
+        if (textbar_value.length >= chat_form.minimum_char_to_suggest) {
             chat_form.get_suggestions(textbar_value);
         }
     }, chat_form.suggestion_timeout_ms);

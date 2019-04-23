@@ -20,14 +20,12 @@ CLASS_QUESTIONS = ["It seems that field {field_name} contains <a href='{uri}' ta
                    "Does the dataset contains <a href='{uri}' target='_blank'>{class_description}</a> in the field {field_name}?"]
 
 PROPERTY_QUESTIONS = ["It seems that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}?",
-                      "Is the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}.",
+                      "Is the field {field_name} the <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}.",
                       "I think that the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}. Am I right?",
                       "Does the field {field_name} is <a href='{uri}' target='_blank'>{predicate_description}</a> of {domain}?"]
 
-PROPERTY_CLASS_QUESTIONS = ["Select the field that identifies {domain} that have {predicate_description} as a characteristic.",
-                            "Select the field that contains {domain} that have {predicate_description} as a characteristic.",
-                            "Which field contains {domain} that have {predicate_description} as a characteristic?",
-                            "Which field identifies {domain} that have {predicate_description} as a characteristic?"]
+PROPERTY_CLASS_QUESTIONS = ["{predicate_description} is a characteristic of {domain}. Select the field that contains {domain}.",
+                            "{predicate_description} is a characteristic of {domain}. Which field contains {domain}?"]
 
 SALUTATION = ["""I have no more questions to ask.<br>
                  You will find your mapping below.<br>
