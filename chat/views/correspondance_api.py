@@ -7,9 +7,11 @@ from django.conf import settings
 
 import simplejson as json
 import logging
+import yaml
 
 import utils.dbpedia_ner as DBPediaNER
 import utils.yago_ner as YagoNER
+import utils.yarrrml_saturator as YARRRMLSaturator
 import chatbot.semantic_engine as SemanticEngine
 from .api_errors import bad_format_correspondance
 
@@ -134,6 +136,21 @@ def get_class(request):
         json.dumps(classes),
         content_type='application/json')
     response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@require_http_methods(['POST'])
+def saturate_mapping(request):
+    try:
+        yarrrml_mapping = yaml.safe_load(request.body)
+        yarrrml_mapping = YARRRMLSaturator.saturate(yarrrml_mapping)
+        response = HttpResponse(
+            yarrrml_mapping,
+            content_type='text')
+        response['Content-Disposition'] = 'attachment; filename="saturated_mapping.yaml"'
+        response['Access-Control-Allow-Origin'] = '*'
+    except (ValueError, KeyError):
+        response = bad_format_correspondance()
     return response
 
 

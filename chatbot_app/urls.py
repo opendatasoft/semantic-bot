@@ -6,6 +6,7 @@ from chat.views.conversation_api import get_error_lov_unavailable, get_error_no_
 from chat.views.correspondance_api import get_rml_mapping, get_class, result_confirmed_correspondances
 from chat.views.correspondance_api import result_awaiting_correspondances, result_denied_correspondances
 from chat.views.correspondance_api import get_field_class_correspondance, get_field_property_correspondance
+from chat.views.correspondance_api import saturate_mapping
 from chat.views.chat import semantize, chatbot_form
 from chat.views.root import api_root
 
@@ -19,6 +20,7 @@ url_api = [
     url(r'^api/(?P<dataset_id>[\w_@-]+)/conversation/error/no-classes', get_error_no_confirmed_class, name='get_error_no_confirmed_class'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/conversation/salutation', get_salutation, name='get_salutation'),
     url(r'^api/ner', get_class, name='get_class'),
+    url(r'^api/saturate', saturate_mapping, name='saturate_mapping'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/confirmed', result_confirmed_correspondances, name='post_result_confirmed_correspondances'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/awaiting', result_awaiting_correspondances, name='post_result_awaiting_correspondances'),
     url(r'^api/(?P<dataset_id>[\w_@-]+)/correspondances/denied', result_denied_correspondances, name='post_result_denied_correspondances'),

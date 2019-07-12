@@ -59,14 +59,17 @@ def term_request(query, term_type='class', language='en'):
         raise QueryParameterMissing
 
 
-def lookup_uri(uri, term_type='class', language='en'):
-    language_selection_query = "language = '{}' OR language = 'undefined' OR language = 'en'".format(language)
+def lookup_uri(uri, term_type='class', language=None):
     if uri:
         if term_type == 'class':
             url = SEARCH_CLASS_URL
         else:
             url = SEARCH_PROPERTY_URL
-        where = "(uri = '{}') AND ({})".format(uri, language_selection_query)
+        if language:
+            language_selection_query = "language = '{}' OR language = 'undefined' OR language = 'en'".format(language)
+            where = "(uri = '{}') AND ({})".format(uri, language_selection_query)
+        else:
+            where = "uri = '{}'".format(uri)
         params = {'where': where, 'rows': ROWS, 'apikey': settings.DATA_API_KEY}
         request = requests.get(url, params, timeout=Requester.get_timeout(), headers=Requester.create_ods_headers())
         request.raise_for_status()
