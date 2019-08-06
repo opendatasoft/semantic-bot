@@ -2,7 +2,7 @@ beautifulsoup4>=4.6
 html5lib>=1.0.1
 rdflib>=4.2
 requests>=2.18
-Django==1.11.22
+Django==1.11.23
 hdt>=2.0
 pytest>=4.0.1
 fuzzywuzzy>=0.17.0
