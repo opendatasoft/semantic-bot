@@ -11,7 +11,7 @@ RDF_TYPE = {
     'double': 'http://www.w3.org/2001/XMLSchema#double'
 }
 
-SUBJECT_URI = "https://data.opendatasoft.com/ld/resources/{dataset_id}/{class_name}/$({field_name})"
+SUBJECT_URI = "https://data.opendatasoft.com/ld/resources/{dataset_id}/{class_name}/$({field_name})/"
 
 SOURCE = '{dataset_id}.json~jsonpath'
 ITERATOR = '$.[*].fields'

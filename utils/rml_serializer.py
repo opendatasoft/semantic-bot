@@ -13,7 +13,7 @@ RDF_TYPE = {
     'double': XSD.double
 }
 
-SUBJECT_URI = "https://data.opendatasoft.com/ld/resources/{dataset_id}/{class_name}/{{{field_name}}}"
+SUBJECT_URI = "https://data.opendatasoft.com/ld/resources/{dataset_id}/{class_name}/{{{field_name}}}/"
 
 
 def serialize(confirmed_correspondances, dataset_id):
