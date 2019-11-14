@@ -183,7 +183,7 @@ the following figure illustrate the entities recognition step.
 
 ![Entities Recognition](readme_img/entities_recognition.png "Entities Recognition")
 
-### Properties Recognition
+### 2. Properties Recognition
 The goal of this step is to identify which property correspond to each field of the dataset.
 
 field name and datatype of each field are searched in LOV property api. 
@@ -192,7 +192,7 @@ Property questions are made using rdfs:label and of properties.
 the following figure illustrate the Properties recognition step.
 ![Properties Recognition](readme_img/properties_recognition.png "Properties Recognition")
 
-### Mapping Generation
+### 3. Mapping Generation
 Before serializing the RDF mapping, a lot of mapping rules can be inferred.
 
 First, using rdfs:domain and rdfs:range of properties, we can infer new classes that correspond to dataset fields.
