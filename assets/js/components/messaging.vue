@@ -1,6 +1,6 @@
 <template>
   <div id="inersidepanel"  class="messaging animated fadeIn" v-if="appstarted">
-        <ul>
+        <ul id="messagesContainer">
           <li class=" animated fadeInUp delay-1s">
             Hi!
           </li>
@@ -102,6 +102,12 @@ export default {
   methods: {
     startApp: function (event) {
       this.$root.$emit('appstartedEvent', true);
+    },
+    scrollToEnd() {
+      setTimeout(() => {
+        let container = this.$el.querySelector("#messagesContainer");
+        container.scrollTop = container.scrollHeight;
+      }, 100);
     }
   },
   mounted: function () { 
@@ -113,28 +119,35 @@ export default {
     });
     this.$root.$on('datasetID', (dataset_id) => {
       this.dataset_id = dataset_id;
+      this.scrollToEnd();
     });
     this.$root.$on('classFoundEvent', (is_class_found) => {
       this.is_class_found = is_class_found;
+      this.scrollToEnd();
     });
     this.$root.$on('propertyFoundEvent', (is_property_found) => {
       this.is_property_found = is_property_found;
+      this.scrollToEnd();
     });
     this.$root.$on('confirmedClassCorrespondancesEvent', (checked_fields) => {
       this.processed_class_correspondances = this.$root.correspondances.classes;
       this.processed_class_correspondances.forEach(class_correspondance =>
-              class_correspondance.checked = checked_fields.includes(class_correspondance.field_name))
+              class_correspondance.checked = checked_fields.includes(class_correspondance.field_name));
+      this.scrollToEnd();
     });
     this.$root.$on('passClassCorrespondancesEvent', () => {
       this.pass_class_correspondances = true;
+      this.scrollToEnd();
     });
     this.$root.$on('confirmedPropertyCorrespondancesEvent', (checked_fields) => {
       this.processed_property_correspondances = this.$root.correspondances.properties;
       this.processed_property_correspondances.forEach(property_correspondance =>
-              property_correspondance.checked = checked_fields.includes(property_correspondance.field_name))
+              property_correspondance.checked = checked_fields.includes(property_correspondance.field_name));
+      this.scrollToEnd();
     });
     this.$root.$on('passPropertyCorrespondancesEvent', () => {
       this.pass_property_correspondances = true;
+      this.scrollToEnd();
     });
     this.$root.$on('selectFieldEvent', (confirmed_property_correspondance) => {
       let message = document.createElement('li');
@@ -149,6 +162,7 @@ export default {
               '<a href=\"' + confirmed_property_correspondance.uri + '\" target=\"_blank\">' +
               confirmed_property_correspondance.description + '</a>' + '?';
       document.getElementById('field_messages').appendChild(message);
+      this.scrollToEnd();
     });
     this.$root.$on('fieldSelectedEvent', (field) => {
       let message = document.createElement('li');
@@ -157,10 +171,12 @@ export default {
       message.classList.add('fadeInUp');
       message.innerHTML = field.label;
       document.getElementById('field_messages').appendChild(message);
+      this.scrollToEnd();
     });
     this.$root.$on('finishSemantizationEvent', (success) => {
       this.is_semantization_success = success;
       this.is_semantization_failure = !success;
+      this.scrollToEnd();
     });
   }
 }
