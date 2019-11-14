@@ -1,0 +1,95 @@
+.mainschema{
+    height: 100vh;
+    width: 100%;
+    background-color: $gray-100;
+    background-image: url("/assets/img/botmss.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    &.graphstarted{
+        background-image: none;
+    }
+    .innerapp{
+        height: calc(100vh - 70px);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        .schema{
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .node-resource
+            {
+                fill: #142E7B;
+            }
+            .node-value
+            {
+                fill: #D4DCE9;
+                stroke: #142E7B;
+            }
+            .node-text-resource
+            {
+                text-anchor: middle;
+                font-size: 12px;
+                fill: #FFFFFF;
+            }
+            .node-text-value
+            {
+                text-anchor: middle;
+                font-size: 12px;
+                fill: #142E7B;
+            }
+            .node-text-under-resource
+            {
+                text-anchor: middle;
+                font-size: 12px;
+                fill: #FFFFFF;
+                font-style: italic;
+            }
+            .node-text-under-value
+            {
+                text-anchor: middle;
+                font-size: 12px;
+                fill: #142E7B;
+                font-style: italic;
+            }
+            .link
+            {
+                stroke: #142E7B;
+                stroke-opacity: 1;
+                stroke-width: 1px;
+
+            }
+            .edgelabel
+            {
+                font-size: 12px;
+                fill: #142E7B;
+                text-anchor: middle;
+                pointer-events: none;
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+            }
+            .edgepath{
+                pointer-events: none;
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+            }
+            .arrowhead
+            {
+                fill: #142E7B;
+                stroke: none;
+            }
+        }
+    }
+}

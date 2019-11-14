@@ -1,3 +1,5 @@
+webpack-stats.json
+
 db.sqlite3
 pyHDT/
 learned_denied_correspondances.json
@@ -110,3 +112,4 @@ venv.bak/
 
 #InteliJ
 .idea/
+node_modules

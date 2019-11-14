@@ -12,6 +12,8 @@ import yaml
 import utils.dbpedia_ner as DBPediaNER
 import utils.yago_ner as YagoNER
 import utils.yarrrml_saturator as YARRRMLSaturator
+import utils.ods_catalog_api as ODSCatalog
+import utils.ods_dataset_api as ODSRecords
 import chatbot.semantic_engine as SemanticEngine
 from .api_errors import bad_format_correspondance
 
@@ -22,8 +24,6 @@ else:
 
 LOG_TEMPLATE_CLASS = '[{}] [Class] [{}] field:[{}] uri:[{}] field_type:[{}] field_is_facet:[{}]'
 LOG_TEMPLATE_PROPERTY = '[{}] [Property] [{}] field_domain:[{}] class_domain[{}] -- uri:[{}] --> field_range:[{}] field_type:[{}] field_is_facet:[{}]'
-LOG_TEMPLATE_TIME = '[{}] [Time] server_time:[{}] client_time:[{}]'
-
 
 @require_http_methods(['POST'])
 def get_field_class_correspondance(request, dataset_id):
@@ -74,7 +74,6 @@ def get_rml_mapping(request, dataset_id):
         response['Access-Control-Allow-Origin'] = '*'
         with open('results/{}.yaml'.format(dataset_id), 'w') as outfile:
             outfile.write(rml_mapping)
-        logging.getLogger("results_logger").info("[{}] semantization complete".format(dataset_id))
     except (ValueError, KeyError):
         response = bad_format_correspondance()
     return response
@@ -85,9 +84,6 @@ def result_confirmed_correspondances(request, dataset_id):
     try:
         confirmed_correspondances = json.loads(request.body)
         _correspondances_logger(dataset_id, confirmed_correspondances, 'CONFIRMED')
-        logging.getLogger("results_logger").info(LOG_TEMPLATE_TIME.format(dataset_id,
-                                                                          confirmed_correspondances.get('server_time'),
-                                                                          confirmed_correspondances.get('client_time')))
         response = HttpResponse(
             json.dumps(confirmed_correspondances),
             content_type='application/json')
@@ -139,6 +135,40 @@ def get_class(request):
     return response
 
 
+@require_http_methods(['GET'])
+def catalog_search(request):
+    search = request.GET.get('search', '')
+    rows = request.GET.get('rows', 10)
+    sort = request.GET.get('sort', 'explore.popularity_score')
+    result = ODSCatalog.datasets_search_v2(search, rows, sort)
+    response = HttpResponse(
+        json.dumps(result),
+        content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@require_http_methods(['GET'])
+def catalog_dataset_lookup(request, dataset_id):
+    result = ODSCatalog.dataset_meta_request(dataset_id)
+    response = HttpResponse(
+        json.dumps(result),
+        content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@require_http_methods(['GET'])
+def dataset_records(request, dataset_id):
+    rows = request.GET.get('rows', settings.RECORD_NUMBER)
+    result = ODSRecords.dataset_records_V2_request(dataset_id, rows)
+    response = HttpResponse(
+        json.dumps(result),
+        content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 @require_http_methods(['POST'])
 def saturate_mapping(request):
     try:
@@ -158,7 +188,12 @@ def _correspondances_logger(dataset_id, correspondances, decision):
     fields_metas = correspondances['fields']
     for correspondance_class in correspondances.get('classes'):
         field_type = fields_metas.get(correspondance_class.get('field_name')).get('type')
-        field_is_facet = 'facet' in fields_metas.get(correspondance_class.get('field_name')).get('annotations')
+        field_is_facet = False
+        if fields_metas.get(correspondance_class.get('field_name')).get('annotations'):
+            for annotation in fields_metas.get(correspondance_class.get('field_name')).get('annotations'):
+                if 'facet' in annotation.get('name'):
+                    field_is_facet = True
+                    break
         logging.getLogger("results_logger").info(LOG_TEMPLATE_CLASS.format(dataset_id,
                                                                            decision,
                                                                            correspondance_class.get('field_name'),
@@ -167,7 +202,12 @@ def _correspondances_logger(dataset_id, correspondances, decision):
                                                                            field_is_facet))
     for correspondance_prop in correspondances.get('properties'):
         field_type = fields_metas.get(correspondance_prop.get('field_name')).get('type')
-        field_is_facet = 'facet' in fields_metas.get(correspondance_prop.get('field_name')).get('annotations')
+        field_is_facet = False
+        if fields_metas.get(correspondance_prop.get('field_name')).get('annotations'):
+            for annotation in fields_metas.get(correspondance_prop.get('field_name')).get('annotations'):
+                if 'facet' in annotation.get('name'):
+                    field_is_facet = True
+                    break
         logging.getLogger("results_logger").info(LOG_TEMPLATE_PROPERTY.format(dataset_id,
                                                                               decision,
                                                                               correspondance_prop.get('associated_field'),
