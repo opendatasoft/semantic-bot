@@ -239,5 +239,5 @@ Analyse logs with:
 python logs/log_analyser.py logs/chatbot_results.log
 ```
 
-######notes:
+###### notes:
 [Chatbot](https://thenounproject.com/term/chatbot/933503) icon designed by Oksana Latysheva, is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/us/legalcode).
