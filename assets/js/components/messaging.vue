@@ -107,7 +107,7 @@ export default {
       setTimeout(() => {
         let container = this.$el.querySelector("#messagesContainer");
         container.scrollTop = container.scrollHeight;
-      }, 100);
+      }, 50);
     }
   },
   mounted: function () { 
