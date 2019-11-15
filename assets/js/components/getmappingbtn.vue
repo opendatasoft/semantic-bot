@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-primary" v-bind:disabled="!is_button_activated" v-clipboard:copy="mapping">
+    <button class="btn btn-primary" v-bind:disabled="!is_button_activated" v-clipboard:copy="mapping" v-on:click="mappingHasBeenCopied">
         Get mapping
     </button>
 </template>
@@ -14,6 +14,9 @@
           }
       },
       methods: {
+          mappingHasBeenCopied() {
+              this.$root.$emit('mappingHasBeenCopied');
+          }
       },
       mounted: function () {
           this.$root.$on('mappingUpdatedEvent', (new_mapping) => {

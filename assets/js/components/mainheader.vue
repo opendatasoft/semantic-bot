@@ -13,6 +13,9 @@
     <div>
         <getmappingbtn></getmappingbtn>
     </div>
+      <div class="copymapping alert alert-primary animated fadeOut delay-2s" v-show="showAlert">
+          Mapping has been copied to clipboard
+      </div>
   </div>
 </template>
 
@@ -27,6 +30,7 @@
         data: function () {
             return {
                 switchmainapp: false,
+                showAlert: false
             }
         },
         methods: {
@@ -40,6 +44,12 @@
         mounted: function () {
             this.$root.$on('switchmainappEvent', (switchmainappstate) => {
                 this.switchmainapp = switchmainappstate;
+            });
+            this.$root.$on('mappingHasBeenCopied', () => {
+                this.showAlert = true;
+                window.setTimeout(() => {
+                    this.showAlert = false;
+                }, 3000);
             });
         }
     }

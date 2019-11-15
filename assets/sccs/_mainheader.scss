@@ -5,6 +5,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
+    .copymapping{
+        color: #565656;
+        background-color: #CCE7F7;
+        border-radius: 4px;
+        position:fixed;
+        z-index: 999;
+    }
     .switch{
         ul{
             border: 1px solid $gray-900;
