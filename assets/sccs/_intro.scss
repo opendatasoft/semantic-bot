@@ -1,0 +1,29 @@
+.intro{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    h1{
+        width: 100%;
+        font-size: 18px;
+        text-align: left;
+        line-height: 23px;
+        color: $black;
+        margin-bottom: 20px;
+    }
+    ul{
+        width: 100%;
+        li{
+            margin-bottom: 15px;
+            span{
+                color: #898D92;
+                margin-right: 5px;
+            }
+            a{
+                color: #0086D6;
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Semanticbot-v1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="07.-SemanticChatbot-domain_answer-loading" transform="translate(-47.000000, -914.000000)" fill="#000000">
+            <g id="messages" transform="translate(39.000000, 550.000000)">
+                <g id="bubble-loading" transform="translate(0.000000, 356.000000)">
+                    <g id="loader" transform="translate(8.000000, 8.000000)">
+                        <rect id="rond-1" x="0" y="0" width="5" height="5" rx="2.5"></rect>
+                        <rect id="rond-2" opacity="0.6" x="8" y="0" width="5" height="5" rx="2.5"></rect>
+                        <rect id="rond-3" x="8" y="8" width="5" height="5" rx="2.5"></rect>
+                        <rect id="rond-4" opacity="0.6" x="0" y="8" width="5" height="5" rx="2.5"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

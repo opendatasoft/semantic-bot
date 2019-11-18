@@ -1,0 +1,53 @@
+.mainheader{
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    .copymapping{
+        color: #565656;
+        background-color: #CCE7F7;
+        border-radius: 4px;
+        position:fixed;
+        z-index: 999;
+    }
+    .switch{
+        ul{
+            border: 1px solid $gray-900;
+            height: 32px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            li{
+                width: 74px;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                span{
+                    font-size: 13px;
+                    width: 100%;
+                    height: 100%;
+                    justify-content: center;
+                    display: flex;
+                    align-items: center;
+                    user-select: none;
+                }
+            }
+            .viewschema{
+                span{
+                    color: $white;
+                    background-color: $gray-900;
+                }
+            }
+            .viewmapping{
+                span{
+                    color: $gray-900;
+
+                }
+            }
+        }
+    }
+}

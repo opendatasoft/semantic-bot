@@ -1,0 +1,62 @@
+.mainmapping{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: $gray-900;
+    background-image: url("/assets/img/botmss_dark.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    overflow: scroll;
+    &.graphstarted{
+        background-image: none;
+    }
+    .mainheader{
+        .switch{
+            ul{
+                border-color: $gray-100;
+                .viewschema{
+                    span{
+                        color: $gray-100;
+                    }
+                }
+                .viewmapping{
+                    span{
+                        color: $gray-900;
+                        background-color: $gray-100;
+                    }
+                }
+            }
+        }
+    }
+    .innerapp{
+        height: calc(100vh - 70px);
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+    .hljs-attr
+    {
+        color: #86D9FF;
+    }
+
+    .hljs-string
+    {
+        color: #B28EE0;
+    }
+    .hljs-bullet
+    {
+        color: #FDFDFD;
+    }
+    .hljs
+    {
+        display: block;
+        overflow-x: auto;
+        background: rgba(0, 0, 0, 0);
+        color: #FDFDFD;
+        padding: 0.5em;
+    }
+}

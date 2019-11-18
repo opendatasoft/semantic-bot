@@ -10,3 +10,4 @@ then
     touch chatbot_app/local_settings.py
     echo "SECRET_KEY = '<SECRET_KEY>'" >> chatbot_app/local_settings.py
 fi
+yarn

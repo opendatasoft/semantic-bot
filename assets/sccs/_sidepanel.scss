@@ -1,0 +1,14 @@
+.sidepanel{
+    background-color: $white;
+    height: 100vh;
+    max-width: 580px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 1px 0 3px 0 rgba(0,0,0,0.15);
+    position: relative;
+    overflow: auto;
+    z-index: 1;
+}

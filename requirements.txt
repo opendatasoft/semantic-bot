@@ -9,3 +9,4 @@ fuzzywuzzy>=0.17.0
 python-Levenshtein>=0.12.0
 PyYAML>=5.1
 simplejson>=3.16.0
+django_webpack_loader==0.6.0

@@ -1,0 +1,77 @@
+.messaging{
+    height: calc(100vh - 50px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 40px;
+    flex-direction: column;
+    overflow: hidden;
+    margin-top: 70px;
+    padding-top: 0;
+    padding-bottom: 0;
+    ul{
+        width: 100%;
+        overflow: scroll;
+        li{
+            background-color: #DEE5EF;
+            border-top-right-radius: 10px;
+            border-top-left-radius: 0px;
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 0px;
+            font-size: 15px;
+            color: #565656;
+            text-align: left;
+            line-height: 21px;
+            padding: 10px 20px;
+            margin-bottom: 5px;
+            display: block;
+            float: left;
+            max-width: 90%;
+            clear: both;
+            &:first-child{
+                border-top-left-radius: 10px;
+            }
+            &:nth-child(3){
+                border-bottom-left-radius: 10px;
+            }
+            a{
+                color: #565656;
+                text-decoration: underline;
+            }
+            &.data-info{
+                border-radius: 10px;
+            }
+            &.data-response{
+                background-color: $primary;
+                color: $white;
+                border-radius: 10px;
+                font-weight: 600;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                padding: 7px 10px;
+                float: right;
+                clear: both;
+                ul{
+                    li{
+                        background-color: transparent;
+                        color: $white;
+                        padding: 5px 20px;
+                        s{
+                            opacity: .7;
+                        }
+                    }
+                }
+            }
+           &.data-load{
+               border-radius: 10px;
+               margin-top: 20px;
+               margin-bottom: 20px;
+               padding: 10px;
+               @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+               img{
+                animation: spin 4s linear infinite;
+               }
+           }
+        }
+    }
+}

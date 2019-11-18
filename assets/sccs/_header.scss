@@ -1,0 +1,29 @@
+header{
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 40px;
+    background-color: $white;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    .logo{
+        
+    }
+    .nav{
+        ul{
+            li{
+                padding: 0 20px;
+                a{
+                    font-size: 11px;
+                    color: #000000;
+                    letter-spacing: 0.6px;
+                    text-align: left;
+                    text-transform: uppercase;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,85 @@
+.formchat{
+    width: 100%;
+    .dialogmss{
+
+    }
+    .vue-simple-suggest{
+        width: 100%;
+
+        .suggestions{
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
+            background-color: $white;
+            border: 1px solid #CBD2DB;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
+            border-radius: 2px;
+            font-size: 13px;
+            color: #898D92;
+            left: 0;
+            .suggest-item{
+                width: 100%;
+                cursor: pointer;
+                background-color: $white;
+                .suggestion-item{
+                    width: 100%;
+                    padding: 10px;
+                    display: flex;
+                    justify-content: space-between;
+
+                    &-name{
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 250px;
+                    }
+                    &-id{
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 250px;
+                        font-size: 11px;
+                    }
+                }
+                &:hover{
+                    background-color: #DEE5EF;
+                }
+            }
+
+        }
+    }
+    .input-chatbot{
+        background: #F6F8FB;
+        box-shadow: 0 -1px 0 0 #CBD2DB;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        
+        .form-control{
+            width: 100%;
+            outline: none;
+            box-shadow: none;
+            border: none;
+            font-size: 15px;
+            color: #898D92;
+            background-color: transparent;
+        }
+        &-btn{
+            justify-content: center;
+            background-color: #FFF;
+        }
+        .btn{
+            margin: 5px;
+        }
+    }
+
+    .classselector, .propertyselector{
+        background-color: $white;
+        box-shadow: 0 -1px 0 0 #CBD2DB;
+        padding: 40px;
+        position: relative;
+        //top: 50px;
+    }
+
+}

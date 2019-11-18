@@ -1,20 +1,27 @@
-# ontology-mapping-chatbot
+# SemanticBot
 
 [![Build Status](https://travis-ci.org/opendatasoft/ontology-mapping-chatbot.svg?branch=master)](https://travis-ci.org/opendatasoft/ontology-mapping-chatbot)
 
-Ontology Mapping ChatBot is a semi-interactive ontology mapping algorithm. It provides an easy-to-use interface (Yes or No questions) in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
+SemanticBot is a semi-interactive ontology mapping tool. It provides an easy-to-use interface in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
+![Schema View](readme_img/schema_view.png "semantic bot schema view")
+
+# Publication
+
+For more details, you can read the following demonstration paper:
+
+[Benjamin Moreau, Nicolas Terpolilli, Patricia Serrano-Alvarado. A Semi-Automatic Tool for Linked Data Integration. 18th International Semantic Web Conference (ISWC2019), Oct 2019, Auckland, New Zealand.](https://hal.archives-ouvertes.fr/hal-02194315/document)
 
 # Glossary
 
 ## DBPedia
-[DBpedia](https://wiki.dbpedia.org/) is wikipedia in RDF format with ontologies to describe resources.
-Chatbot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
+[DBpedia](https://wiki.dbpedia.org/) is a knowledge graph containing informations extracted from wikipedia .
+SemanticBot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
 ## YAGO
-[YAGO](https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) is an other dataset that is used for named entity recognition by the chatbot.
+[YAGO](https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) is an other knowledge graph that is used for named entity recognition by the SemanticBot.
 
 ## LOV (Linked Open Vocabularies)
-LOV is an ontology search engine. [This API](http://lov.okfn.org/dataset/lov/api) is used by the chatbot to find candidate ontologies for opendatasoft datasets.
+[LOV](http://lov.okfn.org/) is an ontology search engine. It is used by the SemanticBot to find candidate ontologies for opendatasoft datasets.
 
 ## Ontology (Vocabulary)
 An `ontology` is a vocabulary defining the concepts and relationships used to describe an area of concern.
@@ -27,13 +34,13 @@ Ontologies can be created for every area of concern and by everyone using RDF (R
 ## HDT
 [HDT](http://www.rdfhdt.org/) (Header, Dictionary, Triples) is a compact data structure and binary serialization format for RDF
 
-## RML
-[RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations.
+## RML & YARRRML
+[RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations. [YARRRML](http://rml.io/yarrrml/) is a simple syntax to respresent RML rules.
 
 # Installation
-Assuming you already have `python 3.6`, `pip` and gcc/clang with c++11 support,
+Assuming you already have `python 3.6`, `pip`, `yarn and gcc/clang with c++11 support,
 
-Clone the repository and go to the directory `ontology-mapping-chatbot`.
+Clone the repository and go to the root folder: `semantic-bot`.
 
 It is strongly recommended to create a new virtualenv.
 
@@ -54,7 +61,7 @@ If you get errors, proceed to the manual installation.
 
 ## Manual installation
 
-install dependencies with pip
+install python dependencies with pip
 
 ```bash
 pip install pybind11==2.2.4
@@ -67,9 +74,15 @@ https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
 
 and override `/data_dumps`
 
-Finally, create a file `chatbot_app/local_settings.py` and add a secret key.
+create a file `chatbot_app/local_settings.py` and add a secret key.
 ```python
 SECRET_KEY = "<SECRET_KEY>"
+```
+
+finally, install js dependencies
+
+```bash
+yarn
 ```
 
 ## Mapping serializer
@@ -86,23 +99,18 @@ MAPPING_SERIALIZER = 'YARRRML'
 in your `chatbot_app/local_settings.py` file.
 
 # Run the demo
-Navigate to ontology-mapping-chatbot folder and execute:
+Navigate to semantic-bot folder and execute the two commands:
 
 ```bash
+yarn run build
 python manage.py runserver
 ```
 
 App should be running on [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
-Or go on [http://127.0.0.1:8000/chatbot/{dataset-id}](http://127.0.0.1:8000/chatbot/dataset-id) and replace `dataset-id` with the Data dataset id you want to semantize.
-
-example: [http://127.0.0.1:8000/chatbot/roman-emperors@public/](http://127.0.0.1:8000/chatbot/roman-emperors@public/)
-
-Semantization result will be stored in the `results` folder in a file named results/{dataset-id}.rml
-
 # API
 
-Chatbot is powered by an API exposed by this service:
+SemanticBot is powered by an API exposed by this service:
 
 ## Correspondances API
 
@@ -138,7 +146,7 @@ Conversations API is used to translate possible correspondences into Human Reada
 
 `GET` `/api/conversation/greeting` to retrieve welcome phrase.
 
-`GET` `/api/conversation/instructions` to retrieve instructions to use the chatbot.
+`GET` `/api/conversation/instructions` to retrieve instructions to use the SemanticBot.
 
 `GET` `/api/conversation/answer/positive` to retrieve response to positive user input.
 
@@ -153,31 +161,72 @@ Conversations API is used to translate possible correspondences into Human Reada
 `GET` `/api/ner?q=[query]&lang=[language]` returns the class of the term in the query.
 
 # How it works?
-## 1 Class matching
-It use a local dumps of DBPedia and Yago to find classes corresponding to dataset's fields using named entity recognition.
-N-first values of each fields are analyzed and corresponding classes names are returned.
 
-Each class name is sent to Class LOV API. Class LOV API returns class URI and class description. Those informations are stored in chatbot's candidate correspondences dict.
+## Global approach
 
-Using class description and field name, class/field associations are proposed to the user. A positive answer dispatch correspondence in chatbot's confirmed correspondence dict. A negative answer dispatch it in denied correspondence dict. Empty answer dispatch it in awaiting correspondence dict.
+Our approach works with 3 automatic steps:
+1. Entities Recognition
+2. Properties Recognition
+3. Mapping Generation
 
-the following figure illustrate the class matching process.
+Between each step, semantic bot asks simple questions to the user in order to validate the semantization.
 
-![Class process](img/class_process.png "Class process")
+![Global approach](readme_img/global_approach.png)
 
-## 2 Property matching
-The goal of this step is to associate properties to already confirmed classes (e.g. full name of a Person?, full name of a car?, etc.)
+### 1. Entities Recognition
+The goal of this step is to identify which class correspond to each field of the dataset.
 
-Property LOV API is used to retrieve retrieve corresponding URI and description of properties.
+N-first values of each fields are searched in DBPedia and Yago. Classes of relevant resources are returned.
+For each field, class that occur the most will be search in LOV and proposed to the user. Class questions are made using rdfs:label of classes.
 
-Using property description, user is asked to confirm property/field association (e.g. date of birth property/ date_birth field). Then it is asked to link confirmed property to one of the confirmed class (e.g. date of birth linked to Person class).
+the following figure illustrate the entities recognition step.
 
-the following figure illustrate the property matching process.
+![Entities Recognition](readme_img/entities_recognition.png "Entities Recognition")
 
-![Property process](img/property_process.png "Property process")
+### 2. Properties Recognition
+The goal of this step is to identify which property correspond to each field of the dataset.
+
+field name and datatype of each field are searched in LOV property api. 
+Property questions are made using rdfs:label and of properties.
+
+the following figure illustrate the Properties recognition step.
+![Properties Recognition](readme_img/properties_recognition.png "Properties Recognition")
+
+### 3. Mapping Generation
+Before serializing the RDF mapping, a lot of mapping rules can be inferred.
+
+First, using rdfs:domain and rdfs:range of properties, we can infer new classes that correspond to dataset fields.
+
+In the following example, class `dbo:place` is inferred as a corresponding class of field 
+`Birth Province` because the rdfs:range of the property `dbo:birthPlace` is `dbo:place`.
+
+![Domain Range](readme_img/domain_range.png "Domain Range")
+
+Then, we add rdfs:label property for each type of resources in the RDF mapping.
+This is important to have a human-readable RDF dataset.
+Value of the rdfs:label is the field that was used to identify the class of the resource.
+
+The following example show how `rdfs:label` properties are infered.
+
+![RDFS Label](readme_img/rdfs_label.png "RDFS Label")
+
+Finally, we add new class and properties by saturating the RDF mapping using 
+using subClassOf, equivalentClass, subPropertyOf, equivalentProperty rules.
+
+The following example shows inferred classes using `rdfs:subClassOf`, `owl:equivalentClass`
+
+![Sub Class](readme_img/subclass.png "subclass")
+
+The following example shows inferred properties using `rdfs:subPropertyOf`, `owl:equivalentProperty`
+
+![Sub Property](readme_img/subprop.png "subproperty")
+
+At the end, mapping is serialized and sent to the user.
+
+![Result](readme_img/result.png "Result")
 
 # Logs
-`logs` folder contains data about the usage of the chatbot:
+`logs` folder contains data about the usage of the SemanticBot:
  * Number of semantized dataset
  * Number of cancelled semantization
  * Number of failed semantization
@@ -189,3 +238,6 @@ Analyse logs with:
 ```bash
 python logs/log_analyser.py logs/chatbot_results.log
 ```
+
+###### notes:
+[Chatbot](https://thenounproject.com/term/chatbot/933503) icon designed by Oksana Latysheva, is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/us/legalcode).
