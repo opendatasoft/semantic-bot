@@ -1,6 +1,6 @@
 # SemanticBot
 
-[![Build Status](https://travis-ci.org/opendatasoft/ontology-mapping-chatbot.svg?branch=master)](https://travis-ci.org/opendatasoft/ontology-mapping-chatbot)
+[![Build Status](https://travis-ci.org/opendatasoft/semantic-bot.svg?branch=master)](https://travis-ci.org/opendatasoft/semantic-bot)
 
 SemanticBot is a semi-interactive ontology mapping tool. It provides an easy-to-use interface in order to semantize (i.e. to map ontologies on) OpenDataSoft datasets.
 ![Schema View](readme_img/schema_view.png "semantic bot schema view")
