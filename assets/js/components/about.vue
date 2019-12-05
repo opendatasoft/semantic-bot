@@ -10,28 +10,28 @@
             <div class="modal-body">
 
             <div class="about-section">
-            <h2>OpenDataSoft</h2>
+            <h2>Opendatasoft</h2>
             <p>
-                OpenDataSoft is an online platform designed to quickly facilitate the publication,
+                Opendatasoft is an online platform designed to quickly facilitate the publication,
                 sharing and re-use of data by business users and stimulate the creation of new applications.
-                <a href="https://www.opendatasoft.com/" target="_blank">Learn more about OpenDataSoft.</a>
+                <a href="https://www.opendatasoft.com/" target="_blank">Learn more about Opendatasoft.</a>
             </p>
             <p>
-                The data network is a data catalog available for everyone. It gathers public and open datasets published by every OpenDataSoft's users in one place.
+                The data network is a data catalog available for everyone. It gathers public and open datasets published by every Opendatasoft's users in one place.
                 <a href="https://data.opendatasoft.com/" target="_blank">Explore the data network.</a>
             </p>
 
             </div>
 
             <div class="about-section">
-            <h2>Semantic at OpenDataSoft</h2>
+            <h2>Semantic at Opendatasoft</h2>
             <p>
-                Semantic web technologies are used on OpenDataSoft platform
+                Semantic web technologies are used on Opendatasoft platform
                 to improve data interoperability. It improves data discoverability and data consumption.
-                Semantic powered features such as semantic filters or automatic federation of datasets will make OpenDataSoft platform smarter for it's users.
+                Semantic powered features such as semantic filters or automatic federation of datasets will make Opendatasoft platform smarter for it's users.
             </p>
             <p>
-                A documentation about <a href="hhttps://help.opendatasoft.com/apis/tpf/" target="_blank">how semantic web is used on OpenDataSoft</a> is available.
+                A documentation about <a href="hhttps://help.opendatasoft.com/apis/tpf/" target="_blank">how semantic web is used on Opendatasoft</a> is available.
             </p>
             </div>
 
@@ -52,7 +52,7 @@
             <div class="about-section">
             <h2>Research</h2>
             <p>
-                Semantic web at OpenDataSoft is led by Benjamin Moreau. You can <a href="https://scholar.google.fr/citations?user=TGDeQO0AAAAJ&hl=fr" target="_blank">learn more about his work</a> and feel free to adress him a message!
+                Semantic web at Opendatasoft is led by Benjamin Moreau. You can <a href="https://scholar.google.fr/citations?user=TGDeQO0AAAAJ&hl=fr" target="_blank">learn more about his work</a> and feel free to adress him a message!
             </p>
             </div>
 
