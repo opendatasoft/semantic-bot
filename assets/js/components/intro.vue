@@ -17,6 +17,13 @@
     <li>
       <span>5.</span>Click the save button
     </li>
+    <li>
+    <small>
+      <i>
+        Submitted data are subject to <a href="https://legal.opendatasoft.com/en_FR/privacy-policy.html">Opendatasoft’s Privacy Policy</a>
+      </i>
+    </small>
+    </li>
   </ul>
   <button class="btn btn-primary" v-on:click="startApp">I understand</button>
   

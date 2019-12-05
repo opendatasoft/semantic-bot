@@ -17,6 +17,11 @@
                         Support
                     </a>
                 </li>
+                <li>
+                    <a href="https://legal.opendatasoft.com/en_FR/terms-of-use.html" target="_blank">
+                        Legal
+                    </a>
+                </li>
             </ul>
            
 
