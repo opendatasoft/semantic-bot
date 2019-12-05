@@ -232,15 +232,27 @@ const app = new Vue({
         },
         /** Confirm the domain field of a confirmed property */
         confirm_field_property_correspondance: function (property_correspondance, field) {
-            if (property_correspondance.domain) {
-                property_correspondance.associated_field = field.name;
+            property_correspondance.associated_field = field.name;
+            property_correspondance.domain.field_name = field.name;
+            property_correspondance.domain.label = field.label;
+            if (field.class && field.class !== 'Thing') {
                 property_correspondance.associated_class = field.class;
-                property_correspondance.domain.field_name = field.name;
-                property_correspondance.domain.label = field.label;
-                this.confirmed_correspondances.classes.push(property_correspondance.domain);
+                //
+            } else {
+                let field_new_class = property_correspondance.domain.class;
+                this.dataset_fields[field.name].class = field_new_class;
+                property_correspondance.associated_class = field_new_class;
+                this.update_confirmed_class_correspondances(property_correspondance.domain);
             }
             this.confirmed_correspondances.properties.push(property_correspondance);
             this.select_domain_property();
+        },
+        /** update a class correspondance (if existing... or creates a new one) using the domain of the property */
+        update_confirmed_class_correspondances: function (domain_class_correspondance) {
+            this.confirmed_correspondances.classes = this.confirmed_correspondances.classes.filter((correspondance) => {
+                return correspondance.field_name !== domain_class_correspondance.field_name;
+            });
+            this.confirmed_correspondances.classes.push(domain_class_correspondance);
         },
         /** Confirm the domain field of a confirmed property */
         finish_semantization: function () {
