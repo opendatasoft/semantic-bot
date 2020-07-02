@@ -269,7 +269,7 @@ python chatbot/automatic.py -D domain-id -d dataset-id -o output-file
 where:
 - `domain-id` is the domain-id of the domain of your dataset
 - `dataset-id` is the dataset-id of your dataset
-- `output-file` is the filename of the 
+- `output-file` is the filename of the resulting RDF mapping
 
 working example:
 
