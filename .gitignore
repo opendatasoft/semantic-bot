@@ -1,5 +1,7 @@
 webpack-stats.json
 
+*.rml.yml
+
 db.sqlite3
 pyHDT/
 learned_denied_correspondances.json

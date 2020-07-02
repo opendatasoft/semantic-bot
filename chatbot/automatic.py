@@ -14,12 +14,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chatbot_app.settings")
 ROWS_NUMBER = 10
 
 TOO_GENERIC_CLASSES = ['http://schema.org/Thing',
-               'http://www.w3.org/2004/02/skos/core#Concept',
-               'http://www.w3.org/2002/07/owl#Thing']
+                       'http://www.w3.org/2004/02/skos/core#Concept',
+                       'http://www.w3.org/2002/07/owl#Thing']
 
-def main(domain_id, dataset_id):
-    semantize(domain_id, dataset_id, settings.DATA_API_KEY)
 
+def main(domain_id, dataset_id, output_file):
+    yarrrml_mapping = semantize(domain_id, dataset_id, settings.DATA_API_KEY)
+    output_file.write(yarrrml_mapping)
+    output_file.close()
 
 def semantize(domain_id, dataset_id, api_key):
     dataset = lookup_v2(domain_id, dataset_id, api_key)['dataset']
@@ -28,7 +30,7 @@ def semantize(domain_id, dataset_id, api_key):
     correspondances = {'classes': [], 'properties': []}
     entities_recognition(dataset_id, domain_id, correspondances, fields, api_key, language)
     properties_recognition(correspondances, fields, language)
-    print(YARRRML.serialize(correspondances, dataset_id))
+    return YARRRML.serialize(correspondances, dataset_id)
 
 
 def entities_recognition(dataset_id, domain_id, correspondances, fields, api_key, language):
@@ -82,8 +84,8 @@ def find_field(class_correspondance, fields):
             field_class_strings = fields[name]['strings']
             for field_string in field_class_strings:
                 for class_string in class_strings:
-                   if fuzz.token_set_ratio(field_string, class_string) >= 90:
-                       return fields[name]
+                    if fuzz.token_set_ratio(field_string, class_string) >= 90:
+                        return fields[name]
     return None
 
 
@@ -97,8 +99,10 @@ def get_fields(dataset):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='A tool that federate ods datasets by a specific class.')
+    parser = argparse.ArgumentParser(description='A tool that automatically generates an RDF mapping for an Opendatasoft\'s dataset.')
     parser.add_argument('-D', '-domain_id', type=str, help='The domain-id of the domain', required=True)
-    parser.add_argument('-d', '-dataset_id', type=str, help='The domain-id of the domain', required=True)
+    parser.add_argument('-d', '-dataset_id', type=str, help='The dataset-id of the dataset', required=True)
+    parser.add_argument('-o', '-output', type=argparse.FileType('w'), help='the output file that will contain the mapping file',
+                        required=True)
     args = parser.parse_args()
-    main(args.D, args.d)
+    main(args.D, args.d, args.o)

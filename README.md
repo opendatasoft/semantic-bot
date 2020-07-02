@@ -239,5 +239,43 @@ Analyse logs with:
 python logs/log_analyser.py logs/chatbot_results.log
 ```
 
+# Fully Automatic Approach (Beta)
+We also provide a fully automatic approach to generate an RDF mapping for datasets.
+The three automatic steps (i.e., entities recognition, properties recognition and, mapping generation) are executed sequentially.
+Between each step, class and property correspondences are confirmed by the SemanticBot without asking the user.
+
+This approach can be useful for users that want to generate RDF mappings for a large set of datasets.
+
+For better results, we recommend to check and improve the quality of each mapping after generation.
+
+## How To
+
+Proceed to the installation described in Section [Installation](#Installation)
+
+In your `chatbot_app/local_settings.py` file (create one if it does not exist).
+Add the api_key for the domain of your dataset by adding the following line:
+
+```python
+DATA_API_KEY = 'YOUR_API_KEY_HERE'
+```
+### Run the script
+
+Then you can run the script on your dataset with the following command:
+
+```bash
+python chatbot/automatic.py -D domain-id -d dataset-id -o output-file
+```
+
+where:
+- `domain-id` is the domain-id of the domain of your dataset
+- `dataset-id` is the dataset-id of your dataset
+- `output-file` is the filename of the 
+
+working example:
+
+```bash
+python chatbot/automatic.py -D data -d roman-emperors@public -o roman-emperors@public.rml.yml
+```
+
 ###### notes:
 [Chatbot](https://thenounproject.com/term/chatbot/933503) icon designed by Oksana Latysheva, is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/us/legalcode).
