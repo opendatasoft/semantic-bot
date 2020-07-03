@@ -23,7 +23,7 @@ ODS_POPULAR_THEMES = ['Administration, Gouvernement, Finances publiques, Citoyen
                       'Santé',
                       'SPort, Loisirs'
                       ]
-ODS_LANGUAGES = ['fr', 'en', 'es']
+ODS_LANGUAGES = ['fr', 'en']
 
 REGEX_REFERENCE_FIELD = re.compile('\$\((.*?)\)')
 
@@ -101,7 +101,7 @@ def plot(labels, score_label, type):
     x = np.arange(len(labels))  # the label locations
     width = 0.35  # the width of the bars
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x, score_label, width, label='Men')
+    rects1 = ax.bar(x, score_label, width)
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('EvaMap score (Connectability & Coverability) max=1.0')
     ax.set_title(f'Average quality of RDF mappings grouped by {type}')
