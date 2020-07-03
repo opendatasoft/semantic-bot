@@ -35,6 +35,8 @@ def main(type, number):
     else:
         labels = ODS_LANGUAGES
     score_labels = []
+    score_labels_cov = []
+    score_labels_con = []
     for label in labels:
         if type == 'theme':
             catalog = datasets_by_theme(label)
@@ -42,17 +44,24 @@ def main(type, number):
             catalog = datasets_by_lang(label)
         cpt = 0
         score_label = 0
+        score_label_cov = 0
+        score_label_con = 0
         for i in range(0, number):
             print(f'{label} {i}/{number}')
             try:
                 dataset = catalog.__next__()
                 rml_mapping = AutoSemanticBot.semantize(dataset.domain_id, dataset.dataset_id, api_key)
                 cpt += 1
-                score_label += evamap_get_score(rml_mapping, dataset)
+                scores = evamap_get_score(rml_mapping, dataset)
+                score_label += scores['total']
+                score_label_cov += scores['coverability']
+                score_label_con += scores['connectivity']
             except StopIteration:
                 pass
-        score_labels.append(score_label/cpt)
-    plot(labels, score_labels, type)
+        score_labels.append(round(score_label/cpt,3))
+        score_labels_cov.append(round(score_label_cov/cpt,3))
+        score_labels_con.append(round(score_label_con/cpt,3))
+    plot(labels, score_labels, score_labels_cov,score_labels_con , type)
 
 
 def datasets_by_lang(lang):
@@ -66,7 +75,12 @@ def datasets_by_theme(theme):
 
 
 def evamap_get_score(rml_mapping, dataset):
-    return (evamap_graph_connectivity(rml_mapping)+evamap_vertical_coverage(rml_mapping, dataset.fields))/2
+    coverability = evamap_vertical_coverage(rml_mapping, dataset.fields)
+    connectivity = evamap_graph_connectivity(rml_mapping)
+    score = {'total': ((coverability + connectivity)/2),
+     'coverability': coverability,
+     'connectivity': connectivity}
+    return score
 
 
 def evamap_graph_connectivity(rml_mapping):
@@ -97,11 +111,13 @@ def evamap_vertical_coverage(rml_mapping, dataset_fields):
     return 0
 
 
-def plot(labels, score_label, type):
+def plot(labels, score_label, score_labels_cov, score_labels_con, type):
     x = np.arange(len(labels))  # the label locations
-    width = 0.35  # the width of the bars
+    width = 0.2  # the width of the bars
     fig, ax = plt.subplots()
-    rects1 = ax.bar(x, score_label, width)
+    rects1 = ax.bar(x - width, score_label, width, label='Average')
+    rects2 = ax.bar(x, score_labels_cov, width, label='Coverability')
+    rects3 = ax.bar(x + width, score_labels_con, width, label='Connectability')
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('EvaMap score (Connectability & Coverability) max=1.0')
     ax.set_title(f'Average quality of RDF mappings grouped by {type}')
@@ -114,11 +130,13 @@ def plot(labels, score_label, type):
         for rect in rects:
             height = rect.get_height()
             ax.annotate('{}'.format(height),
-                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xy=(rect.get_x() + rect.get_width() / 3, height),
                         xytext=(0, 3),  # 3 points vertical offset
                         textcoords="offset points",
                         ha='center', va='bottom')
     autolabel(rects1)
+    autolabel(rects2)
+    autolabel(rects3)
     fig.tight_layout()
     plt.show()
 
