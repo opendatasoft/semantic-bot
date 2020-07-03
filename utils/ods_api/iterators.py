@@ -8,7 +8,7 @@ PrettyPrinter = pprint.PrettyPrinter(indent=4)
 
 class CatalogIterator:
     def __init__(self, domain_id, where='', search='', refine='', exclude='', rows=10, start=0,
-                 sort='explore.popularity_score', api_key=None):
+                 sort='-explore.popularity_score', api_key=None):
         self.domain_id = domain_id
         self.where = where
         self.search = search

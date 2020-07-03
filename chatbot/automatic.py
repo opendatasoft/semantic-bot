@@ -23,6 +23,7 @@ def main(domain_id, dataset_id, output_file):
     output_file.write(yarrrml_mapping)
     output_file.close()
 
+
 def semantize(domain_id, dataset_id, api_key):
     dataset = lookup_v2(domain_id, dataset_id, api_key)['dataset']
     fields = get_fields(dataset)
