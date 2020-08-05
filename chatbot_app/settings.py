@@ -160,3 +160,5 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+VIRTUOSO_HTTP_SERVER_PORT = "8889"

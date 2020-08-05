@@ -1,0 +1,12 @@
+db-ner:
+  image: tenforce/virtuoso:1.3.2-virtuoso7.2.5.1
+  environment:
+    SPARQL_UPDATE: "true"
+    DEFAULT_GRAPH: "https://semanticbot.opendatasoft.com/ner-graph"
+    VIRT_HTTPServer_ServerPort: "8889"
+    VIRT_SPARQL_ResultSetMaxRows: "1000"
+    VIRT_SPARQL_MaxQueryExecutionTime: "20"
+  volumes:
+    - ./data-ner/virtuoso:/data
+  ports:
+    - "8889:8889"
