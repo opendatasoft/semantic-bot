@@ -1,3 +1,5 @@
+# Deprecated Replaced by virtuoso_ner
+
 from hdt import HDTDocument
 
 SCHEMA_NAME = "http://schema.org/name"

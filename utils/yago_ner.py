@@ -1,3 +1,5 @@
+# Deprecated Replaced by virtuoso_ner
+
 from hdt import HDTDocument
 
 YAGO_RESOURCE_URI = "http://yago-knowledge.org/resource/{resource_name}"

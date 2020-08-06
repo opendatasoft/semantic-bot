@@ -6,8 +6,7 @@ from django.utils.encoding import smart_str
 from django.conf import settings
 
 import utils.lov_ods_api as LovApi
-import utils.dbpedia_ner as DBPediaNER
-import utils.yago_ner as YagoNER
+import utils.virtuoso_ner as NER
 import utils.requester as Requester
 from requests.exceptions import ConnectionError
 
@@ -35,10 +34,7 @@ def get_field_class(ods_dataset_records, field_metas, language='en'):
         if field_name in record['record']['fields']:
             value = record['record']['fields'][field_name]
             if has_no_numbers(value):
-                types = DBPediaNER.entity_types_request(value, language)
-                if not types:
-                    # DBPedia could not find any class for this field
-                    types = YagoNER.entity_types_request(value, language)
+                types = NER.entity_types_request(value, language)
                 if types:
                     candidate_classes.extend(types)
     if candidate_classes:
