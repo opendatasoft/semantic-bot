@@ -38,9 +38,12 @@ def get_field_class(ods_dataset_records, field_metas, language='en'):
                 if types:
                     candidate_classes.extend(types)
     if candidate_classes:
-        common_class = Counter(candidate_classes).most_common(1)[0][0]
-        common_class = smart_str(common_class)
-        class_correspondance = get_class_correspondance(common_class, language)
+        for counter in Counter(candidate_classes).most_common():
+            common_class = counter[0]
+            common_class = smart_str(common_class)
+            class_correspondance = get_class_correspondance(common_class, language)
+            if class_correspondance:
+                break
     else:
         # Use the field label as the class to search
         field_label = smart_str(field_metas['label'])
