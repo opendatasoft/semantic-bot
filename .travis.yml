@@ -10,7 +10,7 @@ before_install:
   - touch chatbot_app/local_settings.py
   - echo "SECRET_KEY = '<SECRET_KEY>'" >> chatbot_app/local_settings.py
 install:
-  - docker-compose up
+  - docker-compose up -d
   - pip install -r requirements.txt
 script:
   - python -m pytest tests/
