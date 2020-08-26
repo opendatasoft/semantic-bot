@@ -5,7 +5,7 @@ cache: pip
 before_install:
   - curl https://eu.ftp.opendatasoft.com/bmoreau/test-data-ner.zip -L -o data-ner.zip
   - unzip -o data-ner.zip
-  - docker-compose up -d
+  - docker-compose up
   - rm data-ner.zip
   - rm -r __MACOSX/
   - touch chatbot_app/local_settings.py
