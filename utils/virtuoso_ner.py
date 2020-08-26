@@ -17,7 +17,6 @@ def entity_types_request(query, language='en'):
     sparql = SPARQLWrapper(f"http://127.0.0.1:{settings.VIRTUOSO_HTTP_SERVER_PORT}/sparql/")
     # Search for classes of resources with labels that contain the query string
     wildcard_words = query.split()
-    print(query)
     # Wildcard word ends with '*', doesn not contain ',' and needs at least 4 leading characters
     wildcard_words = [f'{term}*'.replace(',', '') for term in wildcard_words if len(term) > 3]
     sparql.setQuery(f"""
@@ -31,7 +30,6 @@ def entity_types_request(query, language='en'):
     """)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-    print(results)
     dict_results = {}
     cls = []
     for result in results["results"]["bindings"]:
