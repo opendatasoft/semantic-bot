@@ -24,6 +24,7 @@ else:
 LOG_TEMPLATE_CLASS = '[{}] [Class] [{}] field:[{}] uri:[{}] field_type:[{}] field_is_facet:[{}]'
 LOG_TEMPLATE_PROPERTY = '[{}] [Property] [{}] field_domain:[{}] class_domain[{}] -- uri:[{}] --> field_range:[{}] field_type:[{}] field_is_facet:[{}]'
 
+
 @require_http_methods(['POST'])
 def get_field_class_correspondance(request, dataset_id):
     try:

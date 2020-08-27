@@ -3,13 +3,6 @@ from fuzzywuzzy import fuzz
 
 from django.conf import settings
 
-LABEL_PROPERTIES = ['<http://www.w3.org/2000/01/rdf-schema#label>',
-                    '<http://www.w3.org/2000/01/rdf-schema#comment>',
-                    '<http://www.w3.org/2004/02/skos/core#prefLabel>',
-                    '<http://yago-knowledge.org/resource/hasGivenName>',
-                    '<http://yago-knowledge.org/resource/hasFamilyName>',
-                    '<http://yago-knowledge.org/resource/hasGloss>']
-
 TYPES_TO_IGNORE = ['Thing', 'Agent']
 
 
@@ -25,8 +18,9 @@ def entity_types_request(query, language='en'):
      ?s ?p ?label .
      ?label bif:contains "'{' '.join(wildcard_words)}'" .
      ?s a ?class .
-     FILTER (?p IN ({','.join(LABEL_PROPERTIES)}))
     }}
+    ORDER BY strlen(str(?label))
+    LIMIT 1000
     """)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
@@ -34,7 +28,7 @@ def entity_types_request(query, language='en'):
     cls = []
     for result in results["results"]["bindings"]:
         label = result["label"]["value"]
-        cl = get_uri_suffix(result["class"]["value"].replace('wikicat_', '').replace('_', ' '))
+        cl = get_uri_suffix(result["class"]["value"])
         if not is_ignored(cl):
             if label in dict_results:
                 dict_results[label]['classes'].append(cl)

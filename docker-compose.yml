@@ -4,8 +4,11 @@ db-ner:
     SPARQL_UPDATE: "true"
     DEFAULT_GRAPH: "https://semanticbot.opendatasoft.com/ner-graph"
     VIRT_HTTPServer_ServerPort: "8889"
-    VIRT_SPARQL_ResultSetMaxRows: "1000"
-    VIRT_SPARQL_MaxQueryExecutionTime: "20"
+    VIRT_SPARQL_ResultSetMaxRows: "10000"
+    VIRT_SPARQL_MaxQueryExecutionTime: "60"
+    # Recommended for a 8 GB system memory free
+    VIRT_Parameters_NumberOfBuffers: "170000"
+    VIRT_Parameters_MaxDirtyBuffers: "130000"
   volumes:
     - ./data-ner/virtuoso:/data
   ports:
