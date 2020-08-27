@@ -31,14 +31,14 @@ It's composed of:
 * `rules` (e.g. A person have a unique date of birth).
 Ontologies can be created for every area of concern and by everyone using RDF (Resource Description Framework), RDFS (RDF Schema) and OWL (Web Ontology Language).
 
-## HDT
-[HDT](http://www.rdfhdt.org/) (Header, Dictionary, Triples) is a compact data structure and binary serialization format for RDF
+## Virtuoso SPARQL ENDPOINT
+[Virtuoso](http://vos.openlinksw.com/owiki/wiki/VOS) is a data virtualization platform. It proposes a SPARQL Endpoint that we use to store and perform full-text searches on RDF data.
 
 ## RML & YARRRML
 [RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations. [YARRRML](http://rml.io/yarrrml/) is a simple syntax to respresent RML rules.
 
 # Installation
-Assuming you already have `python 3.6`, `pip`, `yarn and gcc/clang with c++11 support,
+Assuming you already have `python 3.6`, `pip`, `docker-compose`
 
 Clone the repository and go to the root folder: `semantic-bot`.
 
@@ -57,6 +57,14 @@ Then, in file `chatbot_app/local_settings.py` update the secret key.
 SECRET_KEY = "<SECRET_KEY>"
 ```
 
+Finally run virtuoso using the following command:
+
+```bash
+docker-compose up
+```
+It can take some minutes for for virtuoso to load rdf files into the database.
+When Virtuoso server is online, the installation process is finished.
+
 If you get errors, proceed to the manual installation.
 
 ## Manual installation
@@ -64,26 +72,33 @@ If you get errors, proceed to the manual installation.
 install python dependencies with pip
 
 ```bash
-pip install pybind11==2.2.4
 pip install -r requirements.txt
 ```
 
-Download `hdt` versions of DBPedia and YAGO datasets at this address:
+Download DBPedia datasets at this address:
 
-https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
+https://eu.ftp.opendatasoft.com/bmoreau/data-ner.zip
 
-and override `/data_dumps`
+unzip `data-ner.zip` and override `/data_ner` folder
 
 create a file `chatbot_app/local_settings.py` and add a secret key.
 ```python
 SECRET_KEY = "<SECRET_KEY>"
 ```
 
-finally, install js dependencies
+install js dependencies
 
 ```bash
 yarn
 ```
+
+Finally run virtuoso using the following command:
+
+```bash
+docker-compose up
+```
+It can take some minutes for for virtuoso to load rdf files into the database.
+When Virtuoso server is online, the installation process is finished.
 
 ## Mapping serializer
 
@@ -99,10 +114,11 @@ MAPPING_SERIALIZER = 'YARRRML'
 in your `chatbot_app/local_settings.py` file.
 
 # Run the demo
-Navigate to semantic-bot folder and execute the two commands:
+Navigate to semantic-bot folder and execute the three commands:
 
 ```bash
 yarn run build
+docker-compose up -d
 python manage.py runserver
 ```
 
@@ -279,3 +295,6 @@ python chatbot/automatic.py -D data -d roman-emperors@public -o roman-emperors@p
 
 ###### notes:
 [Chatbot](https://thenounproject.com/term/chatbot/933503) icon designed by Oksana Latysheva, is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/us/legalcode).
+
+[OpenLink Software's Virtuoso Open-Source (VOS) project
+ Copyright © 1998-2012 OpenLink Software](http://vos.openlinksw.com/owiki/wiki/VOS/VOSLicense) is licensed under the GNU General Public License.

@@ -6,9 +6,9 @@ db-ner:
     VIRT_HTTPServer_ServerPort: "8889"
     VIRT_SPARQL_ResultSetMaxRows: "10000"
     VIRT_SPARQL_MaxQueryExecutionTime: "60"
-    # Recommended for a 8 GB system memory free
-    VIRT_Parameters_NumberOfBuffers: "170000"
-    VIRT_Parameters_MaxDirtyBuffers: "130000"
+    # Recommended for a 4 GB system memory free
+    VIRT_Parameters_NumberOfBuffers: "340000"
+    VIRT_Parameters_MaxDirtyBuffers: "250000"
   volumes:
     - ./data-ner/virtuoso:/data
   ports:

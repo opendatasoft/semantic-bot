@@ -31,26 +31,26 @@ def entity_types_request(query, language='en'):
         cl = get_uri_suffix(result["class"]["value"])
         if not is_ignored(cl):
             if label in dict_results:
-                dict_results[label]['classes'].append(cl)
+                dict_results[label]['classes'].add(cl)
             else:
                 dict_results[label] = {
                     'label': label,
-                    'classes': [cl],
+                    'classes': {cl},
                     'score': fuzz.token_sort_ratio(label, query)
                 }
     ordered_results = sorted(dict_results.values(), key=lambda result: result['score'], reverse=True)
     if ordered_results:
-        cls = ordered_results[0]['classes']
+        cls = list(ordered_results[0]['classes'])
     return cls
 
 
 def is_ignored(class_name):
     for type_to_ignore in TYPES_TO_IGNORE:
-        if type_to_ignore in class_name or hasNumbers(class_name):
+        if type_to_ignore in class_name or has_numbers(class_name):
             return True
 
 
-def hasNumbers(value):
+def has_numbers(value):
     if isinstance(value, str):
         return any(char.isdigit() for char in value)
     return True
