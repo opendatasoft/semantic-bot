@@ -17,9 +17,6 @@ For more details, you can read the following demonstration paper:
 [DBpedia](https://wiki.dbpedia.org/) is a knowledge graph containing informations extracted from wikipedia .
 SemanticBot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
-## YAGO
-[YAGO](https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) is an other knowledge graph that is used for named entity recognition by the SemanticBot.
-
 ## LOV (Linked Open Vocabularies)
 [LOV](http://lov.okfn.org/) is an ontology search engine. It is used by the SemanticBot to find candidate ontologies for opendatasoft datasets.
 
@@ -132,7 +129,7 @@ SemanticBot is powered by an API exposed by this service:
 
 Correspondences are the semantic correspondences between a dataset's field and an ontology. Fields can be linked to classes (Car, Person, ...) or poroperties of class (Engine horsepower, full name, ...).
 
-`GET` `/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondences (powered by DBpedia, Yago and LOV).
+`GET` `/api/{dataset-id}/correspondances/classes` to retrieve field values/class correspondences (powered by DBpedia and LOV).
 
 `GET` `/api/{dataset-id}/correspondances/properties` to retrieve field name/properties correspondences (powered by LOV).
 
@@ -192,7 +189,7 @@ Between each step, semantic bot asks simple questions to the user in order to va
 ### 1. Entities Recognition
 The goal of this step is to identify which class correspond to each field of the dataset.
 
-N-first values of each fields are searched in DBPedia and Yago. Classes of relevant resources are returned.
+N-first values of each fields are searched in DBPedia. Classes of relevant resources are returned.
 For each field, class that occur the most will be search in LOV and proposed to the user. Class questions are made using rdfs:label of classes.
 
 the following figure illustrate the entities recognition step.
