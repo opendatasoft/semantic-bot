@@ -8,3 +8,9 @@ class TestNER(object):
             class_list = NER.entity_types_request('Tiberius')
         except Exception:
             self.fail("NER returned an exception.")
+
+    def test_ner_char(self):
+        try:
+            class_list = NER.entity_types_request('t\'es')
+        except Exception:
+            self.fail("NER returned an exception.")
