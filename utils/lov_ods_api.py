@@ -1,7 +1,7 @@
 import re
 
 import requests
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 
 from django.conf import settings
 

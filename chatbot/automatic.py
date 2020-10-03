@@ -7,7 +7,7 @@ import utils.yarrrml_serializer as YARRRML
 from chatbot.semantic_engine import get_field_class, get_field_property, _get_uri_suffix
 
 from django.conf import settings
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chatbot_app.settings")
 
@@ -85,7 +85,7 @@ def find_field(class_correspondance, fields):
             field_class_strings = fields[name]['strings']
             for field_string in field_class_strings:
                 for class_string in class_strings:
-                    if fuzz.token_set_ratio(field_string, class_string) >= 90:
+                    if fuzz.token_set_ratio(field_string, class_string, score_cutoff=90):
                         return fields[name]
     return None
 
