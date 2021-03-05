@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  ontology:
+      build: ./  
+      container_name: ontology
+      privileged: true
+      environment:
+        - "WORKDIR=/semantic-bot"
+        - "PYTHONPATH=/semantic-bot"
+        - "LANG=en"
+      ports:
+        - "8000:8000"
+      volumes:
+        - ./data_dumps:/semantic-bot/data_dumps
+        - ./chat:/semantic-bot/chat
+        - ./chatbot_app/settings.py:/semantic-bot/chatbot_app/settings.py
+        - ./start-server.sh:/semantic-bot/start-server.sh
+        - ./assets:/semantic-bot/static_files
+        - ./webpack.watch.config.js:/semantic-bot/webpack.watch.config.js
+      command: '/semantic-bot/start-server.sh'
