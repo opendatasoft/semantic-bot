@@ -59,6 +59,11 @@ SECRET_KEY = "<SECRET_KEY>"
 
 If you get errors, proceed to the manual installation.
 
+## Docker
+Build image:  `docker build -t semantic-bot .`
+Run container: `docker-compose up` 
+Open your browser: http://0.0.0.0:8080
+
 ## Manual installation
 
 install python dependencies with pip
