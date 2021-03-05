@@ -9,12 +9,12 @@ services:
         - "PYTHONPATH=/semantic-bot"
         - "LANG=en"
       ports:
-        - "8000:8000"
+        - "8080:80"
+        - "8081:8081"
       volumes:
         - ./data_dumps:/semantic-bot/data_dumps
         - ./chat:/semantic-bot/chat
-        - ./chatbot_app/settings.py:/semantic-bot/chatbot_app/settings.py
-        - ./start-server.sh:/semantic-bot/start-server.sh
-        - ./assets:/semantic-bot/static_files
-        - ./webpack.watch.config.js:/semantic-bot/webpack.watch.config.js
+        - ./demo/settings.py:/semantic-bot/chatbot_app/settings.py
+        - ./demo/start-server.sh:/semantic-bot/start-server.sh
+        - ./demo/webpack.watch.config.js:/semantic-bot/webpack.watch.config.js
       command: '/semantic-bot/start-server.sh'
