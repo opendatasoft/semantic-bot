@@ -2,7 +2,7 @@ version: '3.7'
 services:
   ontology:
       build: ./  
-      container_name: ontology
+      container_name: semantic-bot
       privileged: true
       environment:
         - "WORKDIR=/semantic-bot"
