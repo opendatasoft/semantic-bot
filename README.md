@@ -61,8 +61,12 @@ If you get errors, proceed to the manual installation.
 
 ## Docker
 Build image:  `docker build -t semantic-bot .`
+
 Run container: `docker-compose up` 
-Open your browser: http://0.0.0.0:8080
+
+Open application in your browser: http://0.0.0.0:8080
+
+Warning: Docker container is running in the demonstration mode with configuration files in `demo` folder.
 
 ## Manual installation
 
