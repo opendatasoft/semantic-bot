@@ -3,10 +3,10 @@
   <h1>{{ title }}</h1>
   <ul>
     <li>
-      <span>1.</span>Ask <a href="mailto:support@opendatasoft.com?Subject=semantic metadata">support</a> to enable metadata templates on your domain
+      <span>1.</span>Go to your backoffice in the "Configuration" section
     </li>
     <li>
-      <span>2.</span>Go to your backoffice in the configuration section
+      <span>2.</span>Go to the "Metadata Templates" sub-section
     </li>
     <li>
       <span>3.</span>Go to “Other metadata” and click on “Semantic Metadata” 
