@@ -1,0 +1,6 @@
+semantic-bot-es:
+    image: elasticsearch:7.12.0
+    environment:
+        - discovery.type=single-node
+    ports:
+      - "9200:9200"

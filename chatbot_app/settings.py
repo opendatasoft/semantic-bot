@@ -160,3 +160,7 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
+# Elasticsearch
+ES_HOST = 'localhost'
+ES_PORT = '9200'
