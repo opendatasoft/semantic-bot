@@ -1,5 +1,3 @@
-import json
-
 from elasticsearch import Elasticsearch
 
 from chatbot_app.settings import ES_HOST, ES_PORT

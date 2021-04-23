@@ -3,14 +3,14 @@ python:
   - "3.6"
 cache: pip
 before_install:
-  - curl https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip -L -o data_dumps.zip
-  - unzip -o data_dumps.zip
-  - rm data_dumps.zip
+  - curl https://eu.ftp.opendatasoft.com/bmoreau/ttl_data_dumps.zip -L -o ttl_data_dumps.zip
+  - unzip -o ttl_data_dumps.zip
+  - rm ttl_data_dumps.zip
   - rm -r __MACOSX/
   - touch chatbot_app/local_settings.py
   - echo "SECRET_KEY = '<SECRET_KEY>'" >> chatbot_app/local_settings.py
 install:
-  - pip install pybind11==2.2.4
   - pip install -r requirements.txt
+  - python -m scripts.bulk_load
 script:
   - python -m pytest tests/

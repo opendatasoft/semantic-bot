@@ -17,9 +17,6 @@ For more details, you can read the following demonstration paper:
 [DBpedia](https://wiki.dbpedia.org/) is a knowledge graph containing informations extracted from wikipedia .
 SemanticBot uses DBpedia to perform named entity recognition. In other word, to find class of entities (e.g., Italia is a country/PopulatedPLace.. or B.Obama is a President/Person..)
 
-## YAGO
-[YAGO](https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/) is an other knowledge graph that is used for named entity recognition by the SemanticBot.
-
 ## LOV (Linked Open Vocabularies)
 [LOV](http://lov.okfn.org/) is an ontology search engine. It is used by the SemanticBot to find candidate ontologies for opendatasoft datasets.
 
@@ -31,14 +28,11 @@ It's composed of:
 * `rules` (e.g. A person have a unique date of birth).
 Ontologies can be created for every area of concern and by everyone using RDF (Resource Description Framework), RDFS (RDF Schema) and OWL (Web Ontology Language).
 
-## HDT
-[HDT](http://www.rdfhdt.org/) (Header, Dictionary, Triples) is a compact data structure and binary serialization format for RDF
-
 ## RML & YARRRML
 [RML](http://rml.io/) is a generic mapping language to describe multi-format to RDF transformations. [YARRRML](http://rml.io/yarrrml/) is a simple syntax to respresent RML rules.
 
 # Installation
-Assuming you already have `python 3.6`, `pip`, `yarn and gcc/clang with c++11 support,
+Assuming you already have `python 3.6`, `pip`, `yarn` and `docker-compose`:
 
 Clone the repository and go to the root folder: `semantic-bot`.
 
@@ -64,13 +58,12 @@ If you get errors, proceed to the manual installation.
 install python dependencies with pip
 
 ```bash
-pip install pybind11==2.2.4
 pip install -r requirements.txt
 ```
 
-Download `hdt` versions of DBPedia and YAGO datasets at this address:
+Download `ttl` dumps of DBPedia types and labels at this address:
 
-https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
+https://eu.ftp.opendatasoft.com/bmoreau/ttl_data_dumps.zip
 
 and override `/data_dumps`
 
@@ -79,10 +72,21 @@ create a file `chatbot_app/local_settings.py` and add a secret key.
 SECRET_KEY = "<SECRET_KEY>"
 ```
 
-finally, install js dependencies
+install js dependencies
 
 ```bash
 yarn
+```
+
+run Elasticsearch (ES) with `docker-compose`
+```bash
+docker-compose up -d
+```
+
+Finally, when Elasticsearch is ready, load all the turtle files into ES with:
+
+```bash
+python -m scripts.bulk_load
 ```
 
 ## Mapping serializer

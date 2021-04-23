@@ -54,7 +54,6 @@ LABEL_MAPPING = {
 
 def main():
     es_client = ElasticSearch.get_client()
-    es_client.ping()
     load_data(es_client)
 
 
