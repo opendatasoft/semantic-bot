@@ -3,7 +3,6 @@ Bulk Loads all .ttl files in /data_dumps into elasticsearch.
 """
 import os
 import argparse
-from hashlib import sha1
 
 import utils.elasticsearch as ElasticSearch
 import elasticsearch.helpers
@@ -66,7 +65,7 @@ def load_data(es_client):
     es_client.indices.create(index=TYPE_INDEX, body=TYPE_MAPPING)
     es_client.indices.create(index=LABEL_INDEX, body=LABEL_MAPPING)
     # then load
-    for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=25000):
+    for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=5000):
         if not success:
             print('A document failed:', info)
 
@@ -83,7 +82,6 @@ def _bulk_load():
                     if doc_index and doc:
                         yield {
                             "_index": doc_index,
-                            "_id": sha1(line.encode('utf-8')).hexdigest(),
                             "_source": doc
                         }
                     line = file.readline()
