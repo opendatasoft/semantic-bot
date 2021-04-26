@@ -3,7 +3,8 @@ python:
   - "3.6"
 cache: pip
 before_install:
-  - curl https://eu.ftp.opendatasoft.com/bmoreau/ttl_data_dumps.zip -L -o ttl_data_dumps.zip
+  - docker-compose up -d
+  - curl https://eu.ftp.opendatasoft.com/bmoreau/test_ttl_data_dumps.zip -L -o ttl_data_dumps.zip
   - unzip -o ttl_data_dumps.zip
   - rm ttl_data_dumps.zip
   - rm -r __MACOSX/

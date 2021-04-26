@@ -3,6 +3,7 @@ Bulk Loads all .ttl files in /data_dumps into elasticsearch.
 """
 import os
 import argparse
+import time
 
 import utils.elasticsearch as ElasticSearch
 import elasticsearch.helpers
@@ -12,7 +13,7 @@ DUMP_DIR = '../data_dumps'
 
 TYPE_MAPPING = {
     "settings": {
-        "number_of_shards": 3,
+        "number_of_shards": 12,
         "number_of_replicas": 0,  # this can be set as 1 after load
         "refresh_interval": "1m"  # we won't load data regularly
     },
@@ -29,7 +30,7 @@ TYPE_MAPPING = {
 }
 LABEL_MAPPING = {
     "settings": {
-        "number_of_shards": 5,
+        "number_of_shards": 8,
         "number_of_replicas": 0,  # this can be set as 1 after load
         "refresh_interval": "1m"  # we won't load data regularly
     },
@@ -61,7 +62,7 @@ def load_data(es_client):
     es_client.indices.create(index=ElasticSearch.TYPE_INDEX, body=TYPE_MAPPING)
     es_client.indices.create(index=ElasticSearch.LABEL_INDEX, body=LABEL_MAPPING)
     # then load
-    for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=500):
+    for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=2000):
         if not success:
             print('A document failed:', info)
 
@@ -129,4 +130,7 @@ def _triple_to_doc(triple):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Bulk load rdf:labels and rdf:type datasets into elasticsearch.')
+    start = time.time()
     main()
+    end = time.time()
+    print(f"Data loaded in: {end - start} seconds")
