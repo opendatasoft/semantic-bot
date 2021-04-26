@@ -5,6 +5,7 @@ services:
         image: elasticsearch:7.12.0
         environment:
             - discovery.type=single-node
+            - cluster.routing.allocation.disk.threshold_enabled=false
             - "ES_JAVA_OPTS=-Xms1G -Xmx1G"
         volumes:
             - semantic-bot-es-data:/usr/share/elasticsearch/data
