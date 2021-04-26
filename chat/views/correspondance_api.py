@@ -71,8 +71,6 @@ def get_rml_mapping(request, dataset_id):
             content_type='text')
         response['Content-Disposition'] = 'attachment; filename="{}.yaml"'.format(dataset_id)
         response['Access-Control-Allow-Origin'] = '*'
-        with open('results/{}.yaml'.format(dataset_id), 'w') as outfile:
-            outfile.write(rml_mapping)
     except (ValueError, KeyError):
         response = bad_format_correspondance()
     return response
