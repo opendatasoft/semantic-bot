@@ -9,8 +9,7 @@ import simplejson as json
 import logging
 import yaml
 
-import utils.dbpedia_ner as DBPediaNER
-import utils.yago_ner as YagoNER
+import utils.elasticsearch_ner as ElasticSearchNer
 import utils.yarrrml_saturator as YARRRMLSaturator
 import utils.ods_catalog_api as ODSCatalog
 import utils.ods_dataset_api as ODSRecords
@@ -125,9 +124,7 @@ def result_denied_correspondances(request, dataset_id):
 def get_class(request):
     term = request.GET.get('q', None)
     lang = request.GET.get('lang', 'en')
-    classes = DBPediaNER.entity_types_request(term, lang)
-    if not classes:
-        classes = YagoNER.entity_types_request(term, lang)
+    classes = ElasticSearchNer.entity_types_request(term, lang)
     response = HttpResponse(
         json.dumps(classes),
         content_type='application/json')

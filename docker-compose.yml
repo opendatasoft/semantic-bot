@@ -1,6 +1,15 @@
-semantic-bot-es:
-    image: elasticsearch:7.12.0
-    environment:
-        - discovery.type=single-node
-    ports:
-      - "9200:9200"
+version: "3.7"
+
+services:
+    semantic-bot-es:
+        image: elasticsearch:7.12.0
+        environment:
+            - discovery.type=single-node
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        volumes:
+            - semantic-bot-es-data:/usr/share/elasticsearch/data
+        ports:
+          - "9200:9200"
+
+volumes:
+  semantic-bot-es-data:

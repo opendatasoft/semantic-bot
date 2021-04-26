@@ -10,14 +10,11 @@ import elasticsearch.helpers
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chatbot_app.settings")
 DUMP_DIR = '../data_dumps'
 
-TYPE_INDEX = 'rdf_types'
-LABEL_INDEX = 'rdfs_labels'
-
 TYPE_MAPPING = {
     "settings": {
-        "number_of_shards": 2,
+        "number_of_shards": 3,
         "number_of_replicas": 0,  # this can be set as 1 after load
-        "refresh_interval": "1h"  # we won't load data regularly
+        "refresh_interval": "1m"  # we won't load data regularly
     },
     "mappings": {
         "properties": {
@@ -32,9 +29,9 @@ TYPE_MAPPING = {
 }
 LABEL_MAPPING = {
     "settings": {
-        "number_of_shards": 2,
+        "number_of_shards": 5,
         "number_of_replicas": 0,  # this can be set as 1 after load
-        "refresh_interval": "1h"  # we won't load data regularly
+        "refresh_interval": "1m"  # we won't load data regularly
     },
     "mappings": {
         "properties": {
@@ -59,12 +56,12 @@ def main():
 
 def load_data(es_client):
     # clean es indexes
-    es_client.indices.delete(index=TYPE_INDEX, ignore=[400, 404])
-    es_client.indices.delete(index=LABEL_INDEX, ignore=[400, 404])
-    es_client.indices.create(index=TYPE_INDEX, body=TYPE_MAPPING)
-    es_client.indices.create(index=LABEL_INDEX, body=LABEL_MAPPING)
+    es_client.indices.delete(index=ElasticSearch.TYPE_INDEX, ignore=[400, 404])
+    es_client.indices.delete(index=ElasticSearch.LABEL_INDEX, ignore=[400, 404])
+    es_client.indices.create(index=ElasticSearch.TYPE_INDEX, body=TYPE_MAPPING)
+    es_client.indices.create(index=ElasticSearch.LABEL_INDEX, body=LABEL_MAPPING)
     # then load
-    for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=5000):
+    for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=500):
         if not success:
             print('A document failed:', info)
 
@@ -102,7 +99,7 @@ def _triple_to_doc(triple):
                  'skos:hiddenLabel',
                  '<http://www.w3.org/2004/02/skos/core#prefLabel>',
                  'skos:prefLabel']:
-            doc_index = LABEL_INDEX
+            doc_index = ElasticSearch.LABEL_INDEX
             resource = s
             label = o
             # by default, lang is en
@@ -120,7 +117,7 @@ def _triple_to_doc(triple):
                 'lang': lang
             }
         elif p in ['<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>', 'rdf:type', 'a']:
-            doc_index = TYPE_INDEX
+            doc_index = ElasticSearch.TYPE_INDEX
             resource = s
             cl = o
             doc = {
