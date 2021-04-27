@@ -2,10 +2,7 @@ language: python
 python:
   - "3.6"
 cache: pip
-services:
-  - docker
 before_install:
-  - docker-compose up -d
   - curl https://eu.ftp.opendatasoft.com/bmoreau/test_ttl_data_dumps.zip -L -o ttl_data_dumps.zip
   - unzip -o ttl_data_dumps.zip
   - rm ttl_data_dumps.zip
@@ -14,7 +11,8 @@ before_install:
   - echo "SECRET_KEY = '<SECRET_KEY>'" >> chatbot_app/local_settings.py
 install:
   - pip install -r requirements.txt
+  - docker-compose up -d
+  - docker-compose ps
   - python -m scripts.bulk_load
 script:
-  - docker-compose up -d
   - python -m pytest tests/
