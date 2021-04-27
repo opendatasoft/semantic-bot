@@ -9,7 +9,8 @@ import utils.elasticsearch as ElasticSearch
 import elasticsearch.helpers
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chatbot_app.settings")
-DUMP_DIR = '../data_dumps'
+DUMP_DIR = os.path.join(os.path.dirname(__file__), '../data_dumps')
+
 
 TYPE_MAPPING = {
     "settings": {
