@@ -41,7 +41,6 @@ def entity_types_request(query, language='en'):
                 }
             }
         })
-        print(res)
         if res and res.get('hits', {}).get('total', {}).get('value', None):
             # we retrieve the resource IRIs (e.g., <http://dbpedia.org/resource/Opendatasoft>) of the rdfs:label
             # e.g., resource: <http://dbpedia.org/resource/Opendatasoft> label: Opendatasoft
@@ -55,12 +54,11 @@ def entity_types_request(query, language='en'):
                 # e.g., resource: <http://dbpedia.org/resource/Opendatasoft> class: Company
                 res = es_client.search(index=ElasticSearch.TYPE_INDEX, body={
                     'query': {
-                        'match_phrase': {
+                        'match': {
                             'resource': resource
                         }
                     }
                 })
-                print(res)
                 if res and res.get('hits', {}).get('total', {}).get('value', None):
                     # each resource has several hierarchical classes
                     # e.g., "Company" is also an "Organisation", etc.
@@ -68,10 +66,10 @@ def entity_types_request(query, language='en'):
                     for hit in res.get('hits', {}).get('hits', []):
                         res_resource = hit.get('_source', {}).get('resource', None)
                         cl = hit.get('_source', {}).get('class', None)
-                        if cl and res_resource == resource:
+                        if cl and res_resource.lower() == resource.lower():
                             # remove namespace, '<' and '>'
                             cl = get_uri_suffix(cl[1:-1])
-                            if not is_ignored(cl):
+                            if not is_ignored(cl) and cl not in classes:
                                 classes.append(cl)
                     if classes:
                         return classes

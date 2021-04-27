@@ -14,4 +14,5 @@ install:
   - pip install -r requirements.txt
   - python -m scripts.bulk_load
 script:
+  - docker-compose up -d
   - python -m pytest tests/
