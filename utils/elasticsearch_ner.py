@@ -16,11 +16,32 @@ def entity_types_request(query, language='en'):
             # only gets the top 1 score matching result
             'size': 1,
             'query': {
-                'match': {
-                    'label': query
+                "dis_max": {
+                    "queries": [
+                        {"match": {
+                            "resource": {
+                                "query": query,
+                                "boost": 5
+                            }
+                        }},
+                        {"match": {
+                            "label": {
+                                "query": query,
+                                "boost": 3
+                            }
+                        }},
+                        {"match": {
+                            "lang": {
+                                "query": language,
+                                "boost": 1
+                            }
+                        }}
+                    ],
+                    "tie_breaker": 1
                 }
             }
         })
+        print(res)
         if res and res.get('hits', {}).get('total', {}).get('value', None):
             # we retrieve the resource IRIs (e.g., <http://dbpedia.org/resource/Opendatasoft>) of the rdfs:label
             # e.g., resource: <http://dbpedia.org/resource/Opendatasoft> label: Opendatasoft
@@ -39,13 +60,15 @@ def entity_types_request(query, language='en'):
                         }
                     }
                 })
+                print(res)
                 if res and res.get('hits', {}).get('total', {}).get('value', None):
                     # each resource has several hierarchical classes
                     # e.g., "Company" is also an "Organisation", etc.
                     classes = []
                     for hit in res.get('hits', {}).get('hits', []):
+                        res_resource = hit.get('_source', {}).get('resource', None)
                         cl = hit.get('_source', {}).get('class', None)
-                        if cl:
+                        if cl and res_resource == resource:
                             # remove namespace, '<' and '>'
                             cl = get_uri_suffix(cl[1:-1])
                             if not is_ignored(cl):

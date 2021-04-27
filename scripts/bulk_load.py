@@ -14,16 +14,18 @@ DUMP_DIR = '../data_dumps'
 TYPE_MAPPING = {
     "settings": {
         "number_of_shards": 12,
-        "number_of_replicas": 0,  # this can be set as 1 after load
+        "number_of_replicas": 0,  # this can be set after load
         "refresh_interval": "1m"  # we won't load data regularly
     },
     "mappings": {
         "properties": {
             "resource": {
-                "type": "text"  # e.g., <http://dbpedia.org/resource/Opendatasoft>
+                "type": "text",  # e.g., <http://dbpedia.org/resource/Opendatasoft>
+                "index_options": "docs"  # we don't want term frequencies to be indexed
             },
             "class": {
-                "type": "text"  # e.g., <http://dbpedia.org/ontology/Company>
+                "type": "text",  # e.g., <http://dbpedia.org/ontology/Company>
+                "index_options": "docs"  # we don't want term frequencies to be indexed
             }
         }
     }
@@ -31,19 +33,22 @@ TYPE_MAPPING = {
 LABEL_MAPPING = {
     "settings": {
         "number_of_shards": 8,
-        "number_of_replicas": 0,  # this can be set as 1 after load
+        "number_of_replicas": 0,  # this can be set after load
         "refresh_interval": "1m"  # we won't load data regularly
     },
     "mappings": {
         "properties": {
             "resource": {
-                "type": "text"  # e.g., <http://dbpedia.org/resource/Opendatasoft>
+                "type": "text",  # e.g., <http://dbpedia.org/resource/Opendatasoft>
+                "index_options": "docs"  # we don't want term frequencies to be indexed
             },
             "label": {
-                "type": "text"  # e.g., Opendatasoft
+                "type": "text",  # e.g., Opendatasoft
+                "index_options": "docs"  # we don't want term frequencies to be indexed
             },
             "lang": {
-                "type": "text"  # e.g., en
+                "type": "text",  # e.g., en
+                "index_options": "docs"  # we don't want term frequencies to be indexed
             }
         }
     }
