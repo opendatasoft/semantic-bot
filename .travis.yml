@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.6"
+  - "3.9"
 cache: pip
 before_install:
   - curl https://eu.ftp.opendatasoft.com/bmoreau/test_ttl_data_dumps.zip -L -o ttl_data_dumps.zip
@@ -16,5 +16,9 @@ install:
   - docker-compose logs -f &
   - wget -q --waitretry=1 --retry-connrefused -T 10 -O - http://127.0.0.1:9200
   - python -m scripts.bulk_load
+before_script:
+  - sleep 10
+  - wget -q -O - http://127.0.0.1:9200/rdf_types/_search
+  - wget -q -O - http://127.0.0.1:9200/rdfs_labels/_search
 script:
   - python -m pytest tests/
