@@ -114,7 +114,7 @@ def _triple_to_doc(triple):
             label = label.replace('"', '')
             if '@' in o:
                 # label has a lang tag e.g., France@fr
-                splitted_label = o.split('@')
+                splitted_label = label.split('@')
                 label = splitted_label[0]
                 lang = splitted_label[1]
             doc = {
