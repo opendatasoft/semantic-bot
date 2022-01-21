@@ -5,7 +5,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from django.core import urlresolvers
+from django.urls import get_resolver
 
 import json
 
@@ -26,7 +26,7 @@ def index(request):
 
 
 def get_patterns(root_path):
-    resolver = urlresolvers.get_resolver(None)
+    resolver = get_resolver(None)
     patterns = sorted([
         (key, value[0][0][0])
         for key, value in resolver.reverse_dict.items()
