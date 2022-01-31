@@ -154,7 +154,7 @@
             return response.json()
           }).then(json => {
             // Dataset is selected. Semantization starts
-            this.$root.dataset = json.dataset;
+            this.$root.dataset = json.datasets[0].dataset;
             this.$root.$emit('datasetID', this.$root.dataset.dataset_id);
             this.$root.start_semantization();
           }, function () {

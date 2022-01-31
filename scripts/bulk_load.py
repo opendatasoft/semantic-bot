@@ -16,7 +16,7 @@ TYPE_MAPPING = {
     "settings": {
         "number_of_shards": 12,
         "number_of_replicas": 0,  # this can be set after load
-        "refresh_interval": "5s"  # we won't load data regularly
+        "refresh_interval": "-1"  # this can be set after load
     },
     "mappings": {
         "properties": {
@@ -35,7 +35,7 @@ LABEL_MAPPING = {
     "settings": {
         "number_of_shards": 8,
         "number_of_replicas": 0,  # this can be set after load
-        "refresh_interval": "5s"  # we won't load data regularly
+        "refresh_interval": "-1"  # this can be set after load
     },
     "mappings": {
         "properties": {
@@ -71,6 +71,8 @@ def load_data(es_client):
     for success, info in elasticsearch.helpers.parallel_bulk(es_client, _bulk_load(), chunk_size=2000):
         if not success:
             print('A document failed:', info)
+    es_client.indices.forcemerge(index='_all', max_num_segments=1, params={'request_timeout': 60 * 60 * 30})
+    es_client.indices.refresh(index="_all")
 
 
 def _bulk_load():
