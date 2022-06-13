@@ -11,16 +11,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-          cache: npm
+#          cache: npm
 
       - name: Setup pip
         uses: actions/setup-python@v3
         with:
           python-version: '3.6'
-          cache: pip
+#          cache: pip
 
       - name: Setup js dependencies
         run: yarn install
+
+      - name: Install pybind11
+        run: pip install pybind11==2.2.4
 
       - name: Setup python dependencies
         run: pip install -r requirements.txt
