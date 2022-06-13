@@ -2,7 +2,7 @@ ARG NODE_VERSION=14
 ARG PYTHON_VERSION=3
 ARG DEBIAN_VERSION=buster
 
-FROM python:3.6-slim-buster as base
+FROM python:3.9-slim-buster as base
 
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=1

@@ -38,8 +38,23 @@ jobs:
           rm data_dumps.zip && \
           rm -r __MACOSX/
 
+      - name: Prepare Tests
+        run: |
+          docker-compose up -d && \
+          docker-compose ps && \
+          docker-compose logs -f &
+
+      - name: Wait ready Elastic
+        run: |
+          wget -q --waitretry=3 --retry-connrefused -T 10 -O - http://127.0.0.1:9200 && \
+          python -m scripts.bulk_load
+
       - name: Run Tests
-        run: python -m pytest tests/
+        run: |
+          sleep 10 && \
+          wget -q -O - http://127.0.0.1:9200/rdf_types/_search && \
+          wget -q -O - http://127.0.0.1:9200/rdfs_labels/_search && \
+          python -m pytest tests/
 
 #  delivery:
 #    runs-on: ubuntu-latest
