@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost']
 
@@ -162,5 +162,5 @@ WEBPACK_LOADER = {
 }
 
 # Elasticsearch
-ES_HOST = 'semantic-bot_semantic-bot-es_1'
-ES_PORT = '9200'
+ES_HOST = os.getenv('ES_HOST', 'localhost')
+ES_PORT = os.getenv('ES_PORT', '9200')

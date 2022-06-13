@@ -65,10 +65,5 @@ COPY --chown=1000:1000 exp/ ./exp/
 COPY --chown=1000:1000 logs/ ./logs/
 COPY --chown=1000:1000 manage.py ./
 
-ADD --chown=1000:1000 https://eu.ftp.opendatasoft.com/bmoreau/test_ttl_data_dumps.zip ttl_data_dumps.zip
-RUN unzip -o ttl_data_dumps.zip && \
-    rm ttl_data_dumps.zip && \
-    rm -r __MACOSX/
-
 ENTRYPOINT ["python"]
 CMD ["manage.py", "runserver", "0.0.0.0:8000"]
