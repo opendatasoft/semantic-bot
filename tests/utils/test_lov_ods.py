@@ -11,7 +11,7 @@ class TestLOVODSApi(object):
         assert result_set
         assert result_set['records'][0]['record']['fields']['uri_suffix'] == 'administrative region'
 
-    def test_LOV_ODS_class_property(self):
+    def test_LOV_ODS_property(self):
         result_set = LOVODSAPI.term_request('Birth_place', term_type='property', language='en')
         assert result_set
         assert result_set['records'][0]['record']['fields']['uri_suffix'] == 'birth place'

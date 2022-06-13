@@ -68,7 +68,7 @@ const app = new Vue({
         /** Start the semantization. This method is called in formchat component when the dataset is selected */
         start_semantization: function () {
             this.$emit('isWaiting', true);
-            this.dataset_language = this.dataset.metas.language;
+            this.dataset_language = this.dataset.metas.default.language;
             Promise.all([this.retrieve_dataset_fields(), this.retrieve_dataset_records()]).then(results => {
                 const dataset_fields = results[0];
                 const dataset_records = results[1];
@@ -108,7 +108,7 @@ const app = new Vue({
         /** Retrieve the property correspondance for a field of the dataset */
         retrieve_property_correspondance: function (field_name, data) {
             return new Promise( (resolve, reject) => {
-                this.$http.post("/api/" + this.dataset.datasetid + "/correspondances/field/property?field=" + field_name + "&lang=" + this.dataset_language, data).then(response => {
+                this.$http.post("/api/" + this.dataset.dataset_id + "/correspondances/field/property?field=" + field_name + "&lang=" + this.dataset_language, data).then(response => {
                     if (response.body) {
                         this.correspondances['properties'].push(response.body);
                         resolve(true);
@@ -121,7 +121,7 @@ const app = new Vue({
         /** Retrieve the class correspondance for a field of the dataset */
         retrieve_class_correspondance: function (field_name, data) {
             return new Promise( (resolve, reject) => {
-                this.$http.post("/api/" + this.dataset.datasetid + "/correspondances/field/class?field=" + field_name + "&lang=" + this.dataset_language, data).then(response => {
+                this.$http.post("/api/" + this.dataset.dataset_id + "/correspondances/field/class?field=" + field_name + "&lang=" + this.dataset_language, data).then(response => {
                     if (response.body) {
                         this.correspondances['classes'].push(response.body);
                         resolve(true);
@@ -133,7 +133,7 @@ const app = new Vue({
         },
         /** Retrieve records of the dataset from the catalog api v2 of OpenDataSoft DATA Network */
         retrieve_dataset_records: function () {
-            return this.$http.get(ODS_RECORD_DATASET + this.dataset.datasetid)
+            return this.$http.get(ODS_RECORD_DATASET + this.dataset.dataset_id)
                 .then(response => response.json())
                 .then(json => {
                     this.dataset_records = json.records;
@@ -158,8 +158,8 @@ const app = new Vue({
          * @returns {String} message - The url where RDF mapping of the dataset can be updated
          */
         get_mapping_set_url: function () {
-            let dataset_id = this.dataset.datasetid.split('@')[0];
-            let dataset_domain_adress = this.dataset.metas.source_domain_address;
+            let dataset_id = this.dataset.dataset_id.split('@')[0];
+            let dataset_domain_adress = this.dataset.metas.default.source_domain_address;
             return "https://" + dataset_domain_adress + "/publish/" + dataset_id + "/#information";
         },
         /** Find and Confirm class correspondances using an array of field_name */
@@ -267,9 +267,9 @@ const app = new Vue({
             this.confirmed_correspondances['fields'] = this.dataset_fields;
             this.passed_correspondances['fields'] = this.dataset_fields;
             this.denied_correspondances['fields'] = this.dataset_fields;
-            this.$http.post('/api/' + this.dataset.datasetid + '/correspondances/confirmed', this.confirmed_correspondances).then(() => {
-                this.$http.post('/api/' + this.dataset.datasetid + '/correspondances/awaiting', this.passed_correspondances).then(() => {
-                    this.$http.post('/api/' + this.dataset.datasetid + '/correspondances/denied', this.denied_correspondances).then(() => {});
+            this.$http.post('/api/' + this.dataset.dataset_id + '/correspondances/confirmed', this.confirmed_correspondances).then(() => {
+                this.$http.post('/api/' + this.dataset.dataset_id + '/correspondances/awaiting', this.passed_correspondances).then(() => {
+                    this.$http.post('/api/' + this.dataset.dataset_id + '/correspondances/denied', this.denied_correspondances).then(() => {});
                 });
             });
         }

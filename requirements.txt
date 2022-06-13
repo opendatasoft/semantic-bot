@@ -1,10 +1,10 @@
+elasticsearch>=7.0.0,<8.0.0
 numpy
 beautifulsoup4>=4.6
 html5lib>=1.0.1
 rdflib>=4.2
 requests>=2.18
 Django==2.2.28
-hdt>=2.0
 pytest>=4.0.1
 fuzzywuzzy>=0.17.0
 python-Levenshtein>=0.12.0

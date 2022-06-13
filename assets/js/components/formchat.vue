@@ -133,7 +133,7 @@
           this.$root.$emit('switchSelectorEvent', 'field');
         });
         this.$root.$on('newConfirmedCorrespondance', (confirmed_correspondances) => {
-          this.$http.post('/api/' + this.$root.dataset.datasetid + '/correspondances/mapping', confirmed_correspondances).then(response => {
+          this.$http.post('/api/' + this.$root.dataset.dataset_id + '/correspondances/mapping', confirmed_correspondances).then(response => {
           this.mapping = response.body;
         });
         });
@@ -154,8 +154,8 @@
             return response.json()
           }).then(json => {
             // Dataset is selected. Semantization starts
-            this.$root.dataset = json;
-            this.$root.$emit('datasetID', json.datasetid);
+            this.$root.dataset = json.datasets[0].dataset;
+            this.$root.$emit('datasetID', this.$root.dataset.dataset_id);
             this.$root.start_semantization();
           }, function () {
             document.getElementById("textBar").classList.add("is-invalid");

@@ -31,7 +31,7 @@ export default {
             this.switchmainapp = switchmainappstate;
         });
         this.$root.$on('newConfirmedCorrespondance', (confirmed_correspondances) => {
-            this.$http.post('/api/' + this.$root.dataset.datasetid + '/correspondances/mapping', confirmed_correspondances).then(response => {
+            this.$http.post('/api/' + this.$root.dataset.dataset_id + '/correspondances/mapping', confirmed_correspondances).then(response => {
                 this.mapping = response.body;
                 this.$root.$emit('mappingUpdatedEvent', this.mapping);
             });
