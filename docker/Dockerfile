@@ -49,7 +49,6 @@ WORKDIR /usr/src/app
 # Copy source and built files
 COPY --chown=1000:1000 requirements.txt ./
 
-RUN pip install pybind11==2.2.4
 RUN pip install -r requirements.txt
 
 COPY --chown=1000:1000 --from=front-app /usr/local/bin /usr/local/bin
