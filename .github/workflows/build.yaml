@@ -15,13 +15,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-#          cache: npm
+          cache: npm
 
       - name: Setup pip
         uses: actions/setup-python@v3
         with:
           python-version: '3.9'
-#          cache: pip
+          cache: pip
 
       - name: Setup js dependencies
         run: yarn install
