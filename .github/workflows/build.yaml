@@ -1,0 +1,85 @@
+name: build-python
+on:
+  pull_request: {}
+  push:
+    branches:
+      - 'main'
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        env:
+          FORCE_COLOR: 0
+        with:
+          node-version: '15'
+          cache: yarn
+
+      - name: Setup pip
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+          cache: pip
+
+      - name: Setup js dependencies
+        run: yarn install
+
+      - name: Setup python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Prepare tests
+        run: echo "SECRET_KEY = '<SECRET_KEY>'" > chatbot_app/local_settings.py
+
+      - name: Prepare dump
+        run: |
+          curl https://eu.ftp.opendatasoft.com/bmoreau/test_ttl_data_dumps.zip -L -o ttl_data_dumps.zip && \
+          unzip -o ttl_data_dumps.zip && \
+          rm ttl_data_dumps.zip && \
+          rm -r __MACOSX/
+
+      - name: Prepare Tests
+        run: |
+          docker-compose up -d && \
+          docker-compose ps && \
+          docker-compose logs -f &
+
+      - name: Wait ready Elastic
+        run: |
+          wget -q --waitretry=3 --retry-connrefused -T 10 -O - http://127.0.0.1:9200 && \
+          python -m scripts.bulk_load
+
+      - name: Run Tests
+        run: |
+          sleep 10 && \
+          wget -q -O - http://127.0.0.1:9200/rdf_types/_search && \
+          wget -q -O - http://127.0.0.1:9200/rdfs_labels/_search && \
+          python -m pytest tests/
+
+  delivery:
+    runs-on: ubuntu-latest
+    needs:
+      - build-test
+    if: ${{ github.ref == 'refs/heads/main' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: opendatasoft/semantic-bot:latest
+

@@ -47,5 +47,8 @@
     "webpack-dev-server": "^3.8.2",
     "webpack-hot-middleware": "^2.25.0",
     "webpack-merge": "^4.2.2"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
