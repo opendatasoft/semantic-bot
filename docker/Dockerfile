@@ -13,31 +13,24 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
     libc6-dev \
     g++ \
     make \
-    unzip
+    unzip \
+    nginx  \
+    vim
 
-RUN python -m pip install -U pip setuptools wheel virtualenv
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
-ENV VIRTUALENV=/opt/venv
-RUN groupadd --gid 1000 semantic-bot && \
-  adduser --gecos ',,,' --uid 1000 --gid 1000 --disabled-password semantic-bot && \
-  mkdir -p ${VIRTUALENV} && chown 1000:1000 ${VIRTUALENV} && \
-  chown semantic-bot:semantic-bot .
-
-USER semantic-bot
-RUN python -m virtualenv --system-site-packages ${VIRTUALENV}
-ENV PATH="${VIRTUALENV}/bin:$PATH"
-
+RUN python -m pip install -U pip setuptools wheel uwsgi
 
 FROM node:${NODE_VERSION} as front-app
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 RUN yarn install --pure-lock-file
-RUN yarn global add jshint --prefix /usr/local
 
 COPY assets ./assets/
-COPY webpack.config.js webpack.watch.config.js ./
+COPY webpack.config.js ./
 RUN yarn run build
 
 FROM base as semantic-bot
@@ -45,22 +38,31 @@ FROM base as semantic-bot
 WORKDIR /usr/src/app
 
 # Copy source and built files
-COPY --chown=1000:1000 requirements.txt ./
+COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 
-COPY --chown=1000:1000 --from=front-app /usr/local/bin /usr/local/bin
-COPY --chown=1000:1000 --from=front-app /usr/local/share/.config/yarn/global/ /usr/local/share/.config/yarn/global/
-COPY --chown=1000:1000 --from=front-app /usr/src/node_modules/ ./node_modules/
-COPY --chown=1000:1000 --from=front-app /usr/src/assets/ ./assets
-COPY --chown=1000:1000 --from=front-app /usr/src/webpack-stats.json ./webpack-stats.json
-COPY --chown=1000:1000 chat/ ./chat/
-COPY --chown=1000:1000 chatbot/ ./chatbot/
-COPY --chown=1000:1000 chatbot_app/ ./chatbot_app/
-COPY --chown=1000:1000 utils/ ./utils/
-COPY --chown=1000:1000 exp/ ./exp/
-COPY --chown=1000:1000 logs/ ./logs/
-COPY --chown=1000:1000 manage.py ./
+COPY --from=front-app /usr/local/bin /usr/local/bin
+COPY --from=front-app /usr/src/app/static/bundles ./assets/bundles
+COPY --from=front-app /usr/src/app/assets/img ./assets/img
+COPY --from=front-app /usr/src/app/webpack-stats.json ./webpack-stats.json
+COPY chat/ ./chat/
+COPY chatbot/ ./chatbot/
+COPY chatbot_app/ ./chatbot_app/
+COPY utils/ ./utils/
+COPY exp/ ./exp/
+COPY logs/ ./logs/
+COPY manage.py ./
+COPY docker/entrypoint.sh ./entrypoint.sh
+COPY docker/nginx.default /etc/nginx/sites-available/default
+COPY docker/uwsgi.ini ./uwsgi.ini
 
-ENTRYPOINT ["python"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+RUN python manage.py collectstatic
+RUN chmod +x entrypoint.sh
+RUN chown -R www-data:www-data /usr/src/app
+
+RUN mkdir /var/log/uwsgi
+RUN touch /var/log/uwsgi/semantic-bot.log
+RUN chown -R www-data:www-data /var/log/uwsgi
+
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

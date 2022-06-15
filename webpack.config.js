@@ -9,7 +9,7 @@ module.exports = {
     context: __dirname,
     entry: ['./assets/js/index', './assets/sccs/main.scss'],
     output: {
-        path: path.resolve('./assets/bundles/'),
+        path: path.resolve('.') + '/static/bundles',
         filename: 'app.js'
     },
 
