@@ -1,0 +1,12 @@
+services:
+  semantic-bot:
+    image: "opendatasoft/semantic-bot:1.0.0"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+
+  nginx:
+    image: "opendatasoft/semantic-bot:1.0.0"
+    environment:
+      SEMANTIC_BOT_SVC: "${SEMANTIC_BOT_SVC:-semantic-bot:8000}"
+    command: /bin/sh -c "envsubst '$${SEMANTIC_BOT_SVC}' < /etc/nginx/nginx.template > /etc/nginx/sites-available/default && nginx -g 'daemon off; error_log /dev/stdout info;'"

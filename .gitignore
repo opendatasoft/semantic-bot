@@ -115,3 +115,6 @@ venv.bak/
 #InteliJ
 .idea/
 node_modules
+
+#Docker
+docker-compose.override.yml
