@@ -64,5 +64,7 @@ COPY docker/uwsgi.ini ./uwsgi.ini
 RUN chmod +x entrypoint.sh
 RUN chown -R www-data:www-data /usr/src/app
 
+RUN python -m manage collectstatic --noinput
+
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 CMD ["/usr/bin/uwsgi", "--ini=uwsgi.ini", "--master" ,"--pidfile=/tmp/project-master.pid", "--uid=www-data", "--env=DJANGO_SETTINGS_MODULE=chatbot_app.settings"]
