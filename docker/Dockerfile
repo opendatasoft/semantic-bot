@@ -44,6 +44,8 @@ FROM base as semantic-bot
 
 WORKDIR /usr/src/app
 
+RUN curl -L -O https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip
+
 # Copy source and built files
 COPY requirements.txt ./
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-# curl -L https://eu.ftp.opendatasoft.com/bmoreau/data_dumps.zip | bsdtar --exclude "__MACOSX*" --exclude "*.DS_Store" -tvf -
 
 case "$*" in
     "_start_uwsgi_")
