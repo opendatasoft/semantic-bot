@@ -24,7 +24,10 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN python -m pip install -U pip setuptools wheel pybind11
+RUN python -m pip install -U pip setuptools wheel pybind11 virtualenv
+ENV VIRTUALENV=/opt/venv
+RUN mkdir -p ${VIRTUALENV} && python -m virtualenv --system-site-packages ${VIRTUALENV}
+ENV PATH="${VIRTUALENV}/bin:$PATH"
 
 FROM node:${NODE_VERSION} as front-app
 
