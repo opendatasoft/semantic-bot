@@ -69,7 +69,7 @@ COPY docker/uwsgi.ini ./uwsgi.ini
 RUN chmod +x entrypoint.sh
 RUN chown -R www-data:www-data /usr/src/app
 
-RUN python -m manage collectstatic --noinput
+RUN env SECRET_KEY="nOt-s0-s3cr3t-k3Y" python -m manage collectstatic --noinput
 
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 CMD ["_start_uwsgi_"]

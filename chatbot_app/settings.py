@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,12 +20,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", 'localhost').split(",")
 
 # To be defined in your local_settings
-DATA_API_KEY = None
+if os.environ.get("SECRETS_ENV_FILE", None):
+    load_dotenv(os.environ.get("SECRETS_ENV_FILE"))
+
+DATA_API_KEY = os.environ.get("DATA_API_KEY", None)
+SECRET_KEY = os.environ.get("SECRET_KEY", None)
 MAPPING_SERIALIZER = 'YARRRML'
 
 # If True, all URIs (classes and properties) are used only if available (returns http code 200)
