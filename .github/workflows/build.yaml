@@ -16,7 +16,7 @@ jobs:
         env:
           FORCE_COLOR: 0
         with:
-          node-version: '15'
+          node-version: '16'
           cache: yarn
 
       - name: Setup pip
