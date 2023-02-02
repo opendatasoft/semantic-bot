@@ -29,7 +29,7 @@
     "file-loader": "^4.2.0",
     "jquery": "^3.4.1",
     "mini-css-extract-plugin": "^0.8.0",
-    "node-sass": "^7.0.0",
+    "sass": "^1.58.0",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
     "url-loader": "^2.2.0",
