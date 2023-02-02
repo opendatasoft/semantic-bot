@@ -1,4 +1,4 @@
-ARG NODE_VERSION=15
+ARG NODE_VERSION=16
 
 FROM python:3.9-slim-bullseye as base
 
